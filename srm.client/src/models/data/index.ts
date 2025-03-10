@@ -1,0 +1,10 @@
+export type { CapDeTaiData } from './CapDetaiData';
+export type { CongBoData } from './CongBoData';
+export type { DeTaiData } from './DeTaiData';
+export type { DonViChuTriData } from './DonViChuTriData';
+export type { HoatDongData } from './HoatDongData';
+export type { LoaiHoatDongData } from './LoaiHoatDongData';
+export type { LoginData } from './LoginData';
+export type { PageData } from './PageData';
+export type { TacGiaData } from './TacGiaData';
+export type { ThanhQuaData } from './ThanhQuaData';
