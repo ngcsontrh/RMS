@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
-import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select, Breadcrumb } from 'antd';
+import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select, Breadcrumb, Skeleton } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Error, Loading } from '../commons';
 import { useQuery } from '@tanstack/react-query';
 import { CapDeTaiData, DeTaiData } from '../../models/data';
 import { TacGiaJson } from '../../models/json';
@@ -145,190 +146,198 @@ export default () => {
 
     return (
         <>
-            {contextHolder}
-            {(isDeTaiLoading) && <div>Đang tải dữ liệu...</div>}
-            {(deTaiError) && <div>Lỗi khi tải dữ liệu</div>}
+            {contextHolder}            
             <Breadcrumb
                 style={{ marginTop: "10px" }}
                 items={[{ title: "Đề tài" }, { title: id !== undefined && !isNaN(id) ? "Cập nhật" : "Ghi lại" }]}
             />
-            <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: "10px" }} >
-                <Row gutter={15}>                    
-                    <Col span={12}>
-                        <Form.Item name="ten" label="Tên đề tài" rules={[{ required: true, message: 'Vui lòng nhập tên đề tài!' }]}>
-                            <Input placeholder="Nhập tên đề tài" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="maSo" label="Mã số" rules={[{ required: true, message: 'Vui lòng nhập mã số!' }]}>
-                            <Input placeholder="Nhập mã số" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="mucTieu" label="Mục tiêu" rules={[{ required: true, message: 'Vui lòng nhập mục tiêu!' }]}>
-                            <TextArea placeholder="Nhập mục tiêu" rows={3} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="noiDung" label="Nội dung chính" rules={[{ required: true, message: 'Vui lòng nhập nội dung chính!' }]}>
-                            <TextArea placeholder="Nhập nội dung" rows={3} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="capDeTaiId" label="Cấp đề tài" rules={[{ required: true, message: 'Vui lòng chọn cấp đề tài!' }]}>
-                            <Select
-                                showSearch
-                                placeholder="Chọn hoặc nhập cấp đề tài"
-                                allowClear
-                                filterOption={(input, option) =>
-                                    option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                }
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        const target = e.target as HTMLInputElement
-                                        const value = target.value;
-                                        if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
-                                            setCapDeTaiDatas([...capDeTaiDatas, { id: null, ten: value }]);
-                                            form.setFieldsValue({
-                                                capDeTaiId: value,
-                                            });
-                                        }
+            {isDeTaiLoading && 
+                <div style={{ marginTop: '10px' }}>
+                    <Loading />
+                </div>                
+            }
+            {deTaiError &&
+                <Error />
+            }
+            {(!deTaiError && !isDeTaiLoading) && (
+                <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: "10px" }} >
+                    <Row gutter={15}>
+                        <Col span={12}>
+                            <Form.Item name="ten" label="Tên đề tài" rules={[{ required: true, message: 'Vui lòng nhập tên đề tài!' }]}>
+                                <Input placeholder="Nhập tên đề tài" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="maSo" label="Mã số" rules={[{ required: true, message: 'Vui lòng nhập mã số!' }]}>
+                                <Input placeholder="Nhập mã số" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="mucTieu" label="Mục tiêu" rules={[{ required: true, message: 'Vui lòng nhập mục tiêu!' }]}>
+                                <TextArea placeholder="Nhập mục tiêu" rows={3} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="noiDung" label="Nội dung chính" rules={[{ required: true, message: 'Vui lòng nhập nội dung chính!' }]}>
+                                <TextArea placeholder="Nhập nội dung" rows={3} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="capDeTaiId" label="Cấp đề tài" rules={[{ required: true, message: 'Vui lòng chọn cấp đề tài!' }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hoặc nhập cấp đề tài"
+                                    allowClear
+                                    filterOption={(input, option) =>
+                                        option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
                                     }
-                                }}                                
-                            >
-                                {capDeTaiDatas.map((item, index) => (
-                                    <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
-                                        {item.ten}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="tongKinhPhi" label="Tổng kinh phí" rules={[{ required: true, message: 'Vui lòng nhập tổng kinh phí!' }]}>
-                            <InputNumber placeholder="Nhập tổng kinh phí" style={{ width: '100%' }} min={0} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="kinhPhiHangNam" label="Kinh phí hàng năm">
-                            <InputNumber placeholder="Nhập kinh phí hàng năm" style={{ width: '100%' }} min={0} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="ngayBatDau" label="Thời gian bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}>
-                            <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Thời gian bắt đầu" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="ngayKetThuc" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}>
-                            <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Thời gian kết thúc" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="hoSoNghiemThu" label="Hồ sơ nghiệm thu">
-                            <Input placeholder="Nhập thông tin hồ sơ nghiệm thu" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="hoSoSanPham" label="Hồ sơ sản phẩm">
-                            <Input placeholder="Nhập thông tin hồ sơ sản phẩm" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="donViChuTriId" label="Đơn vị chủ tri" rules={[{ required: true, message: 'Vui lòng chọn đơn vị chủ trì!' }]}>
-                            <Select
-                                showSearch
-                                placeholder="Chọn hoặc nhập đơn vị chủ trì"
-                                allowClear
-                                filterOption={(input, option) =>
-                                    option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                }
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        const target = e.target as HTMLInputElement
-                                        const value = target.value;
-                                        if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
-                                            setDonViChuTriDatas([...capDeTaiDatas, { id: null, ten: value }]);
-                                            form.setFieldsValue({
-                                                donViChuTriId: value,
-                                            });
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            const target = e.target as HTMLInputElement
+                                            const value = target.value;
+                                            if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
+                                                setCapDeTaiDatas([...capDeTaiDatas, { id: null, ten: value }]);
+                                                form.setFieldsValue({
+                                                    capDeTaiId: value,
+                                                });
+                                            }
                                         }
+                                    }}
+                                >
+                                    {capDeTaiDatas.map((item, index) => (
+                                        <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
+                                            {item.ten}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="tongKinhPhi" label="Tổng kinh phí" rules={[{ required: true, message: 'Vui lòng nhập tổng kinh phí!' }]}>
+                                <InputNumber placeholder="Nhập tổng kinh phí" style={{ width: '100%' }} min={0} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="kinhPhiHangNam" label="Kinh phí hàng năm">
+                                <InputNumber placeholder="Nhập kinh phí hàng năm" style={{ width: '100%' }} min={0} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="ngayBatDau" label="Thời gian bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}>
+                                <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Thời gian bắt đầu" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="ngayKetThuc" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}>
+                                <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Thời gian kết thúc" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="hoSoNghiemThu" label="Hồ sơ nghiệm thu">
+                                <Input placeholder="Nhập thông tin hồ sơ nghiệm thu" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="hoSoSanPham" label="Hồ sơ sản phẩm">
+                                <Input placeholder="Nhập thông tin hồ sơ sản phẩm" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="donViChuTriId" label="Đơn vị chủ tri" rules={[{ required: true, message: 'Vui lòng chọn đơn vị chủ trì!' }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hoặc nhập đơn vị chủ trì"
+                                    allowClear
+                                    filterOption={(input, option) =>
+                                        option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
                                     }
-                                }}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            const target = e.target as HTMLInputElement
+                                            const value = target.value;
+                                            if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
+                                                setDonViChuTriDatas([...capDeTaiDatas, { id: null, ten: value }]);
+                                                form.setFieldsValue({
+                                                    donViChuTriId: value,
+                                                });
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {donViChuTriDatas.map((item, index) => (
+                                        <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
+                                            {item.ten}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="chuNhiem"
+                                label="Chủ nhiệm"
+                                rules={[{ required: true, message: 'Vui lòng chọn chủ nhiệm!' }]}
                             >
-                                {donViChuTriDatas.map((item, index) => (
-                                    <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
-                                        {item.ten}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="chuNhiem"
-                            label="Chủ nhiệm"
-                            rules={[{ required: true, message: 'Vui lòng chọn chủ nhiệm!' }]}
-                        >
-                            <Select
-                                showSearch
-                                placeholder="Chọn chủ nhiệm"
-                                allowClear
-                                filterOption={(input, option) =>
-                                    option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                }
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn chủ nhiệm"
+                                    allowClear
+                                    filterOption={(input, option) =>
+                                        option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
+                                    }
+                                >
+                                    {tacGiaJsons.map((item, index) => (
+                                        <Select.Option
+                                            key={index}
+                                            value={JSON.stringify(item)}
+                                            style={{ color: item.id ? 'blue' : 'black' }}
+                                        >
+                                            {item.ten}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="canBoThamGias"
+                                label="Cán bộ tham gia"
+                                rules={[{ required: true, message: 'Vui lòng chọn cán bộ tham gia!' }]}
                             >
-                                {tacGiaJsons.map((item, index) => (
-                                    <Select.Option
-                                        key={index}
-                                        value={JSON.stringify(item)}
-                                        style={{ color: item.id ? 'blue' : 'black' }}
-                                    >
-                                        {item.ten}
-                                    </Select.Option>
-                                ))}
-                            </Select>
+                                <Select
+                                    mode="multiple"
+                                    showSearch
+                                    placeholder="Chọn cán bộ tham gia"
+                                    allowClear
+                                    filterOption={(input, option) =>
+                                        option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
+                                    }
+                                >
+                                    {tacGiaJsons.map((item, index) => (
+                                        <Select.Option
+                                            key={index}
+                                            value={JSON.stringify(item)}
+                                            style={{ color: item.id ? 'blue' : 'black' }}
+                                        >
+                                            {item.ten}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row justify="center">
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" loading={isDeTaiLoading}>
+                                {id !== undefined && !isNaN(id) ? 'Cập nhật' : 'Ghi lại'}
+                            </Button>
+                            <Button style={{ marginLeft: '8px' }} onClick={() => navigate('/de-tai')}>
+                                Quay lại
+                            </Button>
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="canBoThamGias"
-                            label="Cán bộ tham gia"
-                            rules={[{ required: true, message: 'Vui lòng chọn cán bộ tham gia!' }]}
-                        >
-                            <Select
-                                mode="multiple"
-                                showSearch
-                                placeholder="Chọn cán bộ tham gia"
-                                allowClear
-                                filterOption={(input, option) =>
-                                    option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                }
-                            >
-                                {tacGiaJsons.map((item, index) => (
-                                    <Select.Option
-                                        key={index}
-                                        value={JSON.stringify(item)}
-                                        style={{ color: item.id ? 'blue' : 'black' }}
-                                    >
-                                        {item.ten}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row justify="center">
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={isDeTaiLoading}>
-                            {id !== undefined && !isNaN(id) ? 'Cập nhật' : 'Ghi lại'}
-                        </Button>
-                        <Button style={{ marginLeft: '8px' }} onClick={() => navigate('/de-tai')}>
-                            Quay lại
-                        </Button>
-                    </Form.Item>
-                </Row>
-            </Form>
+                    </Row>
+                </Form>
+            )}            
         </>
     );
 };
