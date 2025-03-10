@@ -1,5 +1,4 @@
 ﻿import React from "react";
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import { Layout, Menu, MenuProps, theme } from "antd";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";

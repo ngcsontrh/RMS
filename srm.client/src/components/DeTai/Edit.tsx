@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
-import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select, Breadcrumb, Skeleton } from 'antd';
+import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select, Breadcrumb } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Error, Loading } from '../commons';
 import { useQuery } from '@tanstack/react-query';
