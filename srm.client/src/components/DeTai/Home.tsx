@@ -68,7 +68,7 @@ export default () => {
         ? data.data.map((item, index) => ({
             ...item,
             key: item.id!.toString(),
-            stt: (searchParams.pageIndex! * searchParams.pageSize! + index + 1),
+            stt: (searchParams.pageIndex! - 1) * searchParams.pageSize! + index,
         }))
         : [];
 

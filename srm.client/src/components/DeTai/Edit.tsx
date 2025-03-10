@@ -1,11 +1,12 @@
 ﻿import { useState, useEffect } from 'react';
-import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select } from 'antd';
-import { data, useNavigate, useParams } from 'react-router-dom';
+import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select, Breadcrumb } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { CapDeTaiData, DeTaiData } from '../../models/data';
 import { TacGiaJson } from '../../models/json';
 import { createDeTai, editDeTai, getDetai } from '../../services/DeTaiService';
 import { getCapDeTais } from '../../services/CapDeTaiService';
+import { getDonViChuTris } from '../../services/DonViChuTriService';
 import { getTacGiaDropDownData } from '../../services/TacGiaService';
 import dayjs from 'dayjs';
 
@@ -18,6 +19,7 @@ export default () => {
     const id = idString ? Number(idString) : undefined;
     const navigate = useNavigate();
     const [capDeTaiDatas, setCapDeTaiDatas] = useState<CapDeTaiData[]>([]);
+    const [donViChuTriDatas, setDonViChuTriDatas] = useState<CapDeTaiData[]>([]);
     const [tacGiaJsons, setTacGiaJsons] = useState<TacGiaJson[]>([]);
 
     // Fetch danh sách tác giả
@@ -42,28 +44,39 @@ export default () => {
         enabled: id !== undefined && !isNaN(id),
     });
 
-    useEffect(() => { 
+    useEffect(() => {
         if (deTaiData) {
             let updatedTacGiaJsons = [...tacGiaJsons];
             const chuNhiem = deTaiData.chuNhiem;
+            const canBoThamGias = deTaiData.canBoThamGias || [];
 
-            // Kiểm tra xem chuNhiem có tồn tại trong tacGiaJsons không
+            // Xử lý chuNhiem
             if (chuNhiem) {
                 const exists = tacGiaJsons.some(
-                    (item) =>
-                        item.id === chuNhiem.id && item.ten === chuNhiem.ten
+                    (item) => item.id === chuNhiem.id && item.ten === chuNhiem.ten
                 );
-                console.log(chuNhiem);
                 if (!exists) {
-                    updatedTacGiaJsons = [...tacGiaJsons, chuNhiem];
-                    setTacGiaJsons(updatedTacGiaJsons); // Thêm nếu không tồn tại
+                    updatedTacGiaJsons = [...updatedTacGiaJsons, chuNhiem];
                 }
             }
 
-            // Set giá trị form với chuNhiem đã JSON hóa
+            // Xử lý canBoThamGias
+            canBoThamGias.forEach((canBo) => {
+                const exists = updatedTacGiaJsons.some(
+                    (item) => item.id === canBo.id && item.ten === canBo.ten
+                );
+                if (!exists) {
+                    updatedTacGiaJsons = [...updatedTacGiaJsons, canBo];
+                }
+            });
+
+            setTacGiaJsons(updatedTacGiaJsons);
+
+            // Set giá trị form
             form.setFieldsValue({
                 ...deTaiData,
                 chuNhiem: chuNhiem ? JSON.stringify(chuNhiem) : null,
+                canBoThamGias: canBoThamGias.map((item) => JSON.stringify(item)), // Chuyển thành danh sách chuỗi JSON
                 ngayBatDau: deTaiData.ngayBatDau ? dayjs.utc(deTaiData.ngayBatDau).tz("Asia/Ho_Chi_Minh") : null,
                 ngayKetThuc: deTaiData.ngayKetThuc ? dayjs.utc(deTaiData.ngayKetThuc).tz("Asia/Ho_Chi_Minh") : null,
             });
@@ -80,7 +93,19 @@ export default () => {
         if (capDeTaiPage && capDeTaiPage.data) {
             setCapDeTaiDatas(capDeTaiPage.data);
         }
-    }, [capDeTaiPage]);    
+    }, [capDeTaiPage]);
+
+    // Fetch danh sách cấp đề tài
+    const { data: donViChuTriPage } = useQuery({
+        queryKey: ['capDeTais'],
+        queryFn: () => getDonViChuTris({ pageIndex: 1, pageSize: 1000 }),
+    });
+
+    useEffect(() => {
+        if (donViChuTriPage && donViChuTriPage.data) {
+            setDonViChuTriDatas(donViChuTriPage.data);
+        }
+    }, [donViChuTriPage]);
 
     // Xử lý submit form
     const onFinish = async (values: any) => {
@@ -96,11 +121,12 @@ export default () => {
                 kinhPhiHangNam: values.kinhPhiHangNam,
                 hoSoNghiemThu: values.hoSoNghiemThu,
                 hoSoSanPham: values.hoSoSanPham,
-                donViChuTriId: values.donViChuTriId,
-                tenDonViChuTri: values.tenDonViChuTri,
+                donViChuTriId: typeof values.donViChuTriId === 'number' ? values.donViChuTriId : null,
+                tenDonViChuTri: typeof values.donViChuTriId === 'string' ? values.donViChuTriId : null,
                 capDeTaiId: typeof values.capDeTaiId === 'number' ? values.capDeTaiId : null,
                 tenCapDeTai: typeof values.capDeTaiId === 'string' ? values.capDeTaiId : null,
                 chuNhiem: values.chuNhiem != null ? JSON.parse(values.chuNhiem) : null,
+                canBoThamGias: values.canBoThamGias ? values.canBoThamGias.map((item: string) => JSON.parse(item)) : [],
                 phanChiaSuDongGop: values.phanChiaSuDongGop,
             };
 
@@ -118,11 +144,15 @@ export default () => {
     };
 
     return (
-        <div>
+        <>
             {contextHolder}
             {(isDeTaiLoading) && <div>Đang tải dữ liệu...</div>}
             {(deTaiError) && <div>Lỗi khi tải dữ liệu</div>}
-            <Form layout="vertical" form={form} onFinish={onFinish}>
+            <Breadcrumb
+                style={{ marginTop: "10px" }}
+                items={[{ title: "Đề tài" }, { title: id !== undefined && !isNaN(id) ? "Cập nhật" : "Ghi lại" }]}
+            />
+            <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: "10px" }} >
                 <Row gutter={15}>                    
                     <Col span={12}>
                         <Form.Item name="ten" label="Tên đề tài" rules={[{ required: true, message: 'Vui lòng nhập tên đề tài!' }]}>
@@ -135,17 +165,17 @@ export default () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="mucTieu" label="Mục tiêu">
+                        <Form.Item name="mucTieu" label="Mục tiêu" rules={[{ required: true, message: 'Vui lòng nhập mục tiêu!' }]}>
                             <TextArea placeholder="Nhập mục tiêu" rows={3} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="noiDung" label="Nội dung">
+                        <Form.Item name="noiDung" label="Nội dung chính" rules={[{ required: true, message: 'Vui lòng nhập nội dung chính!' }]}>
                             <TextArea placeholder="Nhập nội dung" rows={3} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="capDeTaiId" label="Cấp đề tài">
+                        <Form.Item name="capDeTaiId" label="Cấp đề tài" rules={[{ required: true, message: 'Vui lòng chọn cấp đề tài!' }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hoặc nhập cấp đề tài"
@@ -164,7 +194,7 @@ export default () => {
                                             });
                                         }
                                     }
-                                }}
+                                }}                                
                             >
                                 {capDeTaiDatas.map((item, index) => (
                                     <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
@@ -175,7 +205,7 @@ export default () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="tongKinhPhi" label="Tổng kinh phí">
+                        <Form.Item name="tongKinhPhi" label="Tổng kinh phí" rules={[{ required: true, message: 'Vui lòng nhập tổng kinh phí!' }]}>
                             <InputNumber placeholder="Nhập tổng kinh phí" style={{ width: '100%' }} min={0} />
                         </Form.Item>
                     </Col>
@@ -185,12 +215,12 @@ export default () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="ngayBatDau" label="Thời gian bắt đầu">
+                        <Form.Item name="ngayBatDau" label="Thời gian bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}>
                             <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Thời gian bắt đầu" />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="ngayKetThuc" label="Thời gian kết thúc">
+                        <Form.Item name="ngayKetThuc" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}>
                             <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Thời gian kết thúc" />
                         </Form.Item>
                     </Col>
@@ -205,13 +235,33 @@ export default () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="donViChuTriId" label="ID đơn vị chủ trì">
-                            <InputNumber placeholder="Nhập ID đơn vị chủ trì" style={{ width: '100%' }} min={0} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item name="tenDonViChuTri" label="Tên đơn vị chủ trì">
-                            <Input placeholder="Nhập tên đơn vị chủ trì" />
+                        <Form.Item name="donViChuTriId" label="Đơn vị chủ tri" rules={[{ required: true, message: 'Vui lòng chọn đơn vị chủ trì!' }]}>
+                            <Select
+                                showSearch
+                                placeholder="Chọn hoặc nhập đơn vị chủ trì"
+                                allowClear
+                                filterOption={(input, option) =>
+                                    option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        const target = e.target as HTMLInputElement
+                                        const value = target.value;
+                                        if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
+                                            setDonViChuTriDatas([...capDeTaiDatas, { id: null, ten: value }]);
+                                            form.setFieldsValue({
+                                                donViChuTriId: value,
+                                            });
+                                        }
+                                    }
+                                }}
+                            >
+                                {donViChuTriDatas.map((item, index) => (
+                                    <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
+                                        {item.ten}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -253,6 +303,43 @@ export default () => {
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="canBoThamGias"
+                            label="Cán bộ tham gia"
+                            rules={[{ required: true, message: 'Vui lòng chọn hoặc nhập cán bộ tham gia' }]}
+                        >
+                            <Select
+                                mode="multiple"
+                                showSearch
+                                placeholder="Chọn hoặc nhập cán bộ tham gia"
+                                allowClear
+                                filterOption={(input, option) =>
+                                    option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        const target = e.target as HTMLInputElement;
+                                        const value = target.value.trim();
+                                        if (value && !tacGiaJsons.some((item) => item.ten === value)) {
+                                            const newTacGia = { id: null, ten: value };
+                                            setTacGiaJsons([...tacGiaJsons, newTacGia]);
+                                            target.value = ''; // Xóa nội dung text sau khi thêm
+                                        }
+                                    }
+                                }}
+                                onChange={(value) => {
+                                    form.setFieldsValue({ canBoThamGias: value });
+                                }}
+                            >
+                                {tacGiaJsons.map((item, index) => (
+                                    <Select.Option key={index} value={JSON.stringify(item)} style={{ color: item.id ? 'blue' : 'black' }}>
+                                        {item.ten}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
                 </Row>
                 <Row justify="center">
                     <Form.Item>
@@ -265,6 +352,6 @@ export default () => {
                     </Form.Item>
                 </Row>
             </Form>
-        </div>
+        </>
     );
 };
