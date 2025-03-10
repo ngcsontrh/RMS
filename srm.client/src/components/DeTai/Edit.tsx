@@ -268,36 +268,23 @@ export default () => {
                         <Form.Item
                             name="chuNhiem"
                             label="Chủ nhiệm"
-                            rules={[{ required: true, message: 'Vui lòng chọn hoặc nhập chủ nhiệm' }]}
+                            rules={[{ required: true, message: 'Vui lòng chọn chủ nhiệm!' }]}
                         >
                             <Select
                                 showSearch
-                                placeholder="Chọn hoặc nhập chủ nhiệm"
+                                placeholder="Chọn chủ nhiệm"
                                 allowClear
                                 filterOption={(input, option) =>
                                     option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
                                 }
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        const target = e.target as HTMLInputElement;
-                                        const value = target.value.trim();
-                                        if (value && !tacGiaJsons.some((item) => item.ten === value)) {
-                                            const newTacGia = { id: null, ten: value };
-                                            const jsonTacGia = JSON.stringify(newTacGia); // JSON hóa ngay
-                                            setTacGiaJsons([...tacGiaJsons, newTacGia]);
-                                            form.setFieldsValue({ chuNhiem: jsonTacGia }); // Gán chuỗi JSON
-                                            console.log(jsonTacGia);
-                                        }
-                                    }
-                                }}
                             >
                                 {tacGiaJsons.map((item, index) => (
                                     <Select.Option
                                         key={index}
-                                        value={JSON.stringify(item)} // Giá trị là chuỗi JSON
+                                        value={JSON.stringify(item)}
                                         style={{ color: item.id ? 'blue' : 'black' }}
                                     >
-                                        {item.ten} {/* Hiển thị tên */}
+                                        {item.ten}
                                     </Select.Option>
                                 ))}
                             </Select>
@@ -307,33 +294,23 @@ export default () => {
                         <Form.Item
                             name="canBoThamGias"
                             label="Cán bộ tham gia"
-                            rules={[{ required: true, message: 'Vui lòng chọn hoặc nhập cán bộ tham gia' }]}
+                            rules={[{ required: true, message: 'Vui lòng chọn cán bộ tham gia!' }]}
                         >
                             <Select
                                 mode="multiple"
                                 showSearch
-                                placeholder="Chọn hoặc nhập cán bộ tham gia"
+                                placeholder="Chọn cán bộ tham gia"
                                 allowClear
                                 filterOption={(input, option) =>
                                     option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
                                 }
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        const target = e.target as HTMLInputElement;
-                                        const value = target.value.trim();
-                                        if (value && !tacGiaJsons.some((item) => item.ten === value)) {
-                                            const newTacGia = { id: null, ten: value };
-                                            setTacGiaJsons([...tacGiaJsons, newTacGia]);
-                                            target.value = ''; // Xóa nội dung text sau khi thêm
-                                        }
-                                    }
-                                }}
-                                onChange={(value) => {
-                                    form.setFieldsValue({ canBoThamGias: value });
-                                }}
                             >
                                 {tacGiaJsons.map((item, index) => (
-                                    <Select.Option key={index} value={JSON.stringify(item)} style={{ color: item.id ? 'blue' : 'black' }}>
+                                    <Select.Option
+                                        key={index}
+                                        value={JSON.stringify(item)}
+                                        style={{ color: item.id ? 'blue' : 'black' }}
+                                    >
                                         {item.ten}
                                     </Select.Option>
                                 ))}

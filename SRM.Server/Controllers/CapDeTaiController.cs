@@ -46,7 +46,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IResult> AddAsync([FromForm] CapDeTaiData model)
+        public async Task<IResult> AddAsync([FromBody] CapDeTaiData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
@@ -62,7 +62,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IResult> UpdateAsync(int id, [FromForm] CapDeTaiData model)
+        public async Task<IResult> UpdateAsync(int id, [FromBody] CapDeTaiData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
