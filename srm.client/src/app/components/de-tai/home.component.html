@@ -1,0 +1,47 @@
+<div>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <span>Đề tài</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <span>Danh sách</span>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <button nz-button nzType="primary" routerLink="/de-tai/tao-moi" style="margin-top: 10px;">
+    Tạo mới
+  </button>
+
+  <nz-table #basicTable [nzData]="dataSource" [nzLoading]="isLoading" [nzPagination]="false" style="margin-top: 10px;">
+    <thead>
+      <tr>
+        <th style="text-align: center;">STT</th>
+        <th style="text-align: center;">Thông tin đề tài</th>
+        <th style="text-align: center;">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of basicTable.data">
+        <td style="text-align: center;">{{ item.stt + 1 }}</td>
+        <td>
+          <h2>{{ item.ten }} - {{ item.maSo }}</h2>
+          <ul style="list-style-type: none;">
+            <li><i class="fa fa-bookmark"></i> {{ item.mucTieu }}</li>
+            <li><i class="fa fa-user"></i> {{ item.chuNhiem?.ten }}</li>
+          </ul>
+        </td>
+        <td style="text-align: center;">
+          <a [routerLink]="['/de-tai', item.id]">Chi tiết</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <app-pagination
+    [current]="searchParams.pageIndex"
+    [pageSize]="searchParams.pageSize"
+    [total]="totalItems"
+    (pageIndexChange)="handlePaginationChange($event, searchParams.pageSize)"
+    (pageSizeChange)="handlePaginationChange(searchParams.pageIndex, $event)"
+  ></app-pagination>
+</div>

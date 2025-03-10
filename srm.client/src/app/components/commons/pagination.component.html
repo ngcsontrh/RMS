@@ -1,0 +1,9 @@
+<nz-pagination
+  [nzPageIndex]="current"
+  [nzPageSize]="pageSize"
+  [nzTotal]="total"
+  [nzShowSizeChanger]="true"
+  [nzPageSizeOptions]="[5, 10, 20, 50]"
+  (nzPageIndexChange)="onChange($event, pageSize)"
+  (nzPageSizeChange)="onChange(current, $event)"
+></nz-pagination>

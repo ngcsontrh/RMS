@@ -1,0 +1,62 @@
+<div>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <span>Danh mục</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <span>Cấp đề tài</span>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div style="margin-top: 10px;">
+    <nz-row [nzGutter]="15">
+      <nz-col [nzSpan]="12">
+        <nz-table #basicTable [nzData]="dataSource" [nzLoading]="isLoading" (nzCurrentPageDataChange)="onCurrentPageDataChange($event)">
+          <thead>
+            <tr>
+              <th nzWidth="5%">STT</th>
+              <th>Tên cấp đề tài</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of basicTable.data">
+              <td>{{ data.stt + 1 }}</td>
+              <td>{{ data.ten }}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+        <app-pagination
+          [current]="searchParams.pageIndex"
+          [pageSize]="searchParams.pageSize"
+          [total]="totalItems"
+          (pageIndexChange)="handlePaginationChange($event)"
+          (pageSizeChange)="handlePaginationChange(searchParams.pageIndex, $event)"
+        ></app-pagination>
+      </nz-col>
+      <nz-col [nzSpan]="12">
+        <nz-row [nzGutter]="10">
+          <nz-col>
+            <button nz-button nzType="primary" (click)="handleCreateNew()">Thêm mới</button>
+          </nz-col>
+          <nz-col>
+            <button *ngIf="isEditing" nz-button nzType="primary" nzDanger (click)="handleCancelEdit()">Hủy</button>
+            <button *ngIf="!isEditing" nz-button nzType="primary" (click)="handleEdit()">Chỉnh sửa</button>
+          </nz-col>
+        </nz-row>
+        <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()" style="margin-top: 10px;">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true" nzFor="ten">Tên đề tài</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="ten" placeholder="Nhập tên đề tài" [disabled]="!isEditing" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
+              <button *ngIf="isEditing" nz-button nzType="primary" [disabled]="!form.valid">Ghi lại</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </nz-col>
+    </nz-row>
+  </div>
+</div>
