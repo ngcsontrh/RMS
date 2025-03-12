@@ -18,7 +18,8 @@ const PersonalInfoForm: React.FC = () => {
                 form.setFieldsValue(response.data);
             })
             .catch(error => {
-                message.error("Lỗi khi tải dữ liệu cá nhân", error);
+                message.error("Lỗi khi tải dữ liệu cá nhân");
+                setTimeout(() => message.destroy(), 3000);
             });
     }, []);
 
