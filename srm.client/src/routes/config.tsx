@@ -4,6 +4,7 @@ import { DanhMucHome } from '../components/DanhMuc';
 import LienHe from "../components/LienHe/LienHe"
 import QuyChe from "../components/QuyChe/QuyChe";
 import HuongDanSuDung from '../components/HuongDanSuDung/HuongDanSuDung';
+import { ThongTinCaNhanHome } from '../components/ThongTinCaNhan';
 
 const AppRoutes: React.FC = () => {
     return (
