@@ -13,8 +13,8 @@ interface DataType extends DonViChuTriData {
 
 const columns: TableProps<DataType>['columns'] = [
     {
-        title: <div style={{ textAlign: 'center' }}>STT</div>,
         dataIndex: 'stt',
+        title: <div style={{ textAlign: 'center' }}>STT</div>,
         key: 'stt',
         width: '5%',
         render: (_, record) => (
