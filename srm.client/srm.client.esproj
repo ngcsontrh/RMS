@@ -13,7 +13,6 @@
     <Folder Include="src\components\CongBo\" />
     <Folder Include="src\components\HoatDong\" />
     <Folder Include="src\components\commons\" />
-    <Folder Include="src\components\DanhMuc\" />
     <Folder Include="src\components\TrangChu\" />
     <Folder Include="src\models\json\" />
   </ItemGroup>
