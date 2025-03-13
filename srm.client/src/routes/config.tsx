@@ -5,6 +5,7 @@ import LienHe from "../components/LienHe/LienHe"
 import QuyChe from "../components/QuyChe/QuyChe";
 import HuongDanSuDung from '../components/HuongDanSuDung/HuongDanSuDung';
 import { ThongTinCaNhanHome } from '../components/ThongTinCaNhan';
+import {DangNhap} from "../components/DangNhap";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -20,6 +21,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/quy-che" element={<QuyChe />} />
             <Route path="/huong-dan-su-dung" element={<HuongDanSuDung />} />
             <Route path="/thong-tin-ca-nhan" element={<ThongTinCaNhanHome />} />
+            <Route path="/dang-nhap" element={<DangNhap />} />
         </Routes>
     )
 }

@@ -1,10 +1,10 @@
 ﻿import React from "react";
-import { Layout, Menu, MenuProps, theme } from "antd";
+import {Button, Layout, Menu, MenuProps, theme} from "antd";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { AppRoutes } from './routes';
-import { useNavigate } from "react-router-dom";
+import {AppRoutes} from './routes';
+import {useNavigate, useLocation} from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -24,6 +24,10 @@ const App: React.FC = () => {
     } = theme.useToken();
 
     const navigate = useNavigate();
+    const location = useLocation(); // Lấy đường dẫn hiện tại
+
+    // Kiểm tra nếu đang ở trang đăng nhập
+    const isLoginPage = location.pathname === "/dang-nhap";
     const items: MenuItem[] = [
         {
             key: '1',
@@ -120,37 +124,49 @@ const App: React.FC = () => {
     ];
 
     return (
-        <Layout>
-            <Sider
-                breakpoint="lg"
-                collapsedWidth="0"                
-            >
-                <div style={{
-                    height: 32,
-                    margin: 16,
-                    background: "rgba(255, 255, 255, .2)",
-                    borderRadius: 6
-                } } />
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]} items={items} />
-            </Sider>
-            <Layout style={{ minHeight: "100vh" }}>
-                <Header style={{ padding: 0, background: colorBgContainer }} />
-                <Content style={{ margin: "15px 10px 0" }}>
-                    <div
-                        style={{
-                            padding: 12,                            
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
-                        <AppRoutes />
-                    </div>
-                </Content>
-                <Footer style={{ textAlign: "center" }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
-                </Footer>
+        isLoginPage ?(
+            <AppRoutes />
+        ) :(
+            <Layout>
+                <Sider
+                    breakpoint="lg"
+                    collapsedWidth="0"
+                >
+                    <div style={{
+                        height: 32,
+                        margin: 16,
+                        background: "rgba(255, 255, 255, .2)",
+                        borderRadius: 6
+                    } }/>
+                    <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]} items={items} />
+                </Sider>
+                <Layout style={{ minHeight: "100vh" }}>
+                    <Header style={{ padding: 0, background: colorBgContainer }}>
+                        <Button type="primary"
+                                htmlType="submit"
+                                style={{ marginRight: 20, marginTop: 10, float: "right" }}
+                                onClick={() => navigate('/dang-nhap')}>
+                            Đăng nhập
+                        </Button>
+                    </Header>
+
+                    <Content style={{ margin: "15px 10px 0" }}>
+                        <div
+                            style={{
+                                padding: 12,
+                                background: colorBgContainer,
+                                borderRadius: borderRadiusLG,
+                            }}
+                        >
+                            <AppRoutes />
+                        </div>
+                    </Content>
+                    <Footer style={{ textAlign: "center" }}>
+                        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    </Footer>
+                </Layout>
             </Layout>
-        </Layout>
+        )
     );
 };
 

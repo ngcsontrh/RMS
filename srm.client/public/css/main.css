@@ -26,6 +26,19 @@
 }
 
 
+/*//////////////////////////////////////////////////////////////////
+[ RESTYLE LOGO ]*/
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 200px; /* Giảm kích thước */
+  height: auto;
+}
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -141,14 +154,14 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {
-  font-family: Poppins-Regular;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   color: #666666;
   line-height: 1.5;
 }
 
 .txt2 {
-  font-family: Poppins-Regular;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   color: #333333;
   line-height: 1.5;
