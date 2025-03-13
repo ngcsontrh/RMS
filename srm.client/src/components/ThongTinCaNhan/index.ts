@@ -1,0 +1,1 @@
+﻿export { default as ThongTinCaNhanHome } from './Home';

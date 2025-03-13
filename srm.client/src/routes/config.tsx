@@ -18,6 +18,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/lien-he" element={<LienHe />} />
             <Route path="/quy-che" element={<QuyChe />} />
             <Route path="/huong-dan-su-dung" element={<HuongDanSuDung />} />
+            <Route path="/thong-tin-ca-nhan" element={<ThongTinCaNhanHome />} />
         </Routes>
     )
 }
