@@ -8,3 +8,4 @@ export type { LoginData } from './LoginData';
 export type { PageData } from './PageData';
 export type { TacGiaData } from './TacGiaData';
 export type { ThanhQuaData } from './ThanhQuaData';
+export type { NoiDangBaoData } from './NoiDangBaoData';

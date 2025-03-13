@@ -44,7 +44,7 @@ namespace SRM.Server.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IResult> AddAsync([FromForm] DonViChuTriData model)
+		public async Task<IResult> AddAsync([FromBody] DonViChuTriData model)
 		{
 			var validateResult = await _donViChuTriDataValidator.ValidateAsync(model);
 			if (!validateResult.IsValid)
@@ -60,7 +60,7 @@ namespace SRM.Server.Controllers
 		}
 
 		[HttpPut("{id:int}")]
-		public async Task<IResult> UpdateAsync(int id, [FromForm] DonViChuTriData model)
+		public async Task<IResult> UpdateAsync(int id, [FromBody] DonViChuTriData model)
 		{
 			var validateResult = await _donViChuTriDataValidator.ValidateAsync(model);
 			if (!validateResult.IsValid)
