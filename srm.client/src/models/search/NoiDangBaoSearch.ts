@@ -3,3 +3,4 @@ export interface NoiDangBaoSearch {
     pageSize?: number;
     ten?: string | null;
 }
+

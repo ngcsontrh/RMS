@@ -43,7 +43,12 @@ namespace SRM.Business.Services
             }
         }
 
-        public async Task<DonViChuTriData?> GetAsync(int id)
+		public Task DeleteAsync(int id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task<DonViChuTriData?> GetAsync(int id)
         {
             try
             {

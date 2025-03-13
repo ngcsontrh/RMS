@@ -13,5 +13,6 @@ namespace SRM.Business.IServices
         Task UpdateAsync(DonViChuTriData model);
         Task<DonViChuTriData?> GetAsync(int id);
         Task<PageData<DonViChuTriData>> GetPageAsync(int pageIndex = 1, int pageSize = 10);
-    }
+		Task DeleteAsync(int id);
+	}
 }

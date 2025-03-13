@@ -1,7 +1,7 @@
 ﻿import { AxiosError } from "axios";
 import api from "./api";
 import type { NoiDangBaoData, PageData } from "../models/data";
-import type { NoiDangBaoSearch } from "../models/search";
+import type { NoiDangBaoSearch } from "../models/search/NoiDangBaoSearch";
 
 const endpoint = "/api/noi-dang-bao";
 
