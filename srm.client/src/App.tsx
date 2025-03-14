@@ -121,7 +121,16 @@ const App: React.FC = () => {
             key: '13',
             label: 'Đơn vị chủ trì',
             onClick: () => navigate('/don-vi-chu-tri')
-
+        },
+        {
+            key: '14',
+            label: 'Nơi đăng báo',
+            onClick: () => navigate('/noi-dang-bao')
+        },
+        {
+            key: '15',
+            label: 'Thành quả',
+            onClick: () => navigate('/thanh-qua')
         }
     ];
 

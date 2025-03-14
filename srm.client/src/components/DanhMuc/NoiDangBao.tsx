@@ -1,20 +1,21 @@
 ﻿import { Button, Form, Input, Row, Col, Breadcrumb, TableProps, Table, message, Popconfirm } from 'antd';
-import { DonViChuTriData } from '../../models/data';
+import { NoiDangBaoData } from '../../models/data';
 import { useState } from 'react';
-import { DonViChuTriSearch } from '../../models/search';
+import { NoiDangBaoSearch } from '../../models/search/NoiDangBaoSearch';
 import { useQuery } from '@tanstack/react-query';
-import { getDonViChuTris, editDonViChuTri, createDonViChuTri } from '../../services/DonViChuTriService';
+import { getNoiDangBaos, editNoiDangBao, createNoiDangBao } from '../../services/NoiDangBaoService';
 import { Pagination } from '../commons';
 
-interface DataType extends DonViChuTriData {
+
+interface DataType extends NoiDangBaoData {
     key: string;
     stt: number;
 }
 
 const columns: TableProps<DataType>['columns'] = [
     {
-        dataIndex: 'stt',
         title: <div style={{ textAlign: 'center' }}>STT</div>,
+        dataIndex: 'stt',
         key: 'stt',
         width: '5%',
         render: (_, record) => (
@@ -22,35 +23,35 @@ const columns: TableProps<DataType>['columns'] = [
         ),
     },
     {
-        title: <div style={{ textAlign: 'center' }}>Tên đơn vị chủ trì</div>,
+        title: <div style={{ textAlign: 'center' }}>Tên nơi đăng báo</div>,
         key: 'ten',
         dataIndex: 'ten',
     },
 ];
 
-const DonViChuTri: React.FC = () => {
+const NoiDangBao: React.FC = () => {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
-    const [searchParams, setSearchParams] = useState<DonViChuTriSearch>({
+    const [searchParams, setSearchParams] = useState<NoiDangBaoSearch>({
         pageIndex: 1,
         pageSize: 10,
         ten: null,
     });
-    const [editData, setEditData] = useState<DonViChuTriData | null>(null);
+    const [editData, setEditData] = useState<NoiDangBaoData | null>(null);
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    const { data: donViChuTriDatas, isLoading, error, refetch } = useQuery({
-        queryKey: ['donViChuTriData', searchParams],
-        queryFn: () => getDonViChuTris(searchParams),
+    const { data: noiDangBaoDatas, isLoading, error, refetch } = useQuery({
+        queryKey: ['noiDangBaoData', searchParams],
+        queryFn: () => getNoiDangBaos(searchParams),
     });
 
-    const dataSource: DataType[] = donViChuTriDatas?.data?.map((item, index) => ({
+    const dataSource: DataType[] = noiDangBaoDatas?.data?.map((item, index) => ({
         ...item,
         key: item.id!.toString(),
         stt: (searchParams.pageIndex! - 1) * searchParams.pageSize! + index,
     })) || [];
 
-    const totalItems = donViChuTriDatas?.total ?? dataSource.length;
+    const totalItems = noiDangBaoDatas?.total ?? dataSource.length;
 
     const handlePaginationChange = (pageIndex: number, pageSize: number) => {
         setSearchParams(prev => ({ ...prev, pageIndex, pageSize }));
@@ -87,10 +88,10 @@ const DonViChuTri: React.FC = () => {
     const onFinish = async (values: any) => {
         try {
             if (editData?.id) {
-                await editDonViChuTri(editData.id, { ...editData, ten: values.ten });                
+                await editNoiDangBao(editData.id, { ...editData, ten: values.ten });
                 messageApi.success('Cập nhật thành công');
             } else {
-                await createDonViChuTri({ ten: values.ten });
+                await createNoiDangBao({ ten: values.ten });
                 messageApi.success('Tạo mới thành công');
             }
             form.resetFields();
@@ -103,64 +104,67 @@ const DonViChuTri: React.FC = () => {
         }
     };
 
-    if (error) return <div>{(error as Error).message}</div>;
+    if (error) return <div>{(error as Error).message
+    }</div>;
 
     return (
         <>
             {contextHolder}
-            <Breadcrumb style={{ marginTop: '10px' }} items={[{ title: 'Danh mục' }, { title: 'Đơn vị chủ trì' }]} />            
+            < Breadcrumb style={{ marginTop: '10px' }} items={[{ title: 'Danh mục' }, { title: 'Nơi đăng báo' }]} />
             <Row gutter={15} style={{ marginTop: '10px' }}>
                 <Col span={12}>
                     <Table<DataType>
                         columns={columns}
                         dataSource={dataSource}
                         pagination={false}
-                        loading={isLoading}                        
+                        loading={isLoading}
                         rowClassName={() => 'cursor-pointer'}
                         onRow={(record) => ({
                             onClick: () => handleRowClick(record),
                         })}
                     />
-                    <Pagination
+                    < Pagination
                         current={searchParams.pageIndex!}
                         pageSize={searchParams.pageSize!}
                         total={totalItems}
                         onChange={handlePaginationChange}
                     />
                 </Col>
-                <Col span={12}>
+                < Col span={12} >
                     <Row gutter={10}>
                         <Col>
-                            <Button type="primary" onClick={handleCreateNew}>Thêm mới</Button>
+                            <Button type="primary" onClick={handleCreateNew} > Thêm mới </Button>
                         </Col>
                         <Col>
-                            {isEditing ? (
-                                <Popconfirm
-                                    title="Xác nhận"
-                                    description="Dữ liệu sẽ không được lưu lại"
-                                    onConfirm={handleCancelEdit}
-                                    okText="Đồng ý"
-                                    cancelText="Hủy"
+                            {
+                                isEditing ? (
+                                    <Popconfirm
+                                        title="Xác nhận"
+                                        description="Dữ liệu sẽ không được lưu lại"
+                                        onConfirm={handleCancelEdit}
+                                        okText="Đồng ý"
+                                        cancelText="Hủy"
                                     >
-                                    <Button type="primary" danger>Hủy</Button>
-                                </Popconfirm>                                
-                            ) : (
-                                <Button type="primary" onClick={handleEdit}>Chỉnh sửa</Button>
-                            )}
+                                        <Button type="primary" danger > Hủy </Button>
+                                    </Popconfirm>
+                                ) : (
+                                    <Button type="primary" onClick={handleEdit} > Chỉnh sửa </Button>
+                                )
+                            }
                         </Col>
                     </Row>
-                    <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: '10px' }} initialValues={{ ten: '' }}>
+                    < Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: '10px' }} initialValues={{ ten: '' }}>
                         <Form.Item
                             name="ten"
-                            label="Tên đơn vị chủ trì"
-                            rules={[{ required: true, message: 'Vui lòng nhập tên đơn vị chủ trì!' }]}
+                            label="Tên nơi đăng báo"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên nơi đăng báo!' }]}
                         >
-                            <Input placeholder="Nhập tên đơn vị chủ trì" disabled={!isEditing} />
+                            <Input placeholder="Nhập tên nơi đăng báo" disabled={!isEditing} />
                         </Form.Item>
-                        <Row justify="center">
+                        < Row justify="center" >
                             <Form.Item>
                                 {isEditing && (
-                                    <Button type="primary" htmlType="submit">
+                                    <Button type="primary" htmlType="submit" >
                                         Ghi lại
                                     </Button>
                                 )}
@@ -173,4 +177,4 @@ const DonViChuTri: React.FC = () => {
     );
 };
 
-export default DonViChuTri;
+export default NoiDangBao;
