@@ -12,5 +12,6 @@ namespace SRM.Data.IRepositories
     {
         Task<LoaiHoatDong?> GetByTenAsync(string ten);
         Task<(List<LoaiHoatDong>, int)> GetPageWithSearchAsync(LoaiHoatDongSearch search);
+
     }
 }

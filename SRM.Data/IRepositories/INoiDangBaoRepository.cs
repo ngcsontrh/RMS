@@ -11,5 +11,6 @@ namespace SRM.Data.IRepositories
     public interface INoiDangBaoRepository : IRepositoryBase<NoiDangBao>
     {
         Task<bool> ExistsAsync(string ten);
+        Task<List<NoiDangBao>> GetDropDownDataAsync();
     }
 }

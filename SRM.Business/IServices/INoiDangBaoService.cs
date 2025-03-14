@@ -14,5 +14,6 @@ namespace SRM.Business.IServices
         Task<bool> DeleteAsync(int id);
         Task<NoiDangBaoData?> GetAsync(int id);
         Task<PageData<NoiDangBaoData>> GetPageAsync(int pageIndex = 1, int pageSize = 10);
+        Task<List<NoiDangBaoData>> GetDropDownDataAsync();
     }
 }

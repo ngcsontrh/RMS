@@ -105,5 +105,21 @@ namespace SRM.Business.Services
                 throw;
             }
         }
+        public async Task<List<NoiDangBaoData>> GetDropDownDataAsync()
+        {
+            try
+            {
+                var entities = await _noiDangBaoRepository.GetDropDownDataAsync();
+                var result = _mapper.Map<List<NoiDangBaoData>>(entities);
+                return result;
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
+      
     }
 }

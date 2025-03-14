@@ -12,5 +12,6 @@ namespace SRM.Data.IRepositories
     public interface ICongBoRepository : IRepositoryBase<CongBo>
     {
         Task<(List<CongBo>, int)> GetPageWithSearchAsync(CongBoSearch search, int pageIndex, int pageSize);
+       
     }
 }
