@@ -2,6 +2,7 @@
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import CapDeTai from './CapDeTai';
+import LoaiHoatDong from './LoaiHoatDong';
 
 const onChange = (key: string) => {
     console.log(key);
@@ -22,6 +23,11 @@ const items: TabsProps['items'] = [
         key: '3',
         label: 'Tab 3',
         children: 'Content of Tab Pane 3',
+    },
+    {
+        key: '4',
+        label: 'Loại Hoạt Động',
+        children: <LoaiHoatDong />,
     },
 ];
 
