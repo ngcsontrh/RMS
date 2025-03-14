@@ -22,5 +22,14 @@ namespace SRM.Data.Repositories
             bool result = await _context.NoiDangBaos.Where(x => x.Ten == ten.Trim()).AnyAsync();
             return result;
         }
+        public async Task<List<NoiDangBao>> GetDropDownDataAsync()
+        {
+            var result = await _context.NoiDangBaos.Select(x => new NoiDangBao
+            {
+                Id = x.Id,
+                Ten = x.Ten,
+            }).ToListAsync();
+            return result;
+        }
     }
 }

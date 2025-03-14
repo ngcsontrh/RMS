@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\components\CapDeTai\" />
-    <Folder Include="src\components\CongBo\" />
     <Folder Include="src\components\HoatDong\" />
     <Folder Include="src\components\commons\" />
     <Folder Include="src\components\DanhMuc\" />

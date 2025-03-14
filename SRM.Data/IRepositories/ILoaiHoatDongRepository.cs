@@ -10,5 +10,6 @@ namespace SRM.Data.IRepositories
     public interface ILoaiHoatDongRepository : IRepositoryBase<LoaiHoatDong>
     {
         Task<LoaiHoatDong?> GetByTenAsync(string ten);
+       
     }
 }

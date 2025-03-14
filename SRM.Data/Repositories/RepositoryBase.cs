@@ -83,7 +83,7 @@ namespace SRM.Data.Repositories
             var result = await _context.Set<TEntity>().Where(x => ids.Contains(x.Id)).ToListAsync();
             return result;
         }
-
+       
         public virtual async Task<(List<TEntity>, int)> GetPageWithFilterAsync(IQueryable<TEntity> query, int pageIndex = 1, int pageSize = 10)
         {
             var result = await query
