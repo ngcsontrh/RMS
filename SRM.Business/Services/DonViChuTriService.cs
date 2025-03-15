@@ -29,13 +29,14 @@ namespace SRM.Business.Services
             _mapper = mapper;
         }
 
-        public async Task AddAsync(DonViChuTriData model)
+        public async Task<bool> AddAsync(DonViChuTriData model)
         {
             try
             {
                 var entity = _mapper.Map<DonViChuTri>(model);
                 await _donViChuTriRepository.AddAsync(entity);
-            }
+				return true;
+			}
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
@@ -43,9 +44,18 @@ namespace SRM.Business.Services
             }
         }
 
-		public Task DeleteAsync(int id)
+		public async Task<bool> DeleteAsync(int id)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				await _donViChuTriRepository.DeleteAsync(id);
+				return true;
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message);
+				throw;
+			}
 		}
 
 		public async Task<DonViChuTriData?> GetAsync(int id)
@@ -81,13 +91,14 @@ namespace SRM.Business.Services
             }
         }
 
-        public async Task UpdateAsync(DonViChuTriData model)
+        public async Task<bool> UpdateAsync(DonViChuTriData model)
         {
             try
             {
                 var entity = _mapper.Map<DonViChuTri>(model);
                 await _donViChuTriRepository.UpdateAsync(entity);
-            }
+				return true;
+			}
             catch (Exception e)
             {
                 _logger.LogError(e.Message);

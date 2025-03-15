@@ -3,7 +3,7 @@ import { DonViChuTriData } from '../../models/data';
 import { useState } from 'react';
 import { DonViChuTriSearch } from '../../models/search';
 import { useQuery } from '@tanstack/react-query';
-import { getDonViChuTris, editDonViChuTri, createDonViChuTri } from '../../services/DonViChuTriService';
+import { getDonViChuTris, editDonViChuTri, createDonViChuTri, deleteDonViChuTri } from '../../services/DonViChuTriService';
 import { Pagination } from '../commons';
 
 interface DataType extends DonViChuTriData {
@@ -11,25 +11,44 @@ interface DataType extends DonViChuTriData {
     stt: number;
 }
 
-const columns: TableProps<DataType>['columns'] = [
-    {
-        dataIndex: 'stt',
-        title: <div style={{ textAlign: 'center' }}>STT</div>,
-        key: 'stt',
-        width: '5%',
-        render: (_, record) => (
-            <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
-        ),
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Tên đơn vị chủ trì</div>,
-        key: 'ten',
-        dataIndex: 'ten',
-    },
-];
-
-
 const DonViChuTri: React.FC = () => {
+    const columns: TableProps<DataType>['columns'] = [
+        {
+            dataIndex: 'stt',
+            title: <div style={{ textAlign: 'center' }}>STT</div>,
+            key: 'stt',
+            width: '5%',
+            render: (_, record) => (
+                <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
+            ),
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Tên đơn vị chủ trì</div>,
+            key: 'ten',
+            dataIndex: 'ten',
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Hành động</div>,
+            key: 'action',
+            render: (_, record) => (
+                <div style={{ textAlign: 'center' }}>
+                    <Button type="primary" onClick={() => handleEdit(record)}>Chỉnh sửa</Button>
+                    <Popconfirm
+                        title="Xác nhận"
+                        description="Bạn có chắc chắn muốn xóa?"
+                        onConfirm={() => handleDelete(record.id!)}
+                        okText="Đồng ý"
+                        cancelText="Hủy"
+                    >
+                        <Button type="primary" color="danger" danger>Xóa</Button>
+                    </Popconfirm>
+                </div>
+            ),
+        },
+    ];
+
+
+
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const [searchParams, setSearchParams] = useState<DonViChuTriSearch>({
@@ -68,11 +87,9 @@ const DonViChuTri: React.FC = () => {
         setIsEditing(true);
     }
 
-    const handleEdit = () => {
-        if (!editData) {
-            messageApi.warning('Vui lòng chọn một dòng để chỉnh sửa!');
-            return;
-        }
+    const handleEdit = (record: DataType) => {
+        setEditData({ id: record.id, ten: record.ten });
+        form.setFieldsValue({ ten: record.ten });
         setIsEditing(true);
     };
 
@@ -85,10 +102,21 @@ const DonViChuTri: React.FC = () => {
         setIsEditing(false);
     };
 
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteDonViChuTri(id);
+            messageApi.success('Xóa thành công');
+            refetch();
+        } catch (err) {
+            messageApi.error('Có lỗi xảy ra');
+            console.error(err);
+        }
+    };
+
     const onFinish = async (values: any) => {
         try {
             if (editData?.id) {
-                await editDonViChuTri(editData.id, { ...editData, ten: values.ten });                
+                await editDonViChuTri(editData.id, { ...editData, ten: values.ten });
                 messageApi.success('Cập nhật thành công');
             } else {
                 await createDonViChuTri({ ten: values.ten });
@@ -109,14 +137,14 @@ const DonViChuTri: React.FC = () => {
     return (
         <>
             {contextHolder}
-            <Breadcrumb style={{ marginTop: '10px' }} items={[{ title: 'Danh mục' }, { title: 'Đơn vị chủ trì' }]} />            
+            <Breadcrumb style={{ marginTop: '10px' }} items={[{ title: 'Danh mục' }, { title: 'Đơn vị chủ trì' }]} />
             <Row gutter={15} style={{ marginTop: '10px' }}>
                 <Col span={12}>
                     <Table<DataType>
                         columns={columns}
                         dataSource={dataSource}
                         pagination={false}
-                        loading={isLoading}                        
+                        loading={isLoading}
                         rowClassName={() => 'cursor-pointer'}
                         onRow={(record) => ({
                             onClick: () => handleRowClick(record),
@@ -132,9 +160,6 @@ const DonViChuTri: React.FC = () => {
                 <Col span={12}>
                     <Row gutter={10}>
                         <Col>
-                            <Button type="primary" onClick={handleCreateNew}>Thêm mới</Button>
-                        </Col>
-                        <Col>
                             {isEditing ? (
                                 <Popconfirm
                                     title="Xác nhận"
@@ -142,11 +167,25 @@ const DonViChuTri: React.FC = () => {
                                     onConfirm={handleCancelEdit}
                                     okText="Đồng ý"
                                     cancelText="Hủy"
-                                    >
+                                >
                                     <Button type="primary" danger>Hủy</Button>
-                                </Popconfirm>                                
+                                </Popconfirm>
                             ) : (
-                                <Button type="primary" onClick={handleEdit}>Chỉnh sửa</Button>
+                                <Col>  
+                                    {isEditing ? (  
+                                        <Popconfirm  
+                                            title="Xác nhận"  
+                                            description="Dữ liệu sẽ không được lưu lại"  
+                                            onConfirm={handleCancelEdit}  
+                                            okText="Đồng ý"  
+                                            cancelText="Hủy"  
+                                        >  
+                                            <Button type="primary" danger>Hủy</Button>  
+                                        </Popconfirm>  
+                                    ) : (  
+                                        <Button type="primary" onClick={handleCreateNew}>Thêm mới</Button>  
+                                    )}  
+                                </Col>
                             )}
                         </Col>
                     </Row>

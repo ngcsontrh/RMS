@@ -49,3 +49,15 @@ export const editDonViChuTri = async (id: number, data: DonViChuTriData): Promis
         throw new Error("Xảy ra lỗi trong quá trình xử lý");
     }
 }
+
+export const deleteDonViChuTri = async (id: number): Promise<void> => {
+    try {
+        await api.delete(`${endpoint}/${id}`);
+    } catch (e) {
+        if (e instanceof AxiosError && e.response?.status == 400) {
+            const errors: string[] = e.response?.data || [];
+            throw new Error(errors.join("\n"));
+        }
+        throw new Error("Xảy ra lỗi trong quá trình xử lý");
+    }
+}

@@ -1,68 +1,88 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
+using SRM.Business.Services;
 using SRM.Shared.Models.Data;
-using System.Threading.Tasks;
+using SRM.Shared.Models.Search;
 
 namespace SRM.Server.Controllers
 {
+	[Route("api/don-vi-chu-tri")]
 	[ApiController]
-	[Route("api/[controller]")]
 	public class DonViChuTriController : ControllerBase
 	{
-		private readonly IDonViChuTriService _donViChuTriService;
+		private readonly IDonViChuTriService _DonViChuTriService;
+		private readonly IValidator<DonViChuTriData> _validator;
 
-		public DonViChuTriController(IDonViChuTriService donViChuTriService)
+		public DonViChuTriController(
+			IDonViChuTriService DonViChuTriService,
+			IValidator<DonViChuTriData> validator
+			)
 		{
-			_donViChuTriService = donViChuTriService;
+			_DonViChuTriService = DonViChuTriService;
+			_validator = validator;
+		}
+
+		[HttpGet]
+		public async Task<IResult> GetAsync(
+			[FromQuery] int pageIndex = 1,
+			[FromQuery] int pageSize = 10
+			)
+		{
+			var result = await _DonViChuTriService.GetPageAsync(pageIndex, pageSize);
+			return Results.Ok(result);
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetAsync(int id)
+		public async Task<IResult> GetAsync(int id)
 		{
-			var result = await _donViChuTriService.GetAsync(id);
+			var result = await _DonViChuTriService.GetAsync(id);
 			if (result == null)
 			{
-				return NotFound();
+				return Results.NotFound();
 			}
-			return Ok(result);
+			return Results.Ok(result);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AddAsync([FromBody] DonViChuTriData model)
+		public async Task<IResult> AddAsync([FromBody] DonViChuTriData model)
 		{
-			if (model == null)
+			var validateResult = await _validator.ValidateAsync(model);
+			if (!validateResult.IsValid)
 			{
-				return BadRequest("Invalid data.");
+				return Results.ValidationProblem(ModelState.ToDictionary(
+					x => x.Key,
+					x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+				));
 			}
 
-			await _donViChuTriService.AddAsync(model);
-			return Ok("Added successfully.");
+			var result = await _DonViChuTriService.AddAsync(model);
+			return Results.Created();
 		}
 
-		[HttpPut]
-		public async Task<IActionResult> UpdateAsync([FromBody] DonViChuTriData model)
+		[HttpPut("{id}")]
+		public async Task<IResult> UpdateAsync(int id, [FromBody] DonViChuTriData model)
 		{
-			if (model == null)
+			var validateResult = await _validator.ValidateAsync(model);
+			if (!validateResult.IsValid)
 			{
-				return BadRequest("Invalid data.");
+				return Results.ValidationProblem(ModelState.ToDictionary(
+					x => x.Key,
+					x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+				));
 			}
 
-			await _donViChuTriService.UpdateAsync(model);
-			return Ok("Updated successfully.");
+			model.Id = id;
+			var result = await _DonViChuTriService.UpdateAsync(model);
+			return Results.Ok();
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteAsync(int id)
+		public async Task<IResult> DeleteAsync(int id)
 		{
-			await _donViChuTriService.DeleteAsync(id);
-			return Ok("Deleted successfully.");
-		}
-
-		[HttpGet("page")]
-		public async Task<IActionResult> GetPageAsync(int pageIndex = 1, int pageSize = 10)
-		{
-			var result = await _donViChuTriService.GetPageAsync(pageIndex, pageSize);
-			return Ok(result);
+			await _DonViChuTriService.DeleteAsync(id);
+			return Results.NoContent();
 		}
 	}
 }
