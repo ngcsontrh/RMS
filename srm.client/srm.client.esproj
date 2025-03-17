@@ -9,11 +9,15 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\components\CapDeTai\" />
-    <Folder Include="src\components\HoatDong\" />
-    <Folder Include="src\components\commons\" />
-    <Folder Include="src\components\DanhMuc\" />
+    <None Remove="src\components\CapDeTai\**" />
+    <None Remove="src\components\HoatDong\**" />
+    <TypeScriptConfiguration Remove="src\components\CapDeTai\**" />
+    <TypeScriptConfiguration Remove="src\components\HoatDong\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\components\Auth\" />
     <Folder Include="src\components\TrangChu\" />
     <Folder Include="src\models\json\" />
+    <Folder Include="src\stores\" />
   </ItemGroup>
 </Project>

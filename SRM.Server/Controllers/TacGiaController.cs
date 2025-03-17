@@ -1,7 +1,10 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
 using SRM.Business.IServices;
+using SRM.Server.Attributes;
+using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
 using SRM.Shared.Utils;
@@ -24,65 +27,59 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IResult> GetAsync(
+        public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
             )
         {
             var search = new CongBoSearch();
             var result = await _tacGiaService.GetPageAsync(pageIndex, pageSize);
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> GetAsync(int id)
+        public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _tacGiaService.GetAsync(id);
-            if (result == null)
-            {
-                return Results.NotFound();
-            }
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpPost]
-        public async Task<IResult> AddAsync([FromBody] TacGiaData model)
+        [Authorize]
+        [Permission(nameof(Permission.AddTacGia))]
+        public async Task<ExecuteData> AddAsync([FromBody] TacGiaData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
-                return Results.ValidationProblem(ModelState.ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-                ));
+                return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
             }
 
-            await _tacGiaService.AddAsync(model);
-            return Results.Created();
+            var result = await _tacGiaService.AddAsync(model);
+            return result;
         }
 
         [HttpPut("{id}")]
-        public async Task<IResult> UpdateAsync(int id, [FromBody] TacGiaData model)
+        [Authorize]
+        [Permission(nameof(Permission.UpdateTacGia))]
+        public async Task<ExecuteData> UpdateAsync(int id, [FromBody] TacGiaData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
-                return Results.ValidationProblem(ModelState.ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-                ));
+                return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
             }
 
             model.Id = id;
-            await _tacGiaService.UpdateAsync(model);
-            return Results.NoContent();
+            var result = await _tacGiaService.UpdateAsync(model);
+            return result;
         }
 
         [HttpGet("dropdown-data")]
-        public async Task<IResult> GetDropDownDataAsync()
+        public async Task<ExecuteData> GetDropDownDataAsync()
         {
             var result = await _tacGiaService.GetDropDownDataAsync();
-            return Results.Ok(result);
+            return result;
         }
     }
 }

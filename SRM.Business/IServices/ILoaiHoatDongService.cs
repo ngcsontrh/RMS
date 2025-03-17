@@ -10,10 +10,10 @@ namespace SRM.Business.IServices
 {
     public interface ILoaiHoatDongService
     {
-        Task<bool> AddAsync(LoaiHoatDongData model);
-        Task<bool> UpdateAsync(LoaiHoatDongData model);
-        Task<bool> DeleteAsync(int id);
-        Task<LoaiHoatDongData?> GetAsync(int id);
-        Task<PageData<LoaiHoatDongData>> GetPageAsync(LoaiHoatDongSearch searchModel,int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> AddAsync(LoaiHoatDongData model);
+        Task<ExecuteData> UpdateAsync(LoaiHoatDongData model);
+        Task<ExecuteData> DeleteAsync(int id);
+        Task<ExecuteData> GetAsync(int id);
+        Task<ExecuteData> GetPageAsync(LoaiHoatDongSearch searchModel,int pageIndex = 1, int pageSize = 10);
     }
 }

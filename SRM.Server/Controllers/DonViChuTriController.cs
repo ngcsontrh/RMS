@@ -1,8 +1,12 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
+using SRM.Server.Attributes;
+using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
+using SRM.Shared.Utils;
 
 namespace SRM.Server.Controllers
 {
@@ -23,57 +27,49 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IResult> GetAsync(
+        public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
             )
         {
             var result = await _donViChuTriService.GetPageAsync(pageIndex, pageSize);
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> GetAsync(int id)
+        public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _donViChuTriService.GetAsync(id);
-            if (result == null)
-            {
-                return Results.NotFound();
-            }
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpPost]
-        public async Task<IResult> AddAsync([FromForm] DonViChuTriData model)
-        {
+        [Authorize]
+        [Permission(nameof(Permission.AddDonViChuTri))]
+        public async Task<ExecuteData> AddAsync([FromBody] DonViChuTriData model)
+        {             
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
-                return Results.ValidationProblem(ModelState.ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-                ));
+                return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
             }
-
-            await _donViChuTriService.AddAsync(model);
-            return Results.Created();
+            var result = await _donViChuTriService.AddAsync(model);
+            return result;
         }
 
         [HttpPut("{id}")]
-        public async Task<IResult> UpdateAsync(int id, [FromForm] DonViChuTriData model)
+        [Authorize]
+        [Permission(nameof(Permission.UpdateDonViChuTri))]
+        public async Task<ExecuteData> UpdateAsync(int id, [FromBody] DonViChuTriData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
-                return Results.ValidationProblem(ModelState.ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-                ));
+                return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
             }
-
             model.Id = id;
-            await _donViChuTriService.UpdateAsync(model);
-            return Results.Ok();
+            var result = await _donViChuTriService.UpdateAsync(model);
+            return result;
         }
     }
 }

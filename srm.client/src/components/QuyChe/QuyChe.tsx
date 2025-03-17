@@ -52,9 +52,10 @@ const QuyChe: React.FC = () => {
             <h2 style={{ marginBottom: "20px" }}>Quyết định số 255/QĐ-ĐHTL ngày 30/3/2021</h2>
             <p>
                 Quy định này quy định về hỗ trợ kinh phí cho CBGV thuộc biên chế của Trường Đại học Thuỷ lợi tham dự hội nghị, hội thảo trong nước và quốc tế hoặc có các bài báo khoa học đã được công bố quốc tế, văn bằng sở hữu trí tuệ trong năm.
-                Nội dung Quyết định download tại link:{" "}
-                <a href="https://drive.google.com/file/d/1Jv1FggLHUeM4pbT1Eu_QxoMSF6tUzeam/view?usp=sharing" target="_blank" rel="noopener noreferrer">
-                    https://drive.google.com/file/d/1Jv1FggLHUeM4pbT1Eu_QxoMSF6tUzeam/view?usp=sharing
+            </p>
+            <p>
+                Nội dung Quyết định download <a href="https://drive.google.com/file/d/1Jv1FggLHUeM4pbT1Eu_QxoMSF6tUzeam/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+                    Tại đây
                 </a>
             </p>
 

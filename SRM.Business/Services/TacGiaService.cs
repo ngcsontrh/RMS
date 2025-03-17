@@ -5,6 +5,7 @@ using SRM.Data.IRepositories;
 using SRM.Data.Repositories;
 using SRM.Shared.Entities;
 using SRM.Shared.Models.Data;
+using SRM.Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,92 +31,147 @@ namespace SRM.Business.Services
             _mapper = mapper;
         }
 
-        public async Task AddAsync(TacGiaData model)
+        public async Task<ExecuteData> AddAsync(TacGiaData model)
         {
             try
             {
                 var entity = _mapper.Map<TacGia>(model);
                 await _tacGiaRepository.AddAsync(entity);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            try
-            {
-                await _tacGiaRepository.DeleteAsync(id);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task<TacGiaData?> GetAsync(int id)
-        {
-            try
-            {
-                var entity = await _tacGiaRepository.GetByIdAsync(id);
-                var result = _mapper.Map<TacGiaData?>(entity);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task<List<TacGiaData>> GetDropDownDataAsync()
-        {
-            try
-            {
-                var entities = await _tacGiaRepository.GetDropDownDataAsync();
-                var result = _mapper.Map<List<TacGiaData>>(entities);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task<PageData<TacGiaData>> GetPageAsync(int pageIndex = 1, int pageSize = 10)
-        {
-            try
-            {
-                var result = await _tacGiaRepository.GetPageWithFilterAsync(_tacGiaRepository.GetQueryable(), pageIndex, pageSize);
-                return new PageData<TacGiaData>
+                return new ExecuteData
                 {
-                    Data = _mapper.Map<List<TacGiaData>>(result.Item1),
-                    Total = result.Item2
+                    Success = true,
+                    Message = GlobalConstraint.Success,
                 };
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task UpdateAsync(TacGiaData model)
+        public async Task<ExecuteData> DeleteAsync(int id)
+        {
+            try
+            {
+                await _tacGiaRepository.DeleteAsync(id);
+                return new ExecuteData { Success = true, Message = GlobalConstraint.Success };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData { Success = false, Message = GlobalConstraint.GeneralError };
+            }
+        }
+
+        public async Task<ExecuteData> GetAsync(int id)
+        {
+            try
+            {
+                var entity = await _tacGiaRepository.GetByIdAsync(id);
+                if (entity == null)
+                {
+                    return new ExecuteData
+                    {
+                        Success = false,
+                        Message = GlobalConstraint.NotFound,
+                    };
+                }
+                var result = _mapper.Map<TacGiaData?>(entity);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                    Data = result,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
+        public async Task<ExecuteData> GetDropDownDataAsync()
+        {
+            try
+            {
+                var entities = await _tacGiaRepository.GetDropDownDataAsync();
+                var result = _mapper.Map<List<TacGiaData>>(entities);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                    Data = result,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
+        public async Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = await _tacGiaRepository.GetPageWithFilterAsync(_tacGiaRepository.GetQueryable(), pageIndex, pageSize);
+                var pageData = new PageData<TacGiaData>
+                {
+                    Items = _mapper.Map<List<TacGiaData>>(result.Item1),
+                    Total = result.Item2
+                };
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                    Data = pageData,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
+        public async Task<ExecuteData> UpdateAsync(TacGiaData model)
         {
             try
             {
                 var entity = _mapper.Map<TacGia>(model);
                 await _tacGiaRepository.UpdateAsync(entity);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
     }

@@ -3,10 +3,10 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import CapDeTai from './CapDeTai';
 import LoaiHoatDong from './LoaiHoatDong';
-
-const onChange = (key: string) => {
-    console.log(key);
-};
+import DonViChuTri from './DonViChuTri';
+import DonVi from './DonVi';
+import NoiDangBao from './NoiDangBao';
+import ThanhQua from './ThanhQua';
 
 const items: TabsProps['items'] = [
     {
@@ -17,20 +17,34 @@ const items: TabsProps['items'] = [
     {
         key: '2',
         label: 'Đơn vị chủ trì',
-        children: 'Content of Tab Pane 2',
+        children: <DonViChuTri />,
     },
     {
         key: '3',
-        label: 'Tab 3',
-        children: 'Content of Tab Pane 3',
-    },
-    {
-        key: '4',
         label: 'Loại Hoạt Động',
         children: <LoaiHoatDong />,
     },
+    {
+        key: '4',
+        label: 'Đơn vị',
+        children: <DonVi />,
+    },
+    {
+        key: '5',
+        label: 'Nơi đăng báo',
+        children: <NoiDangBao />,
+    },
+    {
+        key: '6',
+        label: 'Thành quả',
+        children: <ThanhQua />,
+    },
 ];
 
-const App: React.FC = () => <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+const DanhMucHome: React.FC = () => {
+    return (
+        <Tabs items={items}  />
+    )
+}
 
-export default App;
+export default DanhMucHome;

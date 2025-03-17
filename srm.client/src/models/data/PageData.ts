@@ -1,4 +1,4 @@
 export interface PageData<TData> {
-    data: TData[];
+    items: TData[];
     total: number;
 }

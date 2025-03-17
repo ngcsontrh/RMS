@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 namespace SRM.Shared.Models.Search
 {
     public class DeTaiSearch
-    {        
+    {
+        public int? TacGiaId { get; set; }
+
+        public DeTaiSearch() { }
+
+        public DeTaiSearch(int? tacGiaId)
+        {
+            TacGiaId = tacGiaId;
+        }
     }
 }

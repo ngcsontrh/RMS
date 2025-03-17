@@ -1,6 +1,4 @@
-﻿import { TacGiaJson } from '../json/TacGiaJson';
-
-export interface DeTaiData {
+﻿export interface DeTaiData {
     id?: number | null;
     capDeTaiId?: number | null;
     tenCapDeTai?: string | null;
@@ -16,7 +14,7 @@ export interface DeTaiData {
     hoSoSanPham?: string | null;
     donViChuTriId?: number | null;
     tenDonViChuTri?: string | null;
-    chuNhiem?: TacGiaJson | null;
-    canBoThamGias?: TacGiaJson[] | null;
+    chuNhiem?: string | null;
+    canBoThamGias?: string[] | null;
     phanChiaSuDongGop?: string | null;
 }

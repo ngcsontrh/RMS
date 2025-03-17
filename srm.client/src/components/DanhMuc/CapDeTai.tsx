@@ -28,7 +28,7 @@ const columns: TableProps<DataType>['columns'] = [
     },
 ];
 
-const DanhMuc: React.FC = () => {
+const CapDeTai: React.FC = () => {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const [searchParams, setSearchParams] = useState<CapDeTaiSearch>({
@@ -44,7 +44,7 @@ const DanhMuc: React.FC = () => {
         queryFn: () => getCapDeTais(searchParams),
     });
 
-    const dataSource: DataType[] = capDeTaiDatas?.data?.map((item, index) => ({
+    const dataSource: DataType[] = capDeTaiDatas?.items?.map((item, index) => ({
         ...item,
         key: item.id!.toString(),
         stt: (searchParams.pageIndex! - 1) * searchParams.pageSize! + index,
@@ -112,6 +112,7 @@ const DanhMuc: React.FC = () => {
             <Row gutter={15} style={{ marginTop: '10px' }}>
                 <Col span={12}>
                     <Table<DataType>
+                        size="small"
                         columns={columns}
                         dataSource={dataSource}
                         pagination={false}
@@ -173,4 +174,4 @@ const DanhMuc: React.FC = () => {
     );
 };
 
-export default DanhMuc;
+export default CapDeTai;

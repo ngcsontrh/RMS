@@ -1,4 +1,4 @@
 export interface NoiDangBaoData {
-    id?: string | null;
+    id?: number | null;
     ten?: string | null;
 }

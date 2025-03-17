@@ -10,9 +10,9 @@ namespace SRM.Business.IServices
 {
     public interface IDeTaiService
     {
-        public Task<bool> AddAsync(DeTaiData model);
-        public Task<bool> UpdateAsync(DeTaiData model);
-        public Task<DeTaiData?> GetAsync(int id);
-        public Task<PageData<DeTaiData>> GetPageAsync(DeTaiSearch searchModel, int pageIndex = 1, int pageSize = 10);
+        public Task<ExecuteData> AddAsync(DeTaiData model);
+        public Task<ExecuteData> UpdateAsync(DeTaiData model);
+        public Task<ExecuteData> GetAsync(int id);
+        public Task<ExecuteData> GetPageAsync(DeTaiSearch searchModel, int pageIndex = 1, int pageSize = 10);
     }
 }

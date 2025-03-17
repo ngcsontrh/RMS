@@ -1,4 +1,4 @@
-export type { CapDeTaiData } from './CapDetaiData';
+export type { CapDeTaiData } from './CapDeTaiData';
 export type { CongBoData } from './CongBoData';
 export type { DeTaiData } from './DeTaiData';
 export type { DonViChuTriData } from './DonViChuTriData';
@@ -9,3 +9,8 @@ export type { PageData } from './PageData';
 export type { TacGiaData } from './TacGiaData';
 export type { ThanhQuaData } from './ThanhQuaData';
 export type { NoiDangBaoData } from './NoiDangBaoData';
+export type { ExecuteData } from './ExecuteData';
+export type { UserData } from './UserData';
+export type { AuthData } from './AuthData';
+export type { TokenData } from './TokenData';
+export type { DonViData } from './DonViData';

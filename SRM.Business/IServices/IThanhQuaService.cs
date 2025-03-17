@@ -9,10 +9,10 @@ namespace SRM.Business.IServices
 {
     public interface IThanhQuaService
     {
-        Task<bool> AddAsync(ThanhQuaData model);
-        Task<bool> UpdateAsync(ThanhQuaData model);
-        Task<bool> DeleteAsync(int id);
-        Task<ThanhQuaData?> GetAsync(int id);
-        Task<PageData<ThanhQuaData>> GetPageAsync(int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> AddAsync(ThanhQuaData model);
+        Task<ExecuteData> UpdateAsync(ThanhQuaData model);
+        Task<ExecuteData> DeleteAsync(int id);
+        Task<ExecuteData> GetAsync(int id);
+        Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10);
     }
 }

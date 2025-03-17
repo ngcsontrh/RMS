@@ -1,10 +1,14 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
 using SRM.Business.Services;
+using SRM.Server.Attributes;
+using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
+using SRM.Shared.Utils;
 
 namespace SRM.Server.Controllers
 {
@@ -25,70 +29,58 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IResult> GetAsync(
+        public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
             )
         {
             var result = await _noiDangBaoService.GetPageAsync(pageIndex, pageSize);
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> GetAsync(int id)
+        public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _noiDangBaoService.GetAsync(id);
-            if (result == null)
-            {
-                return Results.NotFound();
-            }
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpPost]
-        public async Task<IResult> AddAsync([FromBody] NoiDangBaoData model)
+        [Authorize]
+        [Permission(nameof(Permission.AddNoiDangBao))]
+        public async Task<ExecuteData> AddAsync([FromBody] NoiDangBaoData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
-                return Results.ValidationProblem(ModelState.ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-                ));
+                return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
             }
 
             var result = await _noiDangBaoService.AddAsync(model);
-            return Results.Created();
+            return result;
         }
 
         [HttpPut("{id}")]
-        public async Task<IResult> UpdateAsync(int id, [FromBody] NoiDangBaoData model)
+        [Authorize]
+        [Permission(nameof(Permission.UpdateNoiDangBao))]
+        public async Task<ExecuteData> UpdateAsync(int id, [FromBody] NoiDangBaoData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
-                return Results.ValidationProblem(ModelState.ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-                ));
+                return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
             }
 
             model.Id = id;
             var result = await _noiDangBaoService.UpdateAsync(model);
-            return Results.Ok();
+            return result;
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IResult> DeleteAsync(int id)
-        {
-            await _noiDangBaoService.DeleteAsync(id);
-            return Results.NoContent();
-        }
         [HttpGet("dropdown-data")]
-        public async Task<IResult> GetDropDownDataAsync()
+        public async Task<ExecuteData> GetDropDownDataAsync()
         {
             var result = await _noiDangBaoService.GetDropDownDataAsync();
-            return Results.Ok(result);
+            return result;
         }
     }
 }

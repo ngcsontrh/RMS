@@ -41,7 +41,7 @@ namespace SRM.Business.Services
             _logger = logger;
         }
 
-        public async Task<bool> AddAsync(DeTaiData model)
+        public async Task<ExecuteData> AddAsync(DeTaiData model)
         {
             try
             {   
@@ -69,50 +69,85 @@ namespace SRM.Business.Services
                 var deTai = _mapper.Map<DeTai>(model);
                 await _deTaiRepository.AddAsync(deTai);
                 await _deTaiRepository.CommitTransactionAsync();
-                return true;
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 await _deTaiRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task<DeTaiData?> GetAsync(int id)
+        public async Task<ExecuteData> GetAsync(int id)
         {
             try
             {
                 var entity = await _deTaiRepository.GetByIdAsync(id);
-                var result = _mapper.Map<DeTaiData>(entity);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task<PageData<DeTaiData>> GetPageAsync(DeTaiSearch searchModel, int pageIndex = 1, int pageSize = 10)
-        {
-            try
-            {
-                var result = await _deTaiRepository.GetPageWithSearchAsync(searchModel);
-                return new PageData<DeTaiData>
+                if (entity == null)
                 {
-                    Data = _mapper.Map<List<DeTaiData>>(result.Item1),
-                    Total = result.Item2
+                    return new ExecuteData
+                    {
+                        Success = false,
+                        Message = GlobalConstraint.NotFound,
+                    };
+                }
+                var result = _mapper.Map<DeTaiData>(entity);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = result,
+                    Message = GlobalConstraint.Success,
                 };
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task<bool> UpdateAsync(DeTaiData model)
+        public async Task<ExecuteData> GetPageAsync(DeTaiSearch searchModel, int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = await _deTaiRepository.GetPageWithSearchAsync(searchModel);
+                var pageData = new PageData<DeTaiData>
+                {
+                    Items = _mapper.Map<List<DeTaiData>>(result.Item1),
+                    Total = result.Item2
+                };
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = pageData,
+                    Message = GlobalConstraint.Success,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
+        public async Task<ExecuteData> UpdateAsync(DeTaiData model)
         {
             try
             {
@@ -134,13 +169,21 @@ namespace SRM.Business.Services
                 var deTai = _mapper.Map<DeTai>(model);
                 await _deTaiRepository.UpdateAsync(deTai);
                 await _deTaiRepository.CommitTransactionAsync();
-                return true;
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 await _deTaiRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
     }

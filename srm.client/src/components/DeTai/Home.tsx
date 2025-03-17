@@ -7,8 +7,9 @@ import type { DeTaiSearch } from '../../models/search';
 import { useQuery } from '@tanstack/react-query';
 import { getDeTais } from '../../services/DeTaiService';
 import { faUser, faBookmark } from "@fortawesome/free-solid-svg-icons";
-import { Pagination } from '../commons';
-import { Link } from 'react-router-dom';
+import { Loading, Pagination, Error } from '../commons';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../../stores/authStore';
 
 interface DataType extends DeTaiData {
     key: string;
@@ -52,20 +53,30 @@ const columns: TableProps<DataType>['columns'] = [
     },
 ];
 
-export default () => {
+export default () => {   
+    const location = useLocation();
+    const { authData } = useAuthStore();
     const [searchParams, setSearchParams] = React.useState<DeTaiSearch>({
         pageIndex: 1,
         pageSize: 10,
-        ten: null,
-    });
+        tacGiaId: location.pathname === '/ca-nhan/de-tai' ? authData?.userId : undefined,
+    });    
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['deTaiData', searchParams],
         queryFn: () => getDeTais(searchParams)
     });
 
-    const dataSource: DataType[] = data?.data
-        ? data.data.map((item, index) => ({
+    if (isLoading) {
+        return <Loading />
+    }
+
+    if (error) {
+        return <Error message={error.message} />
+    }
+
+    const dataSource: DataType[] = data?.items
+        ? data.items.map((item, index) => ({
             ...item,
             key: item.id!.toString(),
             stt: (searchParams.pageIndex! - 1) * searchParams.pageSize! + index,
@@ -90,14 +101,16 @@ export default () => {
                 style={{ marginTop: "10px" }}
                 items={[{ title: "Đề tài" }, { title: "Danh sách" }]}
             />
-            <Flex justify="flex-end">
-                <Button
-                    type="primary"
-                    style={{ marginTop: "10px" }}
-                >
-                    <Link to={'/de-tai/tao-moi'}>Tạo mới</Link>
-                </Button>
-            </Flex>
+            {location.pathname === '/ca-nhan/de-tai' && (
+                <Flex justify="flex-end">
+                    <Button
+                        type="primary"
+                        style={{ marginTop: "10px" }}
+                    >
+                        <Link to={'/de-tai/tao-moi'}>Tạo mới</Link>
+                    </Button>
+                </Flex>
+            )}            
             <Table<DataType>
                 columns={columns}
                 dataSource={dataSource}

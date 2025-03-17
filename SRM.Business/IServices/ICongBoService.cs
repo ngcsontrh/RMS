@@ -11,9 +11,9 @@ namespace SRM.Business.IServices
 {
     public interface ICongBoService
     {
-        Task<bool> AddAsync(CongBoData model);
-        Task<bool> UpdateAsync(CongBoData model);
-        Task<CongBoData?> GetAsync(int id);
-        Task<PageData<CongBoData>> GetPageAsync(CongBoSearch searchModel, int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> AddAsync(CongBoData model);
+        Task<ExecuteData> UpdateAsync(CongBoData model);
+        Task<ExecuteData> GetAsync(int id);
+        Task<ExecuteData> GetPageAsync(CongBoSearch searchModel, int pageIndex = 1, int pageSize = 10);
     }
 }

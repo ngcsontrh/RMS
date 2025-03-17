@@ -1,42 +1,32 @@
-﻿import { useState, useEffect } from 'react';
-import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Select, Breadcrumb } from 'antd';
+﻿import { useEffect, useState } from 'react';
+import { Button, Form, Input, Row, Col, message, DatePicker, InputNumber, Breadcrumb, Select } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Error, Loading } from '../commons';
 import { useQuery } from '@tanstack/react-query';
-import { CapDeTaiData, DeTaiData } from '../../models/data';
-import { TacGiaJson } from '../../models/json';
+import { DeTaiData } from '../../models/data';
 import { createDeTai, editDeTai, getDetai } from '../../services/DeTaiService';
 import { getCapDeTais } from '../../services/CapDeTaiService';
 import { getDonViChuTris } from '../../services/DonViChuTriService';
 import { getTacGiaDropDownData } from '../../services/TacGiaService';
 import dayjs from 'dayjs';
+import CreatableSelect from 'react-select/creatable';
 
 const { TextArea } = Input;
+
+interface Option {
+    value: string | number;
+    label: string;
+}
 
 export default () => {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const { id: idString } = useParams<{ id: string }>();
-    const id = idString ? Number(idString) : undefined;
+    const id = idString ? Number(idString) : undefined;    
     const navigate = useNavigate();
-    const [capDeTaiDatas, setCapDeTaiDatas] = useState<CapDeTaiData[]>([]);
-    const [donViChuTriDatas, setDonViChuTriDatas] = useState<CapDeTaiData[]>([]);
-    const [tacGiaJsons, setTacGiaJsons] = useState<TacGiaJson[]>([]);
-
-    // Fetch danh sách tác giả
-    const { data: tacGiaDropDownDatas } = useQuery({
-        queryKey: ['tacGias'],
-        queryFn: () => getTacGiaDropDownData(),
-    });
-
-    useEffect(() => {
-        if (tacGiaDropDownDatas) {
-            setTacGiaJsons(tacGiaDropDownDatas.map(item => ({
-                id: item.id,
-                ten: item.ten
-            })));
-        }
-    }, [tacGiaDropDownDatas]);
+    const [selectedDonViChuTri, setSelectedDonViChuTri] = useState<Option | undefined>(undefined);
+    const [selectedCapDeTai, setSelectedCapDeTai] = useState<Option | undefined>(undefined);
+    const [selectedChuNhiem, setSelectedChuNhiem] = useState<Option | undefined>(undefined);
 
     // Fetch dữ liệu đề tài
     const { data: deTaiData, isLoading: isDeTaiLoading, error: deTaiError } = useQuery({
@@ -47,42 +37,26 @@ export default () => {
 
     useEffect(() => {
         if (deTaiData) {
-            let updatedTacGiaJsons = [...tacGiaJsons];
-            const chuNhiem = deTaiData.chuNhiem;
-            const canBoThamGias = deTaiData.canBoThamGias || [];
-
-            // Xử lý chuNhiem
-            if (chuNhiem) {
-                const exists = tacGiaJsons.some(
-                    (item) => item.id === chuNhiem.id && item.ten === chuNhiem.ten
-                );
-                if (!exists) {
-                    updatedTacGiaJsons = [...updatedTacGiaJsons, chuNhiem];
-                }
-            }
-
-            // Xử lý canBoThamGias
-            canBoThamGias.forEach((canBo) => {
-                const exists = updatedTacGiaJsons.some(
-                    (item) => item.id === canBo.id && item.ten === canBo.ten
-                );
-                if (!exists) {
-                    updatedTacGiaJsons = [...updatedTacGiaJsons, canBo];
-                }
-            });
-
-            setTacGiaJsons(updatedTacGiaJsons);
 
             // Set giá trị form
             form.setFieldsValue({
                 ...deTaiData,
-                chuNhiem: chuNhiem ? JSON.stringify(chuNhiem) : null,
-                canBoThamGias: canBoThamGias.map((item) => JSON.stringify(item)), // Chuyển thành danh sách chuỗi JSON
                 ngayBatDau: deTaiData.ngayBatDau ? dayjs.utc(deTaiData.ngayBatDau).tz("Asia/Ho_Chi_Minh") : null,
                 ngayKetThuc: deTaiData.ngayKetThuc ? dayjs.utc(deTaiData.ngayKetThuc).tz("Asia/Ho_Chi_Minh") : null,
             });
         }
     }, [deTaiData, form]);
+
+    // Fetch danh sách tác giả
+    const { data: tacGiaDatas } = useQuery({
+        queryKey: ['tacGias'],
+        queryFn: () => getTacGiaDropDownData(),
+    });
+
+    const tacGiaOptions: Option[] | undefined = tacGiaDatas?.map((item) => ({
+        value: item.id?.toString()!,
+        label: item.ten!,
+    })) ?? [];
 
     // Fetch danh sách cấp đề tài
     const { data: capDeTaiPage } = useQuery({
@@ -90,11 +64,10 @@ export default () => {
         queryFn: () => getCapDeTais({ pageIndex: 1, pageSize: 1000 }),
     });
 
-    useEffect(() => {
-        if (capDeTaiPage && capDeTaiPage.data) {
-            setCapDeTaiDatas(capDeTaiPage.data);
-        }
-    }, [capDeTaiPage]);
+    const capDeTaiOptions: Option[] | undefined = capDeTaiPage?.items?.map((item) => ({
+        value: item.id!,
+        label: item.ten!,
+    })) ?? [];
 
     // Fetch danh sách cấp đề tài
     const { data: donViChuTriPage } = useQuery({
@@ -102,15 +75,15 @@ export default () => {
         queryFn: () => getDonViChuTris({ pageIndex: 1, pageSize: 1000 }),
     });
 
-    useEffect(() => {
-        if (donViChuTriPage && donViChuTriPage.data) {
-            setDonViChuTriDatas(donViChuTriPage.data);
-        }
-    }, [donViChuTriPage]);
+    const donViChuTriOptions: Option[] | undefined = donViChuTriPage?.items?.map((item) => ({
+        value: item.id!,
+        label: item.ten!,
+    })) ?? [];
 
     // Xử lý submit form
     const onFinish = async (values: any) => {
         try {
+            console.log(values);
             const formData: DeTaiData = {
                 ten: values.ten,
                 maSo: values.maSo,
@@ -122,12 +95,12 @@ export default () => {
                 kinhPhiHangNam: values.kinhPhiHangNam,
                 hoSoNghiemThu: values.hoSoNghiemThu,
                 hoSoSanPham: values.hoSoSanPham,
-                donViChuTriId: typeof values.donViChuTriId === 'number' ? values.donViChuTriId : null,
-                tenDonViChuTri: typeof values.donViChuTriId === 'string' ? values.donViChuTriId : null,
-                capDeTaiId: typeof values.capDeTaiId === 'number' ? values.capDeTaiId : null,
-                tenCapDeTai: typeof values.capDeTaiId === 'string' ? values.capDeTaiId : null,
-                chuNhiem: values.chuNhiem != null ? JSON.parse(values.chuNhiem) : null,
-                canBoThamGias: values.canBoThamGias ? values.canBoThamGias.map((item: string) => JSON.parse(item)) : [],
+                donViChuTriId: typeof values.donViChuTriId.value === 'number' ? values.capDeTaiId.value : null,
+                tenDonViChuTri: typeof values.donViChuTriId.value === 'string' ? values.donViChuTriId.value : null,
+                capDeTaiId: typeof values.capDeTaiId.value === 'number' ? values.capDeTaiId.value : null,
+                tenCapDeTai: typeof values.capDeTaiId.value === 'string' ? values.capDeTaiId.value : null,
+                chuNhiem: values.chuNhiem.value,
+                canBoThamGias: values.canBoThamGias,
                 phanChiaSuDongGop: values.phanChiaSuDongGop,
             };
 
@@ -143,6 +116,36 @@ export default () => {
             messageApi.error('Xảy ra lỗi khi xử lý!');
         }
     };
+
+    useEffect(() => {
+        if (!deTaiData) return;
+
+        const newSelectedCapDeTai = capDeTaiOptions?.find(item => item.value === deTaiData?.capDeTaiId);
+        if (newSelectedCapDeTai && newSelectedCapDeTai.value !== selectedCapDeTai?.value) {
+            setSelectedCapDeTai(newSelectedCapDeTai);
+        }
+        console.log(selectedCapDeTai);
+    }, [deTaiData, capDeTaiOptions, selectedCapDeTai]);
+
+    useEffect(() => {
+        if (!deTaiData) return;
+
+        const newSelectedDonViChuTri = donViChuTriOptions?.find(item => item.value === deTaiData?.donViChuTriId);
+        if (newSelectedDonViChuTri && newSelectedDonViChuTri.value !== selectedDonViChuTri?.value) {
+            setSelectedDonViChuTri(newSelectedDonViChuTri);
+        }
+        console.log(selectedDonViChuTri);
+    }, [deTaiData, donViChuTriOptions, selectedDonViChuTri]);
+
+    useEffect(() => {
+        if (!deTaiData) return;
+
+        const newSelectedChuNhiem = tacGiaOptions?.find(item => item.value === deTaiData?.chuNhiem);
+        if (newSelectedChuNhiem && newSelectedChuNhiem.value !== selectedChuNhiem?.value) {
+            setSelectedChuNhiem(newSelectedChuNhiem);
+        }
+        console.log(selectedChuNhiem);
+    }, [deTaiData, tacGiaOptions, selectedChuNhiem]);
 
     return (
         <>
@@ -160,7 +163,12 @@ export default () => {
                 <Error />
             }
             {(!deTaiError && !isDeTaiLoading) && (
-                <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: "10px" }} >
+                <Form
+                    layout="vertical"
+                    form={form}
+                    onFinish={onFinish}
+                    style={{ marginTop: "10px" }}
+                >
                     <Row gutter={15}>
                         <Col span={12}>
                             <Form.Item name="ten" label="Tên đề tài" rules={[{ required: true, message: 'Vui lòng nhập tên đề tài!' }]}>
@@ -184,32 +192,13 @@ export default () => {
                         </Col>
                         <Col span={12}>
                             <Form.Item name="capDeTaiId" label="Cấp đề tài" rules={[{ required: true, message: 'Vui lòng chọn cấp đề tài!' }]}>
-                                <Select
-                                    showSearch
+                                <CreatableSelect
+                                    isClearable
+                                    options={capDeTaiOptions}
                                     placeholder="Chọn hoặc nhập cấp đề tài"
-                                    allowClear
-                                    filterOption={(input, option) =>
-                                        option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                    }
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            const target = e.target as HTMLInputElement
-                                            const value = target.value;
-                                            if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
-                                                setCapDeTaiDatas([...capDeTaiDatas, { id: null, ten: value }]);
-                                                form.setFieldsValue({
-                                                    capDeTaiId: value,
-                                                });
-                                            }
-                                        }
-                                    }}
-                                >
-                                    {capDeTaiDatas.map((item, index) => (
-                                        <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
-                                            {item.ten}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
+                                    required
+                                    defaultValue={capDeTaiOptions.find(value => value.value === deTaiData?.capDeTaiId)}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -243,33 +232,18 @@ export default () => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item name="donViChuTriId" label="Đơn vị chủ tri" rules={[{ required: true, message: 'Vui lòng chọn đơn vị chủ trì!' }]}>
-                                <Select
-                                    showSearch
+                            <Form.Item
+                                name="donViChuTriId"
+                                label="Đơn vị chủ tri"
+                                rules={[{ required: true, message: 'Vui lòng chọn đơn vị chủ trì!' }]}
+                                initialValue={ donViChuTriOptions.find(value => value.value === deTaiData?.donViChuTriId)}
+                            >
+                                <CreatableSelect
+                                    isClearable
+                                    options={donViChuTriOptions}
                                     placeholder="Chọn hoặc nhập đơn vị chủ trì"
-                                    allowClear
-                                    filterOption={(input, option) =>
-                                        option!.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                    }
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            const target = e.target as HTMLInputElement
-                                            const value = target.value;
-                                            if (value && !capDeTaiDatas.some((item) => item.ten === value)) {
-                                                setDonViChuTriDatas([...capDeTaiDatas, { id: null, ten: value }]);
-                                                form.setFieldsValue({
-                                                    donViChuTriId: value,
-                                                });
-                                            }
-                                        }
-                                    }}
-                                >
-                                    {donViChuTriDatas.map((item, index) => (
-                                        <Select.Option key={index} value={item.id} style={{ color: item.id ? 'blue' : 'black' }} >
-                                            {item.ten}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
+                                    required
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -278,24 +252,13 @@ export default () => {
                                 label="Chủ nhiệm"
                                 rules={[{ required: true, message: 'Vui lòng chọn chủ nhiệm!' }]}
                             >
-                                <Select
-                                    showSearch
-                                    placeholder="Chọn chủ nhiệm"
-                                    allowClear
-                                    filterOption={(input, option) =>
-                                        option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
-                                    }
-                                >
-                                    {tacGiaJsons.map((item, index) => (
-                                        <Select.Option
-                                            key={index}
-                                            value={JSON.stringify(item)}
-                                            style={{ color: item.id ? 'blue' : 'black' }}
-                                        >
-                                            {item.ten}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
+                                <CreatableSelect
+                                    isClearable
+                                    options={tacGiaOptions}
+                                    placeholder="Chọn hoặc nhập chủ nhiệm"
+                                    required
+                                    value={selectedChuNhiem}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -305,7 +268,7 @@ export default () => {
                                 rules={[{ required: true, message: 'Vui lòng chọn cán bộ tham gia!' }]}
                             >
                                 <Select
-                                    mode="multiple"
+                                    mode="tags"
                                     showSearch
                                     placeholder="Chọn cán bộ tham gia"
                                     allowClear
@@ -313,11 +276,10 @@ export default () => {
                                         option?.children?.toString().toLowerCase().includes(input.toLowerCase()) || input === ''
                                     }
                                 >
-                                    {tacGiaJsons.map((item, index) => (
+                                    {tacGiaDatas?.map((item, index) => (
                                         <Select.Option
                                             key={index}
-                                            value={JSON.stringify(item)}
-                                            style={{ color: item.id ? 'blue' : 'black' }}
+                                            value={item.id?.toString()}
                                         >
                                             {item.ten}
                                         </Select.Option>
