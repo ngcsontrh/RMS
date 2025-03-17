@@ -1,153 +1,70 @@
-﻿import React from "react";
-import { Layout, Menu, MenuProps, theme } from "antd";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+﻿import React, { useEffect } from 'react';
+import { Layout, Flex, theme, Button } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { AppRoutes } from './routes';
-import { useNavigate } from "react-router-dom";
+import { configureApiInterceptors } from './services/api';
+import { Sidebar } from './components/shared/Sidebar';
+import { useAuthStore } from './stores/authStore';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 // Kích hoạt plugin UTC và timezone
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-// Đặt múi giờ mặc định là UTC
 dayjs.tz.setDefault("UTC");
-
-type MenuItem = Required<MenuProps>['items'][number];
-
 
 const App: React.FC = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-
     const navigate = useNavigate();
-    const items: MenuItem[] = [
-        {
-            key: '1',
-            label: 'Trang chủ',
-            onClick: () => navigate('/')
-        },
-        {
-            key: '2',
-            label: 'Dữ liệu toàn trường',
-            children: [
-                {
-                    key: '2.1',
-                    label: 'Đề tài',
-                    onClick: () => navigate('/toan-truong/de-tai')
-                },
-                {
-                    key: '2.2',
-                    label: 'Công bố',
-                    onClick: () => navigate('/toan-truong/cong-bo')
-                },
-                {
-                    key: '2.3',
-                    label: 'Đề tài',
-                    onClick: () => navigate('/toan-truong/hoat-dong')
-                }
-            ],
-        },
-        {
-            key: '3',
-            label: 'Dữ liệu cá nhân',
-            children: [
-                {
-                    key: '3.1',
-                    label: 'Đề tài',
-                    onClick: () => navigate('/ca-nhan/de-tai')
-                },
-                {
-                    key: '3.2',
-                    label: 'Công bố',
-                    onClick: () => navigate('/ca-nhan/cong-bo')
-                },
-                {
-                    key: '3.3',
-                    label: 'Đề tài',
-                    onClick: () => navigate('/ca-nhan/hoat-dong')
-                }
-            ],
-        },
-        {
-            key: '4',
-            label: 'Danh mục',
-            onClick: () => navigate('/danh-muc')
-        },
-        {
-            key: '5',
-            label: 'Thông tin cá nhân',
-            onClick: () => navigate('/thong-tin-ca-nhan')
-        },
-        {
-            key: '6',
-            label: 'Hướng dẫn sử dụng',
-            onClick: () => navigate('/huong-dan-su-dung')
-        },
-        {
-            key: '7',
-            label: 'Lý lịch khoa học',
-            onClick: () => navigate('/ly-lich-khoa-hoc')
-        },
-        {
-            key: '8',
-            label: 'Kết quả',
-            onClick: () => navigate('/ket-qua')
-        },
-        {
-            key: '9',
-            label: 'Quy định tính',
-            onClick: () => navigate('/quy-dinh-tinh')
-        },
-        {
-            key: '10',
-            label: 'Đề xuất đề tài',
-            onClick: () => navigate('/de-xuat-de-tai')
-        },
-        {
-            key: '11',
-            label: 'Quy chế - Quy định KHCN',
-            onClick: () => navigate('/quy-che')
-        },
-        {
-            key: '12',
-            label: 'Liên hệ',
-            onClick: () => navigate('/lien-he')
-        },
-    ];
+
+    useEffect(() => {
+        configureApiInterceptors(navigate);
+    }, [navigate]);
+
+    const { isAuthenticated, authData, clearAuth } = useAuthStore();
+
+    const handleLogout = () => {
+        clearAuth();
+        navigate("/dang-nhap");
+    };
 
     return (
         <Layout>
-            <Sider
-                breakpoint="lg"
-                collapsedWidth="0"                
-            >
-                <div style={{
-                    height: 32,
-                    margin: 16,
-                    background: "rgba(255, 255, 255, .2)",
-                    borderRadius: 6
-                } } />
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]} items={items} />
-            </Sider>
+            <Sidebar />
             <Layout style={{ minHeight: "100vh" }}>
-                <Header style={{ padding: 0, background: colorBgContainer }} />
+                <Header style={{ padding: 0, background: colorBgContainer }}>
+                    <Flex justify="end" align="center" style={{ marginRight: "15px" }}>
+                        {isAuthenticated ? (
+                            <Flex align="center" gap={10}>
+                                <span>Xin chào, {authData.userName}</span>
+                                <Button type="link" onClick={handleLogout}>
+                                    Đăng xuất
+                                </Button>
+                            </Flex>
+                        ) : (
+                            <Link to="/dang-nhap">Đăng nhập</Link>
+                        )}
+                    </Flex>
+                </Header>
                 <Content style={{ margin: "15px 10px 0" }}>
-                    <div
-                        style={{
-                            padding: 12,                            
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
+                    <div style={{
+                        padding: 12,
+                        background: colorBgContainer,
+                        borderRadius: borderRadiusLG,
+                    }}>
                         <AppRoutes />
                     </div>
                 </Content>
-                <Footer style={{ textAlign: "center" }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                <Footer style={{ background: colorBgContainer, padding: '10px 0' }}>
+                    <Flex justify="center" align="center" vertical>
+                        <div>©{new Date().getFullYear()} . Trường Đại học Thủy lợi</div>
+                        <div>Số 175, Tây Sơn, Đống Đa, Hà Nội</div>
+                    </Flex>
                 </Footer>
             </Layout>
         </Layout>

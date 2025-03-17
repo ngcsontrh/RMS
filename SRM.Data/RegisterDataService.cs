@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SRM.Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,9 @@ namespace SRM.Data
                 options.UseSqlServer(connectionString)
                     .EnableSensitiveDataLogging();
             });
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
             var assembly = Assembly.GetAssembly(typeof(RegisterDataService));
             var classes = assembly!.ExportedTypes.Where(c => !c.IsInterface && c.Name.EndsWith("Repository")).ToList();

@@ -9,10 +9,10 @@ namespace SRM.Business.IServices
 {
     public interface ICapDeTaiService
     {
-        Task<bool> AddAsync(CapDeTaiData model);
-        Task<bool> UpdateAsync(CapDeTaiData model);
-        Task<bool> DeleteAsync(int id);
-        Task<CapDeTaiData?> GetAsync(int id);
-        Task<PageData<CapDeTaiData>> GetPageAsync(int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> AddAsync(CapDeTaiData model);
+        Task<ExecuteData> UpdateAsync(CapDeTaiData model);
+        Task<ExecuteData> DeleteAsync(int id);
+        Task<ExecuteData> GetAsync(int id);
+        Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10);
     }
 }

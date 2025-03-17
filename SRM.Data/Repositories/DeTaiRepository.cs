@@ -19,11 +19,23 @@ namespace SRM.Data.Repositories
 
         public async Task<(List<DeTai>, int)> GetPageWithSearchAsync(DeTaiSearch search)
         {
-            var query = GetQueryable();
+            var query = CreateFilter(search);
             query = query.Include(x => x.CapDeTai)
                 .Include(x => x.DonViChuTri);
             var result = await GetPageWithFilterAsync(query);
             return result;
+        }
+
+        private IQueryable<DeTai> CreateFilter(DeTaiSearch search)
+        {
+            var query = GetQueryable();
+            if (search.TacGiaId.HasValue)
+            {
+                var tacGiaId = search.TacGiaId.Value.ToString();
+                query = query.Where(x => x.ChuNhiem == search.TacGiaId.ToString()
+                                    || x.CanBoThamGias != null && x.CanBoThamGias.Contains(search.TacGiaId.ToString()));
+            }
+            return query;
         }
     }
 }

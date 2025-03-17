@@ -148,7 +148,6 @@ export default () => {
     // Xử lý submit form
     const onFinish = async (values: any) => {
         try {
-            console.log('Form Values:', values);
             const thanhQua = values.thanhQuaID ? JSON.parse(values.thanhQuaID) : null;
             const noidangbao = values.noiDangBao ? JSON.parse(values.noiDangBao) : null;
             const formData: CongBoData = {
@@ -186,7 +185,6 @@ export default () => {
                 loaiHoTroChiPhi: values.loaiHoTro,
                 phanChiaSuDongGop: values.phanChiaSuDongGop || 'auto',
             };
-            console.log('Form Data:', formData); // Log dữ liệu gửi đi để kiểm tra
 
            
             if (id !== undefined && !isNaN(id)) {
@@ -215,7 +213,6 @@ export default () => {
             if (typeof reader.result === 'string') {
                 setBase64String(reader.result);
                 form.setFieldsValue({ fileMinhChungBaiBao: file.name });
-                console.log('Base64 PDF:', reader.result);
             }
         };
         reader.onerror = (error) => {

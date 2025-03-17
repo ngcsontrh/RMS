@@ -448,6 +448,14 @@ namespace SRM.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Role", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.RoleClaim", b =>
@@ -646,7 +654,8 @@ namespace SRM.Data.Migrations
                             AccessFailedCount = 0,
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEOe4N3MEZi7wG5irdaFEbKbVhQgmM3sS7vIQIuP1bw0XHQamSc1jByD00RNZrlrQFg==",
+                            NormalizedUserName = "ADMIN123",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEXMEGGZAfbpqnVi2Ei9taVel/ImJ2UPWjQtkwQPww9Xt7Vxv2JaclNg8M4hojbRMg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin123"
@@ -711,6 +720,13 @@ namespace SRM.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRole", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.UserToken", b =>

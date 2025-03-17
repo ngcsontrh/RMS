@@ -1,60 +1,44 @@
 ﻿import { AxiosError } from "axios";
 import api from "./api";
-import type { TacGiaData, PageData } from "../models/data";
+import type { TacGiaData, PageData, ExecuteData } from "../models/data";
 import type { TacGiaSearch } from "../models/search";
 
 const endpoint = "/api/tac-gia";
 
 export const getTacGias = async (search: TacGiaSearch): Promise<PageData<TacGiaData>> => {
-    try {
-        const response = await api.get<PageData<TacGiaData>>(endpoint, { params: search });
-        return response.data;
-    } catch (e) {
-        throw new Error("Xảy ra lỗi trong quá trình xử lý");
+    const response = await api.get<ExecuteData<PageData<TacGiaData>>>(endpoint, { params: search });
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
     }
+    return response.data.data!;
 }
 
 export const getTacGiaDropDownData = async (): Promise<TacGiaData[]> => {
-    try {
-        const response = await api.get<TacGiaData[]>(`${endpoint}/dropdown-data`);
-        return response.data;
-    } catch (e) {
-        throw new Error("Xảy ra lỗi trong quá trình xử lý");
+    const response = await api.get<ExecuteData<TacGiaData[]>>(`${endpoint}/dropdown-data`);
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
     }
+    return response.data.data!;
 }
 
 export const getTacGia = async (id: number): Promise<TacGiaData> => {
-    try {
-        const response = await api.get<TacGiaData>(`${endpoint}/${id}`);
-        return response.data;
-    } catch (e) {
-        if (e instanceof AxiosError && e.response?.status == 404) {
-            throw new Error(`Không tìm thấy dữ liệu`);
-        }
-        throw new Error("Xảy ra lỗi trong quá trình xử lý");
+    const response = await api.get<ExecuteData<TacGiaData>>(`${endpoint}/${id}`);
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
     }
+    return response.data.data!;
 }
 
 export const createTacGia = async (data: TacGiaData): Promise<void> => {
-    try {
-        await api.post(endpoint, data);
-    } catch (e) {
-        if (e instanceof AxiosError && e.response?.status == 400) {
-            const errors: string[] = e.response?.data || [];
-            throw new Error(errors.join("\n"));
-        }
-        throw new Error("Xảy ra lỗi trong quá trình xử lý");
+    const response = await api.post<ExecuteData>(endpoint, data);
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
     }
 }
 
 export const editTacGia = async (id: number, data: TacGiaData): Promise<void> => {
-    try {
-        await api.put(`${endpoint}/${id}`, data);
-    } catch (e) {
-        if (e instanceof AxiosError && e.response?.status == 400) {
-            const errors: string[] = e.response?.data || [];
-            throw new Error(errors.join("\n"));
-        }
-        throw new Error("Xảy ra lỗi trong quá trình xử lý");
+    const response = await api.put<ExecuteData>(`${endpoint}/${id}`, data);
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
     }
 }

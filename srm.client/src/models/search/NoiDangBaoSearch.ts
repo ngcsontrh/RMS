@@ -1,5 +1,5 @@
 import { PageSearch } from ".";
 
-export interface NoiDangBaiSearch extends PageSearch {
+export interface NoiDangBaoSearch extends PageSearch {
     ten?: string | null;
 }

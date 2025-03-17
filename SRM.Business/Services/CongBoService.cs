@@ -45,7 +45,7 @@ namespace SRM.Business.Services
             _logger = logger;
         }
 
-        public async Task<bool> AddAsync(CongBoData model)
+        public async Task<ExecuteData> AddAsync(CongBoData model)
         {
             try
             {
@@ -66,21 +66,28 @@ namespace SRM.Business.Services
                 var congBo = _mapper.Map<CongBo>(model);
                 await _congBoRepository.AddAsync(congBo);
                 await _congBoRepository.CommitTransactionAsync();
-                return true;
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 await _congBoRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task<bool> UpdateAsync(CongBoData model)
+        public async Task<ExecuteData> UpdateAsync(CongBoData model)
         {
             try
             {               
-
                 await _congBoRepository.BeginTransactionAsync();
 
                 if (!model.NoiDangBaoId.HasValue && !string.IsNullOrEmpty(model.TenNoiDangBao))
@@ -100,46 +107,82 @@ namespace SRM.Business.Services
 
                 await _congBoRepository.UpdateAsync(congBo);
                 await _congBoRepository.CommitTransactionAsync();
-                return true;
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 await _congBoRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task<CongBoData?> GetAsync(int id)
+        public async Task<ExecuteData> GetAsync(int id)
         {
             try
             {
                 var entity = await _congBoRepository.GetByIdAsync(id);
-                var result = _mapper.Map<CongBoData>(entity);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task<PageData<CongBoData>> GetPageAsync(CongBoSearch searchModel, int pageIndex = 1, int pageSize = 10)
-        {
-            try
-            {
-                var result = await _congBoRepository.GetPageWithSearchAsync(searchModel, pageIndex, pageSize);
-                return new PageData<CongBoData>
+                if (entity == null)
                 {
-                    Data = _mapper.Map<List<CongBoData>>(result.Item1),
-                    Total = result.Item2,
+                    return new ExecuteData
+                    {
+                        Success = false,
+                        Message = GlobalConstraint.NotFound,
+                    };
+                }
+
+                var result = _mapper.Map<CongBoData>(entity);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = result,
+                    Message = GlobalConstraint.Success,
                 };
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);                
-                throw;
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
+        public async Task<ExecuteData> GetPageAsync(CongBoSearch searchModel, int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = await _congBoRepository.GetPageWithSearchAsync(searchModel, pageIndex, pageSize);
+                var pageData = new PageData<CongBoData>
+                {
+                    Items = _mapper.Map<List<CongBoData>>(result.Item1),
+                    Total = result.Item2,
+                };
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                    Data = pageData,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
     }

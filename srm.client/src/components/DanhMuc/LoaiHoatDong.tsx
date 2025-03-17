@@ -3,15 +3,32 @@ import { LoaiHoatDongData } from '../../models/data';
 import { useState } from 'react';
 import { LoaiHoatDongSearch } from '../../models/search';
 import { useQuery } from '@tanstack/react-query';
-import { getLoaiHoatDongs, editLoaiHoatDong, createLoaiHoatDong, deleteLoaiHoatDong } from '../../services/LoaiHoatDongService';
-import { Pagination } from '../commons';
+import { getLoaiHoatDongs, editLoaiHoatDong, createLoaiHoatDong } from '../../services/LoaiHoatDongService';
+import { Loading, Pagination, Error } from '../commons';
 
 interface DataType extends LoaiHoatDongData {
     key: string;
     stt: number;
 }
 
-const DanhMuc: React.FC = () => {
+const columns: TableProps<DataType>['columns'] = [
+    {
+        title: <div style={{ textAlign: 'center' }}>STT</div>,
+        dataIndex: 'stt',
+        key: 'stt',
+        width: '5%',
+        render: (_, record) => (
+            <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
+        ),
+    },
+    {
+        title: <div style={{ textAlign: 'center' }}>Tên loại hoạt động</div>,
+        key: 'ten',
+        dataIndex: 'ten',
+    },
+];
+
+const LoaiHoatDong: React.FC = () => {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const [searchParams, setSearchParams] = useState<LoaiHoatDongSearch>({
@@ -22,18 +39,18 @@ const DanhMuc: React.FC = () => {
     const [editData, setEditData] = useState<LoaiHoatDongData | null>(null);
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    const { data: loaiHoatDongDatas, isLoading, error, refetch } = useQuery({
-        queryKey: ['loaiHoatDongData', searchParams],
+    const { data: capDeTaiDatas, isLoading, error, refetch } = useQuery({
+        queryKey: ['loaiHoatDongDatas', searchParams],
         queryFn: () => getLoaiHoatDongs(searchParams),
     });
 
-    const dataSource: DataType[] = loaiHoatDongDatas?.data?.map((item, index) => ({
+    const dataSource: DataType[] = capDeTaiDatas?.items?.map((item, index) => ({
         ...item,
         key: item.id!.toString(),
         stt: (searchParams.pageIndex! - 1) * searchParams.pageSize! + index,
     })) || [];
 
-    const totalItems = loaiHoatDongDatas?.total ?? dataSource.length;
+    const totalItems = capDeTaiDatas?.total ?? dataSource.length;
 
     const handlePaginationChange = (pageIndex: number, pageSize: number) => {
         setSearchParams(prev => ({ ...prev, pageIndex, pageSize }));
@@ -78,7 +95,7 @@ const DanhMuc: React.FC = () => {
             }
             form.resetFields();
             setEditData(null);
-            setIsEditing(false);
+            setIsEditing(false)
             refetch();
         } catch (err) {
             messageApi.error('Có lỗi xảy ra');
@@ -86,53 +103,8 @@ const DanhMuc: React.FC = () => {
         }
     };
 
-    const handleDelete = async (id: number) => {
-        try {
-            await deleteLoaiHoatDong(id);
-            messageApi.success("Xóa thành công!");
-            refetch();
-        } catch (err) {
-            messageApi.error("Xóa không thành công!");
-            console.error(err);
-        }
-    };
-
-    const columns: TableProps<DataType>['columns'] = [
-        {
-            title: <div style={{ textAlign: 'center' }}>STT</div>,
-            dataIndex: 'stt',
-            key: 'stt',
-            width: '5%',
-            render: (_, record) => (
-                <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
-            ),
-        },
-        {
-            title: <div style={{ textAlign: 'center' }}>Tên loại hoạt động</div>,
-            key: 'ten',
-            dataIndex: 'ten',
-        },
-        {
-            title: <div style={{ textAlign: 'center' }}>Hành động</div>,
-            key: 'action',
-            width: '15%',
-            render: (_, record) => (
-                <div style={{ textAlign: 'center' }}>
-                    <Popconfirm
-                        title="Xác nhận xóa?"
-                        description="Bạn có chắc chắn muốn xóa loại hoạt động này không?"
-                        onConfirm={() => handleDelete(record.id!)}
-                        okText="Đồng ý"
-                        cancelText="Hủy"
-                    >
-                        <Button danger size="small">Xóa</Button>
-                    </Popconfirm>
-                </div>
-            ),
-        }
-    ];
-
-    if (error) return <div>{(error as Error).message}</div>;
+    if (isLoading) return <Loading />;
+    if (error) return <Error message={error.message} />;
 
     return (
         <>
@@ -141,6 +113,7 @@ const DanhMuc: React.FC = () => {
             <Row gutter={15} style={{ marginTop: '10px' }}>
                 <Col span={12}>
                     <Table<DataType>
+                        size="small"
                         columns={columns}
                         dataSource={dataSource}
                         pagination={false}
@@ -181,10 +154,10 @@ const DanhMuc: React.FC = () => {
                     <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: '10px' }} initialValues={{ ten: '' }}>
                         <Form.Item
                             name="ten"
-                            label="Tên loại hoạt động"
-                            rules={[{ required: true, message: 'Vui lòng nhập tên loại hoạt động!' }]}
+                            label="Tên hoạt động"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên hoạt động!' }]}
                         >
-                            <Input placeholder="Nhập tên loại hoạt động" disabled={!isEditing} />
+                            <Input placeholder="Nhập tên hoạt động" disabled={!isEditing} />
                         </Form.Item>
                         <Row justify="center">
                             <Form.Item>
@@ -202,4 +175,4 @@ const DanhMuc: React.FC = () => {
     );
 };
 
-export default DanhMuc;
+export default LoaiHoatDong;

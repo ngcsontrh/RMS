@@ -9,11 +9,11 @@ namespace SRM.Business.IServices
 {
     public interface ITacGiaService
     {
-        Task AddAsync(TacGiaData model);
-        Task UpdateAsync(TacGiaData model);
-        Task DeleteAsync(int id);
-        Task<TacGiaData?> GetAsync(int id);
-        Task<PageData<TacGiaData>> GetPageAsync(int pageIndex = 1, int pageSize = 10);
-        Task<List<TacGiaData>> GetDropDownDataAsync();
+        Task<ExecuteData> AddAsync(TacGiaData model);
+        Task<ExecuteData> UpdateAsync(TacGiaData model);
+        Task<ExecuteData> DeleteAsync(int id);
+        Task<ExecuteData> GetAsync(int id);
+        Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> GetDropDownDataAsync();
     }
 }

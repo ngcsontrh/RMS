@@ -8,8 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { faUser, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { Pagination } from '../commons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getCongBos } from '../../services/CongBoService';
+import { useAuthStore } from '../../stores/authStore';
 
 interface DataType extends CongBoData {
     key: string;
@@ -54,6 +55,8 @@ const columns: TableProps<DataType>['columns'] = [
 ];
 
 export default () => {
+    const location = useLocation();
+    const { authData } = useAuthStore();
     const [searchParams, setSearchParams] = React.useState<CongBoSearch>({
         pageIndex: 1,
         pageSize: 10,
@@ -65,8 +68,8 @@ export default () => {
         queryFn: () => getCongBos(searchParams)
     });
 
-    const dataSource: DataType[] = data?.data
-        ? data.data.map((item, index) => ({
+    const dataSource: DataType[] = data?.items
+        ? data.items.map((item, index) => ({
             ...item,
             key: item.id!.toString(),
             stt: (searchParams.pageIndex! - 1) * searchParams.pageSize! + index,
@@ -91,14 +94,16 @@ export default () => {
                 style={{ marginTop: "10px" }}
                 items={[{ title: "Công Bố" }, { title: "Danh sách" }]}
             />
-            <Flex justify="flex-end">
-                <Button
-                    type="primary"
-                    style={{ marginTop: "10px" }}
-                >
-                    <Link to={'/cong-bo/tao-moi'}>Tạo mới</Link>
-                </Button>
-            </Flex>
+            {location.pathname === '/ca-nhan/cong-bo' && (
+                <Flex justify="flex-end">
+                    <Button
+                        type="primary"
+                        style={{ marginTop: "10px" }}
+                    >
+                        <Link to={'/cong-bo/tao-moi'}>Tạo mới</Link>
+                    </Button>
+                </Flex>
+            )}            
             <Table<DataType>
                 columns={columns}
                 dataSource={dataSource}

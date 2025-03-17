@@ -33,6 +33,11 @@ namespace SRM.Data
             builder.Entity<Role>(entity =>
             {
                 entity.ToTable("Role");
+
+                entity.HasData(new Role[]
+                {
+                    new Role { Id = 1, Name = "Admin", NormalizedName = "ADMIN" }
+                });
             });
 
             builder.Entity<RoleClaim>(entity =>
@@ -51,7 +56,8 @@ namespace SRM.Data
                 {
                     Id = 1,
                     UserName = "admin123",
-                    PasswordHash = "AQAAAAIAAYagAAAAEOe4N3MEZi7wG5irdaFEbKbVhQgmM3sS7vIQIuP1bw0XHQamSc1jByD00RNZrlrQFg==", // admin123,
+                    NormalizedUserName = "ADMIN123",
+                    PasswordHash = "AQAAAAIAAYagAAAAEEXMEGGZAfbpqnVi2Ei9taVel/ImJ2UPWjQtkwQPww9Xt7Vxv2JaclNg8M4hojbRMg==", // admin123,
                     ConcurrencyStamp = null
                 });
             });
@@ -87,6 +93,11 @@ namespace SRM.Data
                 entity.HasOne(ur => ur.Role)
                     .WithMany(r => r.UserRoles)
                     .HasForeignKey(ur => ur.RoleId);
+
+                entity.HasData(new UserRole[]
+                {
+                    new UserRole { UserId = 1, RoleId = 1 }
+                });
             });                
 
             builder.Entity<UserToken>(entity =>

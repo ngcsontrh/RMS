@@ -10,9 +10,9 @@ namespace SRM.Business.IServices
 {
     public interface IHoatDongService
     {
-        Task<bool> AddAsync(HoatDongData model);
-        Task<bool> UpdateAsync(HoatDongData model);
-        Task<HoatDongData?> GetAsync(int id);
-        Task<PageData<HoatDongData>> GetPageAsync(HoatDongSearch searchModel, int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> AddAsync(HoatDongData model);
+        Task<ExecuteData> UpdateAsync(HoatDongData model);
+        Task<ExecuteData> GetAsync(int id);
+        Task<ExecuteData> GetPageAsync(HoatDongSearch searchModel, int pageIndex = 1, int pageSize = 10);
     }
 }

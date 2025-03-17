@@ -24,8 +24,8 @@ namespace SRM.Shared.Models.Data
         public string? HoSoSanPham { get; set; }
         public int? DonViChuTriId { get; set; }
         public string? TenDonViChuTri { get; set; }
-        public TacGiaJson? ChuNhiem { get; set; }
-        public List<TacGiaJson>? CanBoThamGias { get; set; }
+        public string? ChuNhiem { get; set; }
+        public List<string>? CanBoThamGias { get; set; }
         public string? PhanChiaSuDongGop { get; set; }
     }
 }

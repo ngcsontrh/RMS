@@ -441,7 +441,7 @@ namespace SRM.Data.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TacGiaId", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, null, null, false, false, null, null, null, "AQAAAAIAAYagAAAAEOe4N3MEZi7wG5irdaFEbKbVhQgmM3sS7vIQIuP1bw0XHQamSc1jByD00RNZrlrQFg==", null, false, null, null, false, "admin123" });
+                values: new object[] { 1, 0, null, null, false, false, null, null, "ADMIN123", "AQAAAAIAAYagAAAAEEXMEGGZAfbpqnVi2Ei9taVel/ImJ2UPWjQtkwQPww9Xt7Vxv2JaclNg8M4hojbRMg==", null, false, null, null, false, "admin123" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CongBo_NoiDangBaoId",

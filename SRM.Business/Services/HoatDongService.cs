@@ -5,6 +5,7 @@ using SRM.Data.IRepositories;
 using SRM.Shared.Entities;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
+using SRM.Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace SRM.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> AddAsync(HoatDongData model)
+        public async Task<ExecuteData> AddAsync(HoatDongData model)
         {
             try
             {
@@ -51,50 +52,86 @@ namespace SRM.Business.Services
                 }
                 await _hoatDongRepository.AddAsync(hoatDong);
                 await _hoatDongRepository.CommitTransactionAsync();
-                return true;
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 await _hoatDongRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task<HoatDongData?> GetAsync(int id)
+        public async Task<ExecuteData> GetAsync(int id)
         {
             try
             {
                 var entity = await _hoatDongRepository.GetByIdAsync(id);
-                var result = _mapper.Map<HoatDongData>(entity);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
-        }
-
-        public async Task<PageData<HoatDongData>> GetPageAsync(HoatDongSearch searchModel, int pageIndex = 1, int pageSize = 10)
-        {
-            try
-            {
-                var result = await _loaiHoatDongRepository.GetPageWithFilterAsync(_loaiHoatDongRepository.GetQueryable());
-                return new PageData<HoatDongData>
+                if (entity == null)
                 {
-                    Data = _mapper.Map<List<HoatDongData>>(result.Item1),
-                    Total = result.Item2
+                    return new ExecuteData
+                    {
+                        Success = false,
+                        Message = GlobalConstraint.NotFound,
+                    };
+                }
+
+                var result = _mapper.Map<HoatDongData>(entity);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = result,
+                    Message = GlobalConstraint.Success,
                 };
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
 
-        public async Task<bool> UpdateAsync(HoatDongData model)
+        public async Task<ExecuteData> GetPageAsync(HoatDongSearch searchModel, int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = await _loaiHoatDongRepository.GetPageWithFilterAsync(_loaiHoatDongRepository.GetQueryable());
+                var pageData = new PageData<HoatDongData>
+                {
+                    Items = _mapper.Map<List<HoatDongData>>(result.Item1),
+                    Total = result.Item2
+                };
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = pageData,
+                    Message = GlobalConstraint.Success,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
+        public async Task<ExecuteData> UpdateAsync(HoatDongData model)
         {
             try
             {
@@ -112,13 +149,21 @@ namespace SRM.Business.Services
                 }
                 await _hoatDongRepository.UpdateAsync(hoatDong);
                 await _hoatDongRepository.CommitTransactionAsync();
-                return true;
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.Success,
+                };
             }
             catch (Exception e)
             {
                 await _hoatDongRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
-                throw;
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
             }
         }
     }
