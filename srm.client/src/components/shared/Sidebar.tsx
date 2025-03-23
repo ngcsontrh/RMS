@@ -69,6 +69,11 @@ export const Sidebar: React.FC = () => {
                 label: 'Thông tin cá nhân',
                 onClick: () => navigate('/thong-tin-ca-nhan')
             },
+            {
+                key: '/quan-ly-nguoi-dung',
+                label: 'Quản lý người dùng',
+                onClick: () => navigate('/quan-ly-nguoi-dung')
+            },
             //{
             //    key: '/ly-lich-khoa-hoc',
             //    label: 'Lý lịch khoa học',

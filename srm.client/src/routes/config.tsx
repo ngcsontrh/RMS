@@ -10,6 +10,7 @@ import { Unauthorized } from '../components/commons';
 import { Login } from '../components/Auth';
 import TrangChuHome from '../components/TrangChu/Home';
 import KetQuaHome from '../components/KetQua/Home';
+import { QuanLyNguoiDungHome } from '../components/QuanLyNguoiDung';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -30,6 +31,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/danh-muc" element={<DanhMucHome />} />
             <Route path="/ket-qua" element={<KetQuaHome />} />
             <Route path="/thong-tin-ca-nhan" element={<ThongTinCaNhanHome />} />
+            <Route path="/quan-ly-nguoi-dung" element={<QuanLyNguoiDungHome />} />
             <Route path="/unauthorized" element={<Unauthorized />} />            
         </Routes>
     )
