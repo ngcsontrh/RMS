@@ -8,6 +8,7 @@ import { AppRoutes } from './routes';
 import { configureApiInterceptors } from './services/api';
 import { Sidebar } from './components/shared/Sidebar';
 import { useAuthStore } from './stores/authStore';
+import { refreshToken } from './services/UserService';
 
 const { Header, Content, Footer } = Layout;
 
@@ -26,12 +27,36 @@ const App: React.FC = () => {
         configureApiInterceptors(navigate);
     }, [navigate]);
 
-    const { isAuthenticated, authData, clearAuth } = useAuthStore();
+    const { isAuthenticated, userName, setAuth, clearAuth } = useAuthStore();
 
     const handleLogout = () => {
         clearAuth();
-        navigate("/dang-nhap");
+        navigate("/");
     };
+
+    useEffect(() => {
+        const getToken = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                const expiry = localStorage.getItem("tokenExpiry");
+
+                if (!token || (expiry && Date.now() >= parseInt(expiry, 10))) {
+                    clearAuth();
+                    const tokenData = await refreshToken();
+                    if (tokenData && tokenData.accessToken) {
+                        setAuth(tokenData.accessToken);
+                    }
+                    return;
+                }
+
+                setAuth(token);
+            } catch (error) {
+                console.error("Error fetching token:", error);
+            }
+        };
+
+        getToken();
+    }, [setAuth]);
 
     return (
         <Layout>
@@ -41,7 +66,7 @@ const App: React.FC = () => {
                     <Flex justify="end" align="center" style={{ marginRight: "15px" }}>
                         {isAuthenticated ? (
                             <Flex align="center" gap={10}>
-                                <span>Xin chào, {authData.userName}</span>
+                                <span>Xin chào, {userName}</span>
                                 <Button type="link" onClick={handleLogout}>
                                     Đăng xuất
                                 </Button>

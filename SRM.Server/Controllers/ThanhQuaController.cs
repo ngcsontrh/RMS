@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
 using SRM.Business.Services;
-using SRM.Server.Attributes;
+
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
@@ -29,6 +29,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
@@ -39,6 +40,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _thanhQuaService.GetAsync(id);
@@ -47,7 +49,6 @@ namespace SRM.Server.Controllers
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddThanhQua))]
         public async Task<ExecuteData> AddAsync([FromBody] ThanhQuaData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -62,7 +63,6 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateThanhQua))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] ThanhQuaData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -73,6 +73,13 @@ namespace SRM.Server.Controllers
 
             model.Id = id;
             var result = await _thanhQuaService.UpdateAsync(model);
+            return result;
+        }
+
+        [HttpGet("dropdown")]
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            var result = await _thanhQuaService.GetDropdownAsync();
             return result;
         }
     }

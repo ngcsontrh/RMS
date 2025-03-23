@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
-using SRM.Server.Attributes;
+
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
@@ -24,7 +24,9 @@ namespace SRM.Server.Controllers
             _validator = validator;
         }
 
+        #region authorize
         [HttpGet]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
@@ -44,7 +46,6 @@ namespace SRM.Server.Controllers
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddLoaiHoatDong))]
         public async Task<ExecuteData> AddAsync([FromBody] LoaiHoatDongData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -59,7 +60,6 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateLoaiHoatDong))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] LoaiHoatDongData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -72,5 +72,15 @@ namespace SRM.Server.Controllers
             var result = await _loaiHoatDongService.UpdateAsync(model);
             return result;
         }
+        #endregion
+
+        #region public
+        [HttpGet("dropdown")]
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            var result = await _loaiHoatDongService.GetDropdownAsync();
+            return result;
+        }
+        #endregion
     }
 }

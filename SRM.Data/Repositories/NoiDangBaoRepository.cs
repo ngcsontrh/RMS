@@ -13,7 +13,7 @@ namespace SRM.Data.Repositories
 {
     public class NoiDangBaoRepository : RepositoryBase<NoiDangBao>, INoiDangBaoRepository
     {
-        public NoiDangBaoRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public NoiDangBaoRepository(AppDbContext context) : base(context)
         {
         }
 

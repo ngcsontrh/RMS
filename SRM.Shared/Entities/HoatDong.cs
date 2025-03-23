@@ -24,7 +24,7 @@ namespace SRM.Shared.Entities
         public DateTime? NgayKetThuc { get; set; }
         public string? DuongDan { get; set; }
         public string? ChuNhiem { get; set; }
-        public string? ThanhVienThamGias { get; set; }
+        public string? ThanhVienThamGia { get; set; }
         public string? PhanChiaSuDongGop { get; set; }
 
         public virtual LoaiHoatDong? LoaiHoatDong { get; set; }

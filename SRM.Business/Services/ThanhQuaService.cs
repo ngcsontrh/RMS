@@ -78,6 +78,28 @@ namespace SRM.Business.Services
             }
         }
 
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            try
+            {
+                var result = await _thanhQuaRepository.GetAllAsync();
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = _mapper.Map<List<ThanhQuaData>>(result),
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError
+                };
+            }
+        }
+
         public async Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10)
         {
             try

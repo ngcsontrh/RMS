@@ -9,7 +9,6 @@ namespace SRM.Shared.Entities
     public class DonVi : EntityBase
     {
         public string Ten { get; set; } = null!;
-        
-        public ICollection<TacGia> TacGias { get; set; } = new List<TacGia>();
+        public string? MoTa { get; set; }
     }
 }

@@ -6,7 +6,6 @@ import { Error, Loading } from '../commons';
 import { useQuery } from '@tanstack/react-query';
 import { CongBoData, NoiDangBaoData, ThanhQuaData } from '../../models/data';
 import { TacGiaJson } from '../../models/json'
-import { getTacGiaDropDownData } from '../../services/TacGiaService';
 import { getNoiDangBaos } from '../../services/NoiDangBaoService';
 import { editCongBo, createCongBo, getCongBo } from '../../services/CongBoService';
 import dayjs from 'dayjs';
@@ -29,22 +28,7 @@ export default () => {
     const [noiDangBaoDatas, setNoiDangBaoDatas] = useState<NoiDangBaoData[]>([]);
     const [ThanhQuaDatas, setThanhQuaDatas] = useState<ThanhQuaData[]>([]);
 
-    const [base64String, setBase64String] = useState<string>('');
-
-    // Fetch danh sách tác giả
-    const { data: tacGiaDropDownDatas } = useQuery({
-        queryKey: ['tacGias'],
-        queryFn: () => getTacGiaDropDownData(),
-    });
-
-    useEffect(() => {
-        if (tacGiaDropDownDatas) {
-            setTacGiaJsons(tacGiaDropDownDatas.map(item => ({
-                id: item.id,
-                ten: item.ten,
-            })));
-        }
-    }, [tacGiaDropDownDatas]);
+    const [base64String, setBase64String] = useState<string>('');    
 
     // Fetch danh sách nơi đăng báo
     const { data: noiDangBaoPage } = useQuery({
@@ -53,8 +37,8 @@ export default () => {
     });
 
     useEffect(() => {
-        if (noiDangBaoPage && noiDangBaoPage.data) {
-            setNoiDangBaoDatas(noiDangBaoPage.data);
+        if (noiDangBaoPage && noiDangBaoPage.items) {
+            setNoiDangBaoDatas(noiDangBaoPage.items);
         }
     }, [noiDangBaoPage]);
     // Fetch danh sách nơi đăng báo
@@ -64,8 +48,8 @@ export default () => {
     });
 
     useEffect(() => {
-        if (thanhQuaPage && thanhQuaPage.data) {
-            setThanhQuaDatas(thanhQuaPage.data);
+        if (thanhQuaPage && thanhQuaPage.items) {
+            setThanhQuaDatas(thanhQuaPage.items);
         }
     }, [thanhQuaPage]);
 

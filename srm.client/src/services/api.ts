@@ -1,4 +1,5 @@
 ﻿import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import { ExecuteData, TokenData } from "../models/data";
 
 const api: AxiosInstance = axios.create({
     headers: {
@@ -24,12 +25,33 @@ export const configureApiInterceptors = (navigate: (path: string) => void) => {
         (response: AxiosResponse) => {
             return response;
         },
-        (error: AxiosError) => {
+        async (error: AxiosError) => {
             if (error.response) {
                 console.error("API Error:", error.response.data);
+
                 if (error.response.status === 401) {
-                    localStorage.removeItem("token");
-                    navigate("/dang-nhap");
+                    try {
+                        const response = await axios.post<ExecuteData<TokenData>>("/api/user/refresh-token");
+
+                        if (!response.data.success) {
+                            throw new Error(response.data.message!);
+                        }
+
+                        const newAccessToken = response.data.data?.accessToken;
+                        localStorage.setItem("accessToken", newAccessToken!);
+
+                        // Cập nhật lại header cho request tiếp theo
+                        if (error.config) {
+                            error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                        }
+
+                        // Thực hiện lại request ban đầu với accessToken mới
+                        return axios(error.config!);
+                    } catch (refreshError) {
+                        console.error("Error refreshing token:", refreshError);
+                        localStorage.removeItem("accessToken");
+                        navigate("/dang-nhap");
+                    }
                 } else if (error.response.status === 403) {
                     navigate("/unauthorized");
                 }

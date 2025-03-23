@@ -20,6 +20,7 @@ namespace SRM.Data
                 options.UseSqlServer(connectionString)
                     .EnableSensitiveDataLogging();
             });
+
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();

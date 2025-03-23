@@ -12,6 +12,14 @@ export const getDonViChuTris = async (search: DonViChuTriSearch): Promise<PageDa
     return response.data.data!;
 }
 
+export const getDonViChuTriDropdown = async (): Promise<DonViChuTriData[]> => {
+    const response = await api.get<ExecuteData<DonViChuTriData[]>>(`${endpoint}/dropdown`);
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
+    }
+    return response.data.data!;
+}
+
 export const getDonViChuTri = async (id: number): Promise<DonViChuTriData> => {
     const response = await api.get<ExecuteData<DonViChuTriData>>(`${endpoint}/${id}`);
     if (!response.data.success) {

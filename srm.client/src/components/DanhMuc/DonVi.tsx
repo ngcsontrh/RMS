@@ -40,7 +40,7 @@ const DonVi: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const { data: pageData, isLoading, error, refetch } = useQuery({
-        queryKey: ['donViDatas', searchParams],
+        queryKey: ['donVi', searchParams],
         queryFn: () => getDonVis(searchParams),
     });
 
@@ -84,13 +84,13 @@ const DonVi: React.FC = () => {
         setIsEditing(false);
     };
 
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: DonViData) => {
         try {
             if (editData?.id) {
-                await editDonVi(editData.id, { ...editData, ten: values.ten });
+                await editDonVi(editData.id, { ...values });
                 messageApi.success('Cập nhật thành công');
             } else {
-                await createDonVi({ ten: values.ten });
+                await createDonVi({ ...values });
                 messageApi.success('Tạo mới thành công');
             }
             form.resetFields();
@@ -152,12 +152,18 @@ const DonVi: React.FC = () => {
                         </Col>
                     </Row>
                     <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: '10px' }} initialValues={{ ten: '' }}>
-                        <Form.Item
+                        <Form.Item<DonViData>
                             name="ten"
                             label="Tên đơn vị chủ trì"
                             rules={[{ required: true, message: 'Vui lòng nhập tên đơn vị!' }]}
                         >
                             <Input placeholder="Nhập tên đơn vị" disabled={!isEditing} />
+                        </Form.Item>
+                        <Form.Item<DonViData>
+                            name="moTa"
+                            label="Mô tả"
+                        >
+                            <Input.TextArea placeholder="Nhập mô tả" disabled={!isEditing} />
                         </Form.Item>
                         <Row justify="center">
                             <Form.Item>

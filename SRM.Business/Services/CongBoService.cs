@@ -24,15 +24,13 @@ namespace SRM.Business.Services
         private readonly ICongBoRepository _congBoRepository;
         private readonly INoiDangBaoRepository _noiDangBaoRepository;
         private readonly IThanhQuaRepository _thanhquaRepository;
-        private readonly ITacGiaRepository _tacGiaRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<CongBoService> _logger;
 
         public CongBoService(
             ICongBoRepository congBoRepository,
             INoiDangBaoRepository noiDangBaoRepository,
-            IThanhQuaRepository thanhquaRepository,
-            ITacGiaRepository tacGiaRepository,
+            IThanhQuaRepository thanhquaRepository,            
             IMapper mapper,
             ILogger<CongBoService> logger
             )
@@ -40,7 +38,6 @@ namespace SRM.Business.Services
             _congBoRepository = congBoRepository;
             _noiDangBaoRepository = noiDangBaoRepository;
             _thanhquaRepository = thanhquaRepository;
-            _tacGiaRepository = tacGiaRepository;
             _mapper = mapper;
             _logger = logger;
         }

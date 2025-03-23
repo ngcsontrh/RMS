@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SRM.Business;
@@ -65,8 +66,14 @@ builder.Services.AddSwaggerGen(option =>
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseDefaultFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "storage")),
+    RequestPath = "/storage"
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -12,4 +12,11 @@ namespace SRM.Shared.Models.Data
         public string? Message { get; init; }
         public object? Data { get; init; }
     }
+
+    public record ExecuteData<T>
+    {
+        public bool Success { get; init; }
+        public string? Message { get; init; }
+        public T? Data { get; init; }
+    }
 }

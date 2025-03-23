@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
-using SRM.Server.Attributes;
+
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Utils;
@@ -26,7 +26,18 @@ namespace SRM.Server.Controllers
             _validator = validator;
         }
 
+        #region public
+        [HttpGet("dropdown")]
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            var result = await _donViChuTriService.GetDropdownAsync();
+            return result;
+        }
+        #endregion
+
+        #region authorize
         [HttpGet]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
@@ -37,6 +48,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _donViChuTriService.GetAsync(id);
@@ -45,7 +57,6 @@ namespace SRM.Server.Controllers
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddDonViChuTri))]
         public async Task<ExecuteData> AddAsync([FromBody] DonViChuTriData model)
         {             
             var validateResult = await _validator.ValidateAsync(model);
@@ -59,7 +70,6 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateDonViChuTri))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] DonViChuTriData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -71,6 +81,7 @@ namespace SRM.Server.Controllers
             var result = await _donViChuTriService.UpdateAsync(model);
             return result;
         }
+        #endregion
     }
 }
 

@@ -169,5 +169,28 @@ namespace SRM.Business.Services
                 };
             }
         }
+
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            try
+            {
+                var result = await _loaiHoatDongRepository.GetAllAsync();
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = _mapper.Map<List<LoaiHoatDongData>>(result),
+                    Message = GlobalConstraint.Success,
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new ExecuteData
+                {
+                    Success = true,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
     }
 }

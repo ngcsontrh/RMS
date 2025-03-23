@@ -11,7 +11,7 @@ namespace SRM.Data.Repositories
 {
     public class HoatDongRepository : RepositoryBase<HoatDong>, IHoatDongRepository
     {
-        public HoatDongRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public HoatDongRepository(AppDbContext context) : base(context)
         {
         }
     }

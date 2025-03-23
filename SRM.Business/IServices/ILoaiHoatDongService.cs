@@ -15,5 +15,6 @@ namespace SRM.Business.IServices
         Task<ExecuteData> DeleteAsync(int id);
         Task<ExecuteData> GetAsync(int id);
         Task<ExecuteData> GetPageAsync(LoaiHoatDongSearch searchModel,int pageIndex = 1, int pageSize = 10);
+        Task<ExecuteData> GetDropdownAsync();
     }
 }

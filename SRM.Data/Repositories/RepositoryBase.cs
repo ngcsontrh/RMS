@@ -16,30 +16,22 @@ namespace SRM.Data.Repositories
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
     {
         protected readonly AppDbContext _context;
-        protected readonly IMapper _mapper;
+       
         private IDbContextTransaction? _transaction;
 
-        public RepositoryBase(AppDbContext context, IMapper mapper)
+        public RepositoryBase(AppDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public virtual async Task AddAsync(TEntity entity)
         {
-            entity.NgayTao = DateTime.UtcNow;
-            entity.NgaySua = DateTime.UtcNow;
             await _context.Set<TEntity>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
         public virtual async Task AddAsync(IEnumerable<TEntity> entities)
         {
-            foreach (var item in entities)
-            {
-                item.NgayTao = DateTime.UtcNow;
-                item.NgaySua = DateTime.UtcNow;
-            }
             await _context.Set<TEntity>().AddRangeAsync(entities);
             await _context.SaveChangesAsync();
         }
@@ -64,6 +56,12 @@ namespace SRM.Data.Repositories
         public virtual async Task DeleteAsync(IEnumerable<int> ids)
         {
             await _context.Set<TEntity>().Where(x => ids.Contains(x.Id)).ExecuteDeleteAsync();
+        }
+
+        public async Task<List<TEntity>> GetAllAsync()
+        {
+            var result = await _context.Set<TEntity>().ToListAsync();
+            return result;
         }
 
         public virtual async Task<List<TEntity>> GetAllWithFilter(IQueryable<TEntity> query)
@@ -109,22 +107,17 @@ namespace SRM.Data.Repositories
 
         public virtual async Task UpdateAsync(TEntity entity)
         {
-            entity.NgaySua = DateTime.UtcNow;
-            var currentEntity = await _context.Set<TEntity>().FindAsync(entity.Id);
-            _mapper.Map(entity, currentEntity);
+            _context.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.Update(entity);
             await _context.SaveChangesAsync();
         }
 
         public virtual async Task UpdateAsync(IEnumerable<TEntity> entities)
         {
-            List<int> ids = entities.Select(x => x.Id).ToList();
-            var currentEntities = await _context.Set<TEntity>().Where(x => ids.Contains(x.Id)).ToListAsync();
-            foreach (var entity in entities)
-            {
-                entity.NgaySua = DateTime.UtcNow;
-                var currentEntity = currentEntities.SingleOrDefault(x => x.Id == entity.Id);
-                _mapper.Map(entity, currentEntity);                
-            }
+            _context.AttachRange(entities);
+            _context.Entry(entities).State = EntityState.Modified;
+            _context.UpdateRange(entities);
             await _context.SaveChangesAsync();
         }
     }

@@ -12,7 +12,7 @@ namespace SRM.Data.Repositories
 {
     public class ThanhQuaRepository : RepositoryBase<ThanhQua>, IThanhQuaRepository
     {
-        public ThanhQuaRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public ThanhQuaRepository(AppDbContext context) : base(context)
         {
         }
 

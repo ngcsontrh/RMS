@@ -15,7 +15,7 @@ namespace SRM.Business.Services
 {
     public class CapDeTaiService : ICapDeTaiService
     {
-        private readonly ICapDeTaiRepository _donViRepository;
+        private readonly ICapDeTaiRepository _capDeTaiRepository;
         private readonly ILogger<CapDeTaiService> _logger;
         private readonly IMapper _mapper;
 
@@ -25,7 +25,7 @@ namespace SRM.Business.Services
             IMapper mapper
             )
         {
-            _donViRepository = capDeTaiRepository;
+            _capDeTaiRepository = capDeTaiRepository;
             _logger = logger;
             _mapper = mapper;
         }
@@ -35,7 +35,7 @@ namespace SRM.Business.Services
             try
             {
                 var entity = _mapper.Map<CapDeTai>(model);
-                await _donViRepository.AddAsync(entity);
+                await _capDeTaiRepository.AddAsync(entity);
                 return new ExecuteData
                 {
                     Success = true,
@@ -57,7 +57,7 @@ namespace SRM.Business.Services
         {
             try
             {
-                await _donViRepository.DeleteAsync(id);
+                await _capDeTaiRepository.DeleteAsync(id);
                 return new ExecuteData
                 {
                     Success = true,
@@ -79,7 +79,7 @@ namespace SRM.Business.Services
         {
             try
             {
-                var entity = await _donViRepository.GetByIdAsync(id);
+                var entity = await _capDeTaiRepository.GetByIdAsync(id);
                 if (entity == null)
                 {
                     return new ExecuteData
@@ -108,11 +108,33 @@ namespace SRM.Business.Services
             }
         }
 
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            try
+            {
+                var result = await _capDeTaiRepository.GetAllAsync();
+                return new ExecuteData
+                {
+                    Success = true,
+                    Data = _mapper.Map<List<CapDeTaiData>>(result)
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new ExecuteData
+                {
+                    Success = false,
+                    Message = GlobalConstraint.GeneralError,
+                };
+            }
+        }
+
         public async Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10)
         {
             try
             {
-                var result = await _donViRepository.GetPageWithFilterAsync(_donViRepository.GetQueryable(), pageIndex, pageSize);
+                var result = await _capDeTaiRepository.GetPageWithFilterAsync(_capDeTaiRepository.GetQueryable(), pageIndex, pageSize);
                 var pageResult = new PageData<CapDeTaiData>
                 {
                     Items = _mapper.Map<List<CapDeTaiData>>(result.Item1),
@@ -141,7 +163,7 @@ namespace SRM.Business.Services
             try
             {
                 var entity = _mapper.Map<CapDeTai>(model);
-                await _donViRepository.UpdateAsync(entity);
+                await _capDeTaiRepository.UpdateAsync(entity);
                 return new ExecuteData
                 {
                     Success = true,

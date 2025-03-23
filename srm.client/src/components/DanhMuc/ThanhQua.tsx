@@ -40,7 +40,7 @@ const ThanhQua: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const { data: capDeTaiDatas, isLoading, error, refetch } = useQuery({
-        queryKey: ['deTaiData', searchParams],
+        queryKey: ['thanhQua', searchParams],
         queryFn: () => getThanhQuas(searchParams),
     });
 
@@ -84,13 +84,13 @@ const ThanhQua: React.FC = () => {
         setIsEditing(false);
     };
 
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: ThanhQuaData) => {
         try {
             if (editData?.id) {
-                await editThanhQua(editData.id, { ...editData, ten: values.ten });
+                await editThanhQua(editData.id, { ...values });
                 messageApi.success('Cập nhật thành công');
             } else {
-                await createThanhQua({ ten: values.ten });
+                await createThanhQua({ ...values });
                 messageApi.success('Tạo mới thành công');
             }
             form.resetFields();
@@ -151,12 +151,18 @@ const ThanhQua: React.FC = () => {
                         </Col>
                     </Row>
                     <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: '10px' }} initialValues={{ ten: '' }}>
-                        <Form.Item
+                        <Form.Item<ThanhQuaData>
                             name="ten"
                             label="Tên đề tài"
                             rules={[{ required: true, message: 'Vui lòng nhập tên thành quả!' }]}
                         >
                             <Input placeholder="Nhập tên đề tài" disabled={!isEditing} />
+                        </Form.Item>
+                        <Form.Item<ThanhQuaData>
+                            name="moTa"
+                            label="Mô tả"
+                        >
+                            <Input.TextArea placeholder="Nhập mô tả" disabled={!isEditing} />
                         </Form.Item>
                         <Row justify="center">
                             <Form.Item>

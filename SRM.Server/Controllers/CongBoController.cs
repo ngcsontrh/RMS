@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf.Types;
 using SRM.Business.IServices;
-using SRM.Server.Attributes;
+
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
@@ -26,6 +26,7 @@ namespace SRM.Server.Controllers
             _validator = validator;
         }
 
+        #region public
         [HttpGet]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
@@ -36,8 +37,11 @@ namespace SRM.Server.Controllers
             var result = await _congBoService.GetPageAsync(search, pageIndex, pageSize);
             return result;
         }
+        #endregion
 
+        #region authorize
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _congBoService.GetAsync(id);
@@ -46,7 +50,6 @@ namespace SRM.Server.Controllers
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddCongBo))]
         public async Task<ExecuteData> AddAsync([FromBody] CongBoData model)
         {
              var validateResult = await _validator.ValidateAsync(model);
@@ -60,7 +63,6 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateCongBo))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] CongBoData model)
         {
              var validateResult = await _validator.ValidateAsync(model);
@@ -72,5 +74,7 @@ namespace SRM.Server.Controllers
             var result = await _congBoService.UpdateAsync(model);            
             return result;
         }
+
+        #endregion
     }
 }

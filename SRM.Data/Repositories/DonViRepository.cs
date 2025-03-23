@@ -11,7 +11,7 @@ namespace SRM.Data.Repositories
 {
     public class DonViRepository : RepositoryBase<DonVi>, IDonViRepository
     {
-        public DonViRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public DonViRepository(AppDbContext context) : base(context)
         {
         }
     }

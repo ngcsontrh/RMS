@@ -30,10 +30,14 @@ namespace SRM.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
@@ -44,7 +48,8 @@ namespace SRM.Data.Migrations
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -60,39 +65,45 @@ namespace SRM.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal?>("ChiSoTacDong")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DiaDiem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<decimal?>("DiemHoiDong")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DongTacGias")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("FileMinhChungBaiBao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int?>("Ky")
                         .HasColumnType("int");
 
                     b.Property<string>("LinkBaiBao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("LinkMinhChungLoaiQ")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("LinkMinhChungTapChi")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("LoaiHoTroChiPhi")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LoaiQ")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("NgayCongBo")
                         .HasColumnType("datetime2");
@@ -100,51 +111,67 @@ namespace SRM.Data.Migrations
                     b.Property<DateTime?>("NgayGuiDang")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<int?>("NguoiTaoId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<string>("NhaXuatBan")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("NoiDangBaoId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<string>("PhanChiaSuDongGop")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("TacGiaChinh")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TacGiaLienHe")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("Tap")
                         .HasColumnType("int");
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TenHoiDong")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TenTapChi")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("ThanhQuaId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<string>("Trang")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -164,33 +191,39 @@ namespace SRM.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CanBoThamGias")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int?>("CapDeTaiId")
                         .HasColumnType("int");
 
                     b.Property<string>("ChuNhiem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("DonViChuTriId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<string>("HoSoNghiemThu")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("HoSoSanPham")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<decimal?>("KinhPhiHangNam")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MaSo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("MucTieu")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("NgayBatDau")
                         .HasColumnType("datetime2");
@@ -198,31 +231,38 @@ namespace SRM.Data.Migrations
                     b.Property<DateTime?>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<int?>("NguoiTaoId")
                         .HasColumnType("int");
 
                     b.Property<string>("NoiDung")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("PhanChiaSuDongGop")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<decimal?>("TongKinhPhi")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("TrangThai")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -241,21 +281,30 @@ namespace SRM.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<int?>("NguoiTaoId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -270,10 +319,14 @@ namespace SRM.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
@@ -284,7 +337,8 @@ namespace SRM.Data.Migrations
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -300,25 +354,31 @@ namespace SRM.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ChuNhiem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("DuongDan")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("FileDinhKem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("GhiChu")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<decimal?>("KinhPhi")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("LoaiHoatDongId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("NgayBatDau")
@@ -327,23 +387,29 @@ namespace SRM.Data.Migrations
                     b.Property<DateTime?>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<int?>("NguoiTaoId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<string>("NoiDung")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("PhanChiaSuDongGop")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int?>("SoTiet")
                         .HasColumnType("int");
@@ -353,7 +419,12 @@ namespace SRM.Data.Migrations
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ThanhVienThamGia")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -370,11 +441,112 @@ namespace SRM.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("NguoiSuaId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NguoiTaoId")
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ten")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoaiHoatDong", (string)null);
+                });
+
+            modelBuilder.Entity("SRM.Shared.Entities.LyLichKhoaHoc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChucDanhKhoaHoc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChucDanhNghienCuu")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChucVuHienTai")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChuyenNganhDaoDao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChuyenNganhThacSi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChuyenNganhTienSi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DanToc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiaChi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DienThoaiCoQuan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HeDaoTaoDaiHoc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HocViCaoNhat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MucDoNgoaiNgu1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MucDoNgoaiNgu2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NamCapBangThacSi")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NamCapBangTienSi")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NamNhanHocVi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NamTotNghiepDaiHoc")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NganhDaiHoc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NgaySinh")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgaySua")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NgoaiNgu1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NgoaiNgu2")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("NguoiSuaId")
                         .HasColumnType("int");
@@ -382,13 +554,27 @@ namespace SRM.Data.Migrations
                     b.Property<int?>("NguoiTaoId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Ten")
-                        .IsRequired()
+                    b.Property<string>("NoiCongNhanHocVi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoiDaoTaoDaiHoc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoiDaoTaoThacSi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoiDaoTaoTienSi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoiSinh")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QueQuan")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("LoaiHoatDong", (string)null);
+                    b.ToTable("LyLichKhoaHoc");
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.NoiDangBao", b =>
@@ -399,10 +585,14 @@ namespace SRM.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
@@ -413,11 +603,52 @@ namespace SRM.Data.Migrations
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
                     b.ToTable("NoiDangBao", (string)null);
+                });
+
+            modelBuilder.Entity("SRM.Shared.Entities.QuaTrinhCongTac", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DiaChiToChuc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NamBatDau")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NamKetThuc")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("NgaySua")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("NguoiSuaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NguoiTaoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ToChucCongTac")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ViTriCongTac")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuaTrinhCongTac");
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.Role", b =>
@@ -455,6 +686,18 @@ namespace SRM.Data.Migrations
                             Id = 1,
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Giảng viên",
+                            NormalizedName = "GIẢNG VIÊN"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Sinh viên",
+                            NormalizedName = "SINH VIÊN"
                         });
                 });
 
@@ -482,70 +725,6 @@ namespace SRM.Data.Migrations
                     b.ToTable("RoleClaim", (string)null);
                 });
 
-            modelBuilder.Entity("SRM.Shared.Entities.TacGia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ChucDanh")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ChuyenNganh")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DanToc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DonViId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GioiTinh")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HocVi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaVienChuc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("NgaySinh")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("NgaySua")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("NguoiSuaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NguoiTaoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SoDienThoai")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Ten")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TruongDH")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DonViId");
-
-                    b.ToTable("TacGia", (string)null);
-                });
-
             modelBuilder.Entity("SRM.Shared.Entities.ThanhQua", b =>
                 {
                     b.Property<int>("Id")
@@ -554,10 +733,14 @@ namespace SRM.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("NgaySua")
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("NgaySua")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("NguoiSuaId")
@@ -568,7 +751,8 @@ namespace SRM.Data.Migrations
 
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -586,9 +770,18 @@ namespace SRM.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DonViId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -597,11 +790,20 @@ namespace SRM.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("LyLichKhoaHocId")
+                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -620,20 +822,27 @@ namespace SRM.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("QuaTrinhCongTacId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TacGiaId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DonViId");
+
+                    b.HasIndex("LyLichKhoaHocId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -643,7 +852,7 @@ namespace SRM.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("TacGiaId");
+                    b.HasIndex("QuaTrinhCongTacId");
 
                     b.ToTable("User", (string)null);
 
@@ -808,23 +1017,25 @@ namespace SRM.Data.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SRM.Shared.Entities.TacGia", b =>
-                {
-                    b.HasOne("SRM.Shared.Entities.DonVi", "DonVi")
-                        .WithMany("TacGias")
-                        .HasForeignKey("DonViId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("DonVi");
-                });
-
             modelBuilder.Entity("SRM.Shared.Entities.User", b =>
                 {
-                    b.HasOne("SRM.Shared.Entities.TacGia", "TacGia")
+                    b.HasOne("SRM.Shared.Entities.DonVi", "DonVi")
                         .WithMany()
-                        .HasForeignKey("TacGiaId");
+                        .HasForeignKey("DonViId");
 
-                    b.Navigation("TacGia");
+                    b.HasOne("SRM.Shared.Entities.LyLichKhoaHoc", "LyLichKhoaHoc")
+                        .WithMany()
+                        .HasForeignKey("LyLichKhoaHocId");
+
+                    b.HasOne("SRM.Shared.Entities.QuaTrinhCongTac", "QuaTrinhCongTac")
+                        .WithMany()
+                        .HasForeignKey("QuaTrinhCongTacId");
+
+                    b.Navigation("DonVi");
+
+                    b.Navigation("LyLichKhoaHoc");
+
+                    b.Navigation("QuaTrinhCongTac");
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.UserClaim", b =>
@@ -890,11 +1101,6 @@ namespace SRM.Data.Migrations
             modelBuilder.Entity("SRM.Shared.Entities.CapDeTai", b =>
                 {
                     b.Navigation("DeTais");
-                });
-
-            modelBuilder.Entity("SRM.Shared.Entities.DonVi", b =>
-                {
-                    b.Navigation("TacGias");
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.DonViChuTri", b =>

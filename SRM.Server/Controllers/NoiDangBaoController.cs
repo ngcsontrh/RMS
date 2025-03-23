@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
 using SRM.Business.Services;
-using SRM.Server.Attributes;
+
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
@@ -28,7 +28,9 @@ namespace SRM.Server.Controllers
             _validator = validator;
         }
 
+        #region authorize
         [HttpGet]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
@@ -39,6 +41,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _noiDangBaoService.GetAsync(id);
@@ -47,7 +50,6 @@ namespace SRM.Server.Controllers
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddNoiDangBao))]
         public async Task<ExecuteData> AddAsync([FromBody] NoiDangBaoData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -62,7 +64,6 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateNoiDangBao))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] NoiDangBaoData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -75,12 +76,15 @@ namespace SRM.Server.Controllers
             var result = await _noiDangBaoService.UpdateAsync(model);
             return result;
         }
+        #endregion
 
-        [HttpGet("dropdown-data")]
+        #region public
+        [HttpGet("dropdown")]
         public async Task<ExecuteData> GetDropDownDataAsync()
         {
-            var result = await _noiDangBaoService.GetDropDownDataAsync();
+            var result = await _noiDangBaoService.GetDropdownAsync();
             return result;
         }
+        #endregion
     }
 }

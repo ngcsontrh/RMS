@@ -141,11 +141,12 @@ namespace SRM.Business.Services
                 return new ExecuteData { Success = false, Message = GlobalConstraint.GeneralError };
             }
         }
-        public async Task<ExecuteData> GetDropDownDataAsync()
+
+        public async Task<ExecuteData> GetDropdownAsync()
         {
             try
             {
-                var entities = await _noiDangBaoRepository.GetDropDownDataAsync();
+                var entities = await _noiDangBaoRepository.GetAllAsync();
                 var result = _mapper.Map<List<NoiDangBaoData>>(entities);
                 return new ExecuteData { Success = true, Data = result, Message = GlobalConstraint.Success };
             }

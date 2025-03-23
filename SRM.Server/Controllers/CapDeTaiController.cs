@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
 using SRM.Business.Services;
-using SRM.Server.Attributes;
+
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
@@ -28,7 +28,18 @@ namespace SRM.Server.Controllers
             _validator = validator;
         }
 
+        #region public
+        [HttpGet("dropdown")]
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            var result = await _capDeTaiService.GetDropdownAsync();
+            return result;
+        }
+        #endregion
+
+        #region authorize
         [HttpGet]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10
@@ -39,6 +50,7 @@ namespace SRM.Server.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ExecuteData> GetAsync(int id)
         {
             var result = await _capDeTaiService.GetAsync(id);
@@ -47,10 +59,9 @@ namespace SRM.Server.Controllers
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddCapDeTai))]
         public async Task<ExecuteData> AddAsync([FromBody] CapDeTaiData model)
         {
-             var validateResult = await _validator.ValidateAsync(model);
+            var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
                 return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
@@ -61,10 +72,9 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateCapDeTai))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] CapDeTaiData model)
         {
-             var validateResult = await _validator.ValidateAsync(model);
+            var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
                 return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };
@@ -75,10 +85,12 @@ namespace SRM.Server.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ExecuteData> DeleteAsync(int id)
         {
             var result = await _capDeTaiService.DeleteAsync(id);
             return result;
         }
+        #endregion
     }
 }

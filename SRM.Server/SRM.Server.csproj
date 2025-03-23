@@ -30,4 +30,9 @@
     <ProjectReference Include="..\SRM.Shared\SRM.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="storage\HoSoNghiemThu\" />
+    <Folder Include="storage\HoSoSanPham\" />
+  </ItemGroup>
+
 </Project>

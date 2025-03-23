@@ -8,3 +8,4 @@ export type { ThanhQuaSearch } from './ThanhQuaSearch';
 export type { LoaiHoatDongSearch } from './LoaiHoatDongSearch';
 export type { NoiDangBaoSearch } from './NoiDangBaoSearch'; }
 export type { DonViSearch } from './DonViSearch';
+export type { RoleSearch } from './RoleSearch';

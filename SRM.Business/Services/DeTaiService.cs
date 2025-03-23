@@ -21,7 +21,6 @@ namespace SRM.Business.Services
         private readonly IMapper _mapper;
         private readonly ICapDeTaiRepository _donViRepository;
         private readonly IDonViChuTriRepository _donViChuTriRepository;
-        private readonly ITacGiaRepository _tacGiaRepository;
         private readonly ILogger<DeTaiService> _logger;
 
         public DeTaiService(
@@ -29,7 +28,6 @@ namespace SRM.Business.Services
             IMapper mapper,
             ICapDeTaiRepository capDeTaiRepository,
             IDonViChuTriRepository donViChuTriRepository,
-            ITacGiaRepository tacGiaRepository,
             ILogger<DeTaiService> logger
             )
         {
@@ -37,7 +35,6 @@ namespace SRM.Business.Services
             _mapper = mapper;
             _donViRepository = capDeTaiRepository;
             _donViChuTriRepository = donViChuTriRepository;
-            _tacGiaRepository = tacGiaRepository;
             _logger = logger;
         }
 
@@ -45,30 +42,8 @@ namespace SRM.Business.Services
         {
             try
             {   
-                await _deTaiRepository.BeginTransactionAsync();
-
-                var capDeTai = await _donViRepository.GetByTenAsync(model.TenCapDeTai!);
-                if (capDeTai == null)
-                {
-                    capDeTai = new CapDeTai { Ten = model.TenCapDeTai! };
-                    await _donViRepository.AddAsync(capDeTai);
-                }
-                model.CapDeTaiId = capDeTai.Id;
-
-                if (model.TenDonViChuTri != null)
-                {
-                    var donViChuTri = await _donViChuTriRepository.GetByTenAsync(model.TenDonViChuTri);
-                    if (donViChuTri == null)
-                    {
-                        donViChuTri = new DonViChuTri { Ten = model.TenDonViChuTri };
-                        await _donViChuTriRepository.AddAsync(donViChuTri);
-                    }
-                    model.DonViChuTriId = donViChuTri.Id;
-                }
-
                 var deTai = _mapper.Map<DeTai>(model);
                 await _deTaiRepository.AddAsync(deTai);
-                await _deTaiRepository.CommitTransactionAsync();
                 return new ExecuteData
                 {
                     Success = true,
@@ -77,7 +52,6 @@ namespace SRM.Business.Services
             }
             catch (Exception e)
             {
-                await _deTaiRepository.RollbackTransactionAsync();
                 _logger.LogError(e.Message);
                 return new ExecuteData
                 {
@@ -152,20 +126,14 @@ namespace SRM.Business.Services
             try
             {
                 await _deTaiRepository.BeginTransactionAsync();
-                if (model.CapDeTaiId == null)
+                if (!string.IsNullOrEmpty(model.HoSoNghiemThu))
                 {
-                    var capDeTai = new CapDeTai { Ten = model.TenCapDeTai! };
-                    await _donViRepository.AddAsync(capDeTai);
-                    model.CapDeTaiId = capDeTai.Id;
+                    model.HoSoNghiemThu = FileHelper.SaveBase64File(model.HoSoNghiemThu, "HoSoNghiemThu");
                 }
-
-                if (model.DonViChuTriId == null)
+                if (!string.IsNullOrEmpty(model.HoSoSanPham))
                 {
-                    var donViChuTri = new DonViChuTri { Ten = model.TenDonViChuTri! };
-                    await _donViChuTriRepository.AddAsync(donViChuTri);
-                    model.DonViChuTriId = donViChuTri.Id;
+                    model.HoSoSanPham = FileHelper.SaveBase64File(model.HoSoSanPham, "HoSoSanPham");
                 }
-
                 var deTai = _mapper.Map<DeTai>(model);
                 await _deTaiRepository.UpdateAsync(deTai);
                 await _deTaiRepository.CommitTransactionAsync();

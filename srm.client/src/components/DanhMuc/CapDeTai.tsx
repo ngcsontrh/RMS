@@ -40,7 +40,7 @@ const CapDeTai: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const { data: capDeTaiDatas, isLoading, error, refetch } = useQuery({
-        queryKey: ['deTaiData', searchParams],
+        queryKey: ['capDeTai', searchParams],
         queryFn: () => getCapDeTais(searchParams),
     });
 
@@ -57,8 +57,8 @@ const CapDeTai: React.FC = () => {
     };
 
     const handleRowClick = (record: DataType) => {
-        setEditData({ id: record.id, ten: record.ten });
-        form.setFieldsValue({ ten: record.ten });
+        setEditData({ ...record });
+        form.setFieldsValue({ ...record });
     };
 
     const handleCreateNew = () => {
@@ -84,13 +84,13 @@ const CapDeTai: React.FC = () => {
         setIsEditing(false);
     };
 
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: CapDeTaiData) => {
         try {
             if (editData?.id) {
-                await editCapDeTai(editData.id, { ...editData, ten: values.ten });                
+                await editCapDeTai(editData.id, { ...values });
                 messageApi.success('Cập nhật thành công');
             } else {
-                await createCapDeTai({ ten: values.ten });
+                await createCapDeTai({ ...values });
                 messageApi.success('Tạo mới thành công');
             }
             form.resetFields();
@@ -151,12 +151,18 @@ const CapDeTai: React.FC = () => {
                         </Col>
                     </Row>
                     <Form layout="vertical" form={form} onFinish={onFinish} style={{ marginTop: '10px' }} initialValues={{ ten: '' }}>
-                        <Form.Item
+                        <Form.Item<CapDeTaiData>
                             name="ten"
                             label="Tên đề tài"
                             rules={[{ required: true, message: 'Vui lòng nhập tên đề tài!' }]}
                         >
                             <Input placeholder="Nhập tên đề tài" disabled={!isEditing} />
+                        </Form.Item>
+                        <Form.Item<CapDeTaiData>
+                            name="moTa"
+                            label="Mô tả"
+                        >
+                            <Input.TextArea placeholder="Nhập mô tả" disabled={!isEditing} />
                         </Form.Item>
                         <Row justify="center">
                             <Form.Item>

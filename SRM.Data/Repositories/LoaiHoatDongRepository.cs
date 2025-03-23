@@ -13,7 +13,7 @@ namespace SRM.Data.Repositories
 {
     public class LoaiHoatDongRepository : RepositoryBase<LoaiHoatDong>, ILoaiHoatDongRepository
     {
-        public LoaiHoatDongRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public LoaiHoatDongRepository(AppDbContext context) : base(context)
         {
         }
 

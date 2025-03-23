@@ -9,6 +9,7 @@ namespace SRM.Shared.Entities
     public class CapDeTai : EntityBase
     {
         public string Ten { get; set; } = null!;
+        public string? MoTa { get; set; }
 
         public virtual ICollection<DeTai> DeTais { get; set; } = new List<DeTai>();
     }

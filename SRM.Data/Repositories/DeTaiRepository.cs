@@ -13,7 +13,7 @@ namespace SRM.Data.Repositories
 {
     public class DeTaiRepository : RepositoryBase<DeTai>, IDeTaiRepository
     {
-        public DeTaiRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public DeTaiRepository(AppDbContext context) : base(context)
         {
         }
 

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRM.Business.IServices;
 using SRM.Business.Services;
-using SRM.Server.Attributes;
 using SRM.Shared.Enums;
 using SRM.Shared.Models.Data;
 using SRM.Shared.Models.Search;
@@ -25,6 +24,7 @@ namespace SRM.Server.Controllers
             _validator = validator;
         }
 
+        #region public
         [HttpGet]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
@@ -43,10 +43,10 @@ namespace SRM.Server.Controllers
             var result = await _deTaiService.GetAsync(id);
             return result;
         }
+        #endregion
 
         [HttpPost]
         [Authorize]
-        [Permission(nameof(Permission.AddDeTai))]
         public async Task<ExecuteData> AddAsync([FromBody] DeTaiData model)
         {
             var validateResult = await _validator.ValidateAsync(model);
@@ -64,10 +64,9 @@ namespace SRM.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [Permission(nameof(Permission.UpdateDeTai))]
         public async Task<ExecuteData> UpdateAsync(int id, [FromBody] DeTaiData model)
         {
-             var validateResult = await _validator.ValidateAsync(model);
+            var validateResult = await _validator.ValidateAsync(model);
             if (!validateResult.IsValid)
             {
                 return new ExecuteData { Success = false, Message = GlobalConstraint.InvalidData };

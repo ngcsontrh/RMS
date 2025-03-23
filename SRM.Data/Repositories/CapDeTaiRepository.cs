@@ -12,7 +12,7 @@ namespace SRM.Data.Repositories
 {
     public class CapDeTaiRepository : RepositoryBase<CapDeTai>, ICapDeTaiRepository
     {
-        public CapDeTaiRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public CapDeTaiRepository(AppDbContext context) : base(context)
         {
         }
 

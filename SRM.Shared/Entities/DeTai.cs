@@ -11,7 +11,7 @@ namespace SRM.Shared.Entities
     {
         public int? CapDeTaiId { get; set; }
         public string Ten { get; set; } = null!;
-        public string MaSo { get; set; } = null!;
+        public string? MaSo { get; set; }
         public string? MucTieu { get; set; }
         public string? NoiDung { get; set; }
         public decimal? TongKinhPhi { get; set; }
@@ -24,6 +24,7 @@ namespace SRM.Shared.Entities
         public string? ChuNhiem { get; set; }
         public string? CanBoThamGias { get; set; }
         public string? PhanChiaSuDongGop { get; set; }
+        public string? TrangThai { get; set; }
 
         public virtual CapDeTai? CapDeTai { get; set; }
         public virtual DonViChuTri DonViChuTri { get; set; } = null!;

@@ -85,6 +85,16 @@ namespace SRM.Business.Services
             }
         }
 
+        public async Task<ExecuteData> GetDropdownAsync()
+        {
+            var result = await _donViChuTriRepository.GetAllAsync();
+            return new ExecuteData
+            {
+                Success = true,
+                Data = _mapper.Map<List<DonViChuTriData>>(result),
+            };
+        }
+
         public async Task<ExecuteData> GetPageAsync(int pageIndex = 1, int pageSize = 10)
         {
             try

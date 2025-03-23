@@ -16,7 +16,7 @@ namespace SRM.Data.Repositories
 {
     public class CongBoRepository : RepositoryBase<CongBo>, ICongBoRepository
     {
-        public CongBoRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public CongBoRepository(AppDbContext context) : base(context)
         {
         }
 

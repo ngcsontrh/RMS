@@ -1,6 +1,6 @@
 ﻿import React from "react";
 import { Form, Input, Button, Typography, Flex, message } from "antd";
-import { login } from "../../services/AuthService";
+import { login } from "../../services/UserService";
 import { useAuthStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -26,13 +26,12 @@ const Login: React.FC = () => {
             var tokenData = await login({
                 userName: values.userName,
                 password: values.password,
-            });
+            });            
             setAuth(tokenData.accessToken!);
-
             message.success("Đăng nhập thành công!");
             navigate("/");
         } catch (error) {
-            clearAuth(); // Xóa auth nếu có lỗi
+            clearAuth();
             message.error(
                 error instanceof Error ? error.message : "Đăng nhập thất bại"
             );

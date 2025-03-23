@@ -12,7 +12,7 @@ namespace SRM.Data.Repositories
 {
     public class DonViChuTriRepository : RepositoryBase<DonViChuTri>, IDonViChuTriRepository
     {
-        public DonViChuTriRepository(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public DonViChuTriRepository(AppDbContext context) : base(context)
         {
         }
 

@@ -12,11 +12,9 @@ namespace SRM.Shared.Enums
         AddCapDeTai,
         UpdateCapDeTai,
 
-        ViewCongBo,
         AddCongBo,
         UpdateCongBo,
 
-        ViewDeTai,
         AddDeTai,
         UpdateDeTai,
 
@@ -28,7 +26,6 @@ namespace SRM.Shared.Enums
         AddDonViChuTri,
         UpdateDonViChuTri,
 
-        ViewHoatDong,
         AddHoatDong,
         UpdateHoatDong,
 

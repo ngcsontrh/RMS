@@ -1,1 +1,3 @@
-ef database update --project SRM.Data\SRM.Data.csproj --startup-project SRM.Server\SRM.Server.csproj --context SRM.Data.AppDbContext --configuration Debug 20250306102444_Initial
+"C:\Program Files\dotnet\dotnet.exe" ef migrations add --project SRM.Data\SRM.Data.csproj --startup-project SRM.Server\SRM.Server.csproj --context SRM.Data.AppDbContext --configuration Debug Initial --output-dir Migrations
+
+"C:\Program Files\dotnet\dotnet.exe" ef database update --project SRM.Data\SRM.Data.csproj --startup-project SRM.Server\SRM.Server.csproj --context SRM.Data.AppDbContext --configuration Debug 20250322023417_Initial

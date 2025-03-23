@@ -9,6 +9,7 @@ namespace SRM.Shared.Entities
     public class ThanhQua : EntityBase
     {
         public string Ten { get; set; } = null!;
+        public string? MoTa { get; set; }
 
         public ICollection<CongBo> CongBos { get; set; } = new List<CongBo>();
     }

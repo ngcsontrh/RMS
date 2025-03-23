@@ -12,6 +12,14 @@ export const getCapDeTais = async (search: CapDeTaiSearch): Promise<PageData<Cap
     return response.data.data!;
 };
 
+export const getCapDeTaiDropdown = async (): Promise<CapDeTaiData[]> => {
+    const response = await api.get<ExecuteData<CapDeTaiData[]>>(`${endpoint}/dropdown`);
+    if (!response.data.success) {
+        throw new Error(response.data.message!);
+    }
+    return response.data.data!;
+}
+
 export const getCapDeTai = async (id: number): Promise<CapDeTaiData> => {
     const response = await api.get<ExecuteData<CapDeTaiData>>(`${endpoint}/${id}`);
     if (!response.data.success) {
