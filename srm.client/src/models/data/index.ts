@@ -6,7 +6,6 @@ export type { HoatDongData } from './HoatDongData';
 export type { LoaiHoatDongData } from './LoaiHoatDongData';
 export type { LoginData } from './LoginData';
 export type { PageData } from './PageData';
-export type { TacGiaData } from './TacGiaData';
 export type { ThanhQuaData } from './ThanhQuaData';
 export type { NoiDangBaoData } from './NoiDangBaoData';
 export type { ExecuteData } from './ExecuteData';

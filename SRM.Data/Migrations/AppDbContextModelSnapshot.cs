@@ -572,9 +572,15 @@ namespace SRM.Data.Migrations
                     b.Property<string>("QueQuan")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("LyLichKhoaHoc");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("LyLichKhoaHoc", (string)null);
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.NoiDangBao", b =>
@@ -643,10 +649,16 @@ namespace SRM.Data.Migrations
                     b.Property<string>("ToChucCongTac")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ViTriCongTac")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("QuaTrinhCongTac");
                 });
@@ -802,9 +814,6 @@ namespace SRM.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("LyLichKhoaHocId")
-                        .HasColumnType("int");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -821,9 +830,6 @@ namespace SRM.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("QuaTrinhCongTacId")
-                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -842,8 +848,6 @@ namespace SRM.Data.Migrations
 
                     b.HasIndex("DonViId");
 
-                    b.HasIndex("LyLichKhoaHocId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -851,8 +855,6 @@ namespace SRM.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("QuaTrinhCongTacId");
 
                     b.ToTable("User", (string)null);
 
@@ -1006,6 +1008,28 @@ namespace SRM.Data.Migrations
                     b.Navigation("LoaiHoatDong");
                 });
 
+            modelBuilder.Entity("SRM.Shared.Entities.LyLichKhoaHoc", b =>
+                {
+                    b.HasOne("SRM.Shared.Entities.User", "User")
+                        .WithOne("LyLichKhoaHoc")
+                        .HasForeignKey("SRM.Shared.Entities.LyLichKhoaHoc", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SRM.Shared.Entities.QuaTrinhCongTac", b =>
+                {
+                    b.HasOne("SRM.Shared.Entities.User", "User")
+                        .WithOne("QuaTrinhCongTac")
+                        .HasForeignKey("SRM.Shared.Entities.QuaTrinhCongTac", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SRM.Shared.Entities.RoleClaim", b =>
                 {
                     b.HasOne("SRM.Shared.Entities.Role", "Role")
@@ -1023,19 +1047,7 @@ namespace SRM.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DonViId");
 
-                    b.HasOne("SRM.Shared.Entities.LyLichKhoaHoc", "LyLichKhoaHoc")
-                        .WithMany()
-                        .HasForeignKey("LyLichKhoaHocId");
-
-                    b.HasOne("SRM.Shared.Entities.QuaTrinhCongTac", "QuaTrinhCongTac")
-                        .WithMany()
-                        .HasForeignKey("QuaTrinhCongTacId");
-
                     b.Navigation("DonVi");
-
-                    b.Navigation("LyLichKhoaHoc");
-
-                    b.Navigation("QuaTrinhCongTac");
                 });
 
             modelBuilder.Entity("SRM.Shared.Entities.UserClaim", b =>
@@ -1132,6 +1144,10 @@ namespace SRM.Data.Migrations
 
             modelBuilder.Entity("SRM.Shared.Entities.User", b =>
                 {
+                    b.Navigation("LyLichKhoaHoc");
+
+                    b.Navigation("QuaTrinhCongTac");
+
                     b.Navigation("UserClaims");
 
                     b.Navigation("UserLogins");

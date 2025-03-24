@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace SRM.Data.Migrations
 {
     /// <inheritdoc />
@@ -84,49 +86,6 @@ namespace SRM.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LyLichKhoaHoc",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NgaySinh = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NoiSinh = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    QueQuan = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DanToc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HocViCaoNhat = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NoiCongNhanHocVi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChucDanhKhoaHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NamNhanHocVi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChucVuHienTai = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DienThoaiCoQuan = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NganhDaiHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NoiDaoTaoDaiHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HeDaoTaoDaiHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NamTotNghiepDaiHoc = table.Column<int>(type: "int", nullable: true),
-                    ChuyenNganhThacSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NoiDaoTaoThacSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NamCapBangThacSi = table.Column<int>(type: "int", nullable: true),
-                    ChuyenNganhTienSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NoiDaoTaoTienSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NamCapBangTienSi = table.Column<int>(type: "int", nullable: true),
-                    ChuyenNganhDaoDao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NgoaiNgu1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MucDoNgoaiNgu1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NgoaiNgu2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MucDoNgoaiNgu2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChucDanhNghienCuu = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NgaySua = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NguoiTaoId = table.Column<int>(type: "int", nullable: true),
-                    NguoiSuaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LyLichKhoaHoc", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "NoiDangBao",
                 columns: table => new
                 {
@@ -142,27 +101,6 @@ namespace SRM.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NoiDangBao", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuaTrinhCongTac",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NamBatDau = table.Column<int>(type: "int", nullable: true),
-                    NamKetThuc = table.Column<int>(type: "int", nullable: true),
-                    ViTriCongTac = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ToChucCongTac = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DiaChiToChuc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NgaySua = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NguoiTaoId = table.Column<int>(type: "int", nullable: true),
-                    NguoiSuaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuaTrinhCongTac", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,6 +137,43 @@ namespace SRM.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<int>(type: "int", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DonViId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_DonVi_DonViId",
+                        column: x => x.DonViId,
+                        principalTable: "DonVi",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DeTai",
                 columns: table => new
                 {
@@ -219,6 +194,7 @@ namespace SRM.Data.Migrations
                     ChuNhiem = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CanBoThamGias = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     PhanChiaSuDongGop = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    TrangThai = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NgaySua = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NguoiTaoId = table.Column<int>(type: "int", nullable: true),
@@ -276,55 +252,6 @@ namespace SRM.Data.Migrations
                         principalTable: "LoaiHoatDong",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Gender = table.Column<int>(type: "int", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DonViId = table.Column<int>(type: "int", nullable: true),
-                    LyLichKhoaHocId = table.Column<int>(type: "int", nullable: true),
-                    QuaTrinhCongTacId = table.Column<int>(type: "int", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_User_DonVi_DonViId",
-                        column: x => x.DonViId,
-                        principalTable: "DonVi",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_User_LyLichKhoaHoc_LyLichKhoaHocId",
-                        column: x => x.LyLichKhoaHocId,
-                        principalTable: "LyLichKhoaHoc",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_User_QuaTrinhCongTac_QuaTrinhCongTacId",
-                        column: x => x.QuaTrinhCongTacId,
-                        principalTable: "QuaTrinhCongTac",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -398,6 +325,84 @@ namespace SRM.Data.Migrations
                         principalTable: "ThanhQua",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LyLichKhoaHoc",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    NgaySinh = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NoiSinh = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QueQuan = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DanToc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HocViCaoNhat = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoiCongNhanHocVi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChucDanhKhoaHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NamNhanHocVi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChucVuHienTai = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DienThoaiCoQuan = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NganhDaiHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoiDaoTaoDaiHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HeDaoTaoDaiHoc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NamTotNghiepDaiHoc = table.Column<int>(type: "int", nullable: true),
+                    ChuyenNganhThacSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoiDaoTaoThacSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NamCapBangThacSi = table.Column<int>(type: "int", nullable: true),
+                    ChuyenNganhTienSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoiDaoTaoTienSi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NamCapBangTienSi = table.Column<int>(type: "int", nullable: true),
+                    ChuyenNganhDaoDao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NgoaiNgu1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MucDoNgoaiNgu1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NgoaiNgu2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MucDoNgoaiNgu2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChucDanhNghienCuu = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NgaySua = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NguoiTaoId = table.Column<int>(type: "int", nullable: true),
+                    NguoiSuaId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LyLichKhoaHoc", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LyLichKhoaHoc_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuaTrinhCongTac",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    NamBatDau = table.Column<int>(type: "int", nullable: true),
+                    NamKetThuc = table.Column<int>(type: "int", nullable: true),
+                    ViTriCongTac = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ToChucCongTac = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiaChiToChuc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NgaySua = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NguoiTaoId = table.Column<int>(type: "int", nullable: true),
+                    NguoiSuaId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuaTrinhCongTac", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuaTrinhCongTac_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -495,12 +500,17 @@ namespace SRM.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Role",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, null, "Admin", "ADMIN" });
+                values: new object[,]
+                {
+                    { 1, null, "Admin", "ADMIN" },
+                    { 2, null, "Giảng viên", "GIẢNG VIÊN" },
+                    { 3, null, "Sinh viên", "SINH VIÊN" }
+                });
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "AccessFailedCount", "Code", "ConcurrencyStamp", "CreatedDate", "DonViId", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "LyLichKhoaHocId", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "QuaTrinhCongTacId", "SecurityStamp", "TwoFactorEnabled", "UpdatedDate", "UserName" },
-                values: new object[] { 1, 0, null, null, null, null, null, false, null, null, false, null, null, null, "ADMIN123", "AQAAAAIAAYagAAAAEEXMEGGZAfbpqnVi2Ei9taVel/ImJ2UPWjQtkwQPww9Xt7Vxv2JaclNg8M4hojbRMg==", null, false, null, null, false, null, "admin123" });
+                columns: new[] { "Id", "AccessFailedCount", "Code", "ConcurrencyStamp", "CreatedDate", "DonViId", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UpdatedDate", "UserName" },
+                values: new object[] { 1, 0, null, null, null, null, null, false, null, null, false, null, null, "ADMIN123", "AQAAAAIAAYagAAAAEEXMEGGZAfbpqnVi2Ei9taVel/ImJ2UPWjQtkwQPww9Xt7Vxv2JaclNg8M4hojbRMg==", null, false, null, false, null, "admin123" });
 
             migrationBuilder.InsertData(
                 table: "UserRole",
@@ -533,6 +543,18 @@ namespace SRM.Data.Migrations
                 column: "LoaiHoatDongId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LyLichKhoaHoc_UserId",
+                table: "LyLichKhoaHoc",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuaTrinhCongTac_UserId",
+                table: "QuaTrinhCongTac",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "Role",
                 column: "NormalizedName",
@@ -553,16 +575,6 @@ namespace SRM.Data.Migrations
                 name: "IX_User_DonViId",
                 table: "User",
                 column: "DonViId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_LyLichKhoaHocId",
-                table: "User",
-                column: "LyLichKhoaHocId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_QuaTrinhCongTacId",
-                table: "User",
-                column: "QuaTrinhCongTacId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -605,6 +617,12 @@ namespace SRM.Data.Migrations
                 name: "HoatDong");
 
             migrationBuilder.DropTable(
+                name: "LyLichKhoaHoc");
+
+            migrationBuilder.DropTable(
+                name: "QuaTrinhCongTac");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaim");
 
             migrationBuilder.DropTable(
@@ -642,12 +660,6 @@ namespace SRM.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "DonVi");
-
-            migrationBuilder.DropTable(
-                name: "LyLichKhoaHoc");
-
-            migrationBuilder.DropTable(
-                name: "QuaTrinhCongTac");
         }
     }
 }

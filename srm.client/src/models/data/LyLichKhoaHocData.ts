@@ -1,0 +1,31 @@
+export interface LyLichKhoaHocData {
+    id?: number | null;
+    userId?: number | null;
+    ngaySinh?: Date | null;
+    noiSinh?: string | null;
+    queQuan?: string | null;
+    danToc?: string | null;
+    hocViCaoNhat?: string | null;
+    noiCongNhanHocVi?: string | null;
+    chucDanhKhoaHoc?: string | null;
+    namNhanHocVi?: string | null;
+    chucVuHienTai?: string | null;
+    diaChi?: string | null;
+    dienThoaiCoQuan?: string | null;
+    nganhDaiHoc?: string | null;
+    noiDaoTaoDaiHoc?: string | null;
+    heDaoTaoDaiHoc?: string | null;
+    namTotNghiepDaiHoc?: number | null;
+    chuyenNganhThacSi?: string | null;
+    noiDaoTaoThacSi?: string | null;
+    namCapBangThacSi?: number | null;
+    chuyenNganhTienSi?: string | null;
+    noiDaoTaoTienSi?: string | null;
+    namCapBangTienSi?: number | null;
+    chuyenNganhDaoDao?: string | null;
+    ngoaiNgu1?: string | null;
+    mucDoNgoaiNgu1?: string | null;
+    ngoaiNgu2?: string | null;
+    mucDoNgoaiNgu2?: string | null;
+    chucDanhNghienCuu?: string | null;
+}

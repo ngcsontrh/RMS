@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SRM.Data.IRepositories;
 using SRM.Shared.Entities;
 using System;
@@ -13,6 +14,14 @@ namespace SRM.Data.Repositories
     {
         public QuaTrinhCongTacRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<QuaTrinhCongTac?> GetByUserIdAsync(int userId)
+        {
+            var entity = await _context.Set<QuaTrinhCongTac>()
+                .Where(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+            return entity;
         }
     }
 }

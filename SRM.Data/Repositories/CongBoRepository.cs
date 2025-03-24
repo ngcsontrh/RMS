@@ -23,6 +23,12 @@ namespace SRM.Data.Repositories
         public async Task<(List<CongBo>, int)> GetPageWithSearchAsync(CongBoSearch search, int pageIndex, int pageSize)
         {
             var query = GetQueryable();
+            if (search.UserId.HasValue)
+            {
+                query = query.Where(x => x.TacGiaChinh == search.UserId.Value.ToString() ||
+                                        x.TacGiaLienHe ==  search.UserId.Value.ToString() ||
+                                        x.DongTacGias.Contains(search.UserId.Value.ToString()));
+            }
             query = query.Include(x => x.NoiDangBao)
                 .AsNoTracking();
             var result = await GetPageWithFilterAsync(query, pageIndex, pageSize);

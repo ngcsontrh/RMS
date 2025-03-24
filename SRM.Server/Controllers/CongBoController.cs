@@ -30,10 +30,14 @@ namespace SRM.Server.Controllers
         [HttpGet]
         public async Task<ExecuteData> GetAsync(
             [FromQuery] int pageIndex = 1,
-            [FromQuery] int pageSize = 10
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int? userId = null
             )
         {
-            var search = new CongBoSearch();
+            var search = new CongBoSearch
+            {
+                UserId = userId,
+            };
             var result = await _congBoService.GetPageAsync(search, pageIndex, pageSize);
             return result;
         }

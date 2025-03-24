@@ -8,5 +8,6 @@ namespace SRM.Shared.Models.Search
 {
     public class CongBoSearch
     {
+        public int? UserId { get; set; }
     }
 }

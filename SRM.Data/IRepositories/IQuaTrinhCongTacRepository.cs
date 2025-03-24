@@ -9,5 +9,6 @@ namespace SRM.Data.IRepositories
 {
     public interface IQuaTrinhCongTacRepository : IRepositoryBase<QuaTrinhCongTac>
     {
+        Task<QuaTrinhCongTac?> GetByUserIdAsync(int userId);
     }
 }

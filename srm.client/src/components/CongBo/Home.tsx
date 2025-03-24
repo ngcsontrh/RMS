@@ -22,7 +22,8 @@ export default () => {
     const { userId } = useAuthStore();
     const [searchParams, setSearchParams] = React.useState<CongBoSearch>({
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
+        userId: location.pathname === '/ca-nhan/cong-bo' ? Number(userId) : undefined,
     });
     const isToanTruong = location.pathname.startsWith('/toan-truong');    
 

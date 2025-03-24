@@ -32,8 +32,8 @@ namespace SRM.Data.Repositories
             if (search.TacGiaId.HasValue)
             {
                 var tacGiaId = search.TacGiaId.Value.ToString();
-                query = query.Where(x => x.ChuNhiem == search.TacGiaId.ToString()
-                                    || x.CanBoThamGias != null && x.CanBoThamGias.Contains(search.TacGiaId.ToString()));
+                query = query.Where(x => x.ChuNhiem == search.TacGiaId.Value.ToString()
+                                    || x.CanBoThamGias != null && x.CanBoThamGias.Contains(search.TacGiaId.Value.ToString()));
             }
             return query;
         }

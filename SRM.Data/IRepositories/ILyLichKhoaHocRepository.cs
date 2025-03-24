@@ -9,5 +9,6 @@ namespace SRM.Data.IRepositories
 {
     public interface ILyLichKhoaHocRepository : IRepositoryBase<LyLichKhoaHoc>
     {
+        Task<LyLichKhoaHoc?> GetByUserIdAsync(int userId);
     }
 }

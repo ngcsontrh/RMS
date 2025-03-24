@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SRM.Data.IRepositories;
 using SRM.Shared.Entities;
 using System;
@@ -13,6 +14,14 @@ namespace SRM.Data.Repositories
     {
         public LyLichKhoaHocRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<LyLichKhoaHoc?> GetByUserIdAsync(int userId)
+        {
+            var entity = await _context.Set<LyLichKhoaHoc>()
+                .Where(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+            return entity;
         }
     }
 }
