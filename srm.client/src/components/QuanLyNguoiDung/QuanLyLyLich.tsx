@@ -1,32 +1,10 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
-import { Form, Input, Row, Col, Button, message, Select, Typography } from 'antd';
+import { Form, Input, Row, Col, Button, message, Select, Typography, DatePicker } from 'antd';
 import axios from 'axios';
+import { LyLichKhoaHocData } from '../../models/data/LyLichKhoaHocData';
 
 const { Text } = Typography;
 const { Option } = Select;
-
-interface LyLichInfo {
-    noiSinh: string;
-    queQuan: string;
-    diaHoc: string;
-    hocViCaoNhat: string;
-    namCongNhanHocVi: string;
-    chucDanhKhoaHoc: string;
-    namCongNhanChucDanh: string;
-    donViLyLich: string;
-    diaChiLienHe: string;
-    dienThoaiLienHe: string;
-    hieuTruong: string;
-    namCapBang: string;
-    noiCapBang: string;
-    chuyenNganhTienSi: string;
-    kyThuatPhanMem: string;
-    tenDeTaiLuanAn: string;
-    nguonGoc1: string;
-    nguonGoc2: string;
-    mucDoSuDungNguonGoc1: string;
-    chucDanhHienCuu: string;
-}
 
 const QuanLyLyLich: React.FC = () => {
     const [form] = Form.useForm();
@@ -35,10 +13,10 @@ const QuanLyLyLich: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     // Dữ liệu giả lập
-    const LyLichInfo: LyLichInfo = {
+    const LyLichInfo: LyLichKhoaHocData = {
         noiSinh: 'Nam Định',
         queQuan: 'Yên Hồng, Ý Yên, Nam Định',
-        diaHoc: 'Đại học Công nghệ, Đại học Quốc gia Hà Nội',
+        diahoc: 'Đại học Công nghệ, Đại học Quốc gia Hà Nội',
         hocViCaoNhat: 'ThS',
         namCongNhanHocVi: '2014',
         chucDanhKhoaHoc: 'Chức danh (viên chức hoặc trước khi nghỉ hưu)',
@@ -56,7 +34,7 @@ const QuanLyLyLich: React.FC = () => {
         nguonGoc2: 'Khác',
         mucDoSuDungNguonGoc1: 'Mức độ sử dụng nguồn gốc 1',
         chucDanhHienCuu: '',
-    };
+    };  
 
     // Set giá trị ban đầu cho form
     useEffect(() => {
@@ -88,38 +66,38 @@ const QuanLyLyLich: React.FC = () => {
             <Form form={form} layout="vertical" onFinish={handleFinish}>
                 <Row gutter={16}>
                     <Col span={12}>
+                        <Form.Item label="Ngày tháng năm sinh" name="ngayThangNamSinh">
+                            <DatePicker style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
                         <Form.Item label="Nơi sinh" name="noiSinh">
                             <Input />
                         </Form.Item>
                     </Col>
+                </Row>
+
+                <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="Quê quán" name="queQuan">
                             <Input />
                         </Form.Item>
                     </Col>
-                </Row>
-
-                <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Địa học" name="diaHoc">
+                        <Form.Item label="Dân tộc" name="danToc">
                             <Input />
                         </Form.Item>
                     </Col>
+                </Row>
+
+                <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="Học vị cao nhất" name="hocViCaoNhat">
                             <Input />
                         </Form.Item>
                     </Col>
-                </Row>
-
-                <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Năm công nhận học vị" name="namCongNhanHocVi">
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item label="Chức danh khoa học" name="chucDanhKhoaHoc">
+                        <Form.Item label="Năm, nơi công nhận học vị" name="namCongNhanHocVi">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -127,7 +105,20 @@ const QuanLyLyLich: React.FC = () => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Năm công nhận chức danh" name="namCongNhanChucDanh">
+                        <Form.Item label="Chức danh khoa học (GS, PGS)" name="chucDanhKhoaHoc">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Năm công nhận, bổ nhiệm" name="namCongNhanChucDanh">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item label="Chức vụ (nếu hiện tại hoặc trước khi nghỉ hưu)" name="chucVu">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -145,7 +136,7 @@ const QuanLyLyLich: React.FC = () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Điện thoại liên hệ" name="dienThoaiLienHe">
+                        <Form.Item label="Điện thoại liên hệ cơ quan" name="dienThoaiLienHeCoQuan">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -153,12 +144,12 @@ const QuanLyLyLich: React.FC = () => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Hiệu trưởng" name="hieuTruong">
+                        <Form.Item label="Hệ đào tạo" name="heDaoTao">
                             <Input />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Năm cấp bằng" name="namCapBang">
+                        <Form.Item label="Chính quy" name="chinhQuy">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -166,7 +157,20 @@ const QuanLyLyLich: React.FC = () => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Nơi cấp bằng" name="noiCapBang">
+                        <Form.Item label="Nơi công tác" name="noiCongTac">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Nơi đào tạo Thạc sĩ" name="noiDaoTaoThacSi">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item label="Nơi đào tạo Tiến sĩ" name="noiDaoTaoTienSi">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -185,6 +189,45 @@ const QuanLyLyLich: React.FC = () => {
                     </Col>
                     <Col span={12}>
                         <Form.Item label="Tên đề tài luận án" name="tenDeTaiLuanAn">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item label="Năm công nhận, Đại học Quốc gia Hà Nội" name="namCongNhanDaiHocQuocGiaHaNoi">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Ngành Đại học" name="nganhDaiHoc">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item label="Năm tốt nghiệp Đại học" name="namTotNghiepDaiHoc">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Năm đào tạo Thạc sĩ" name="namDaoTaoThacSi">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item label="Năm cấp bằng Thạc sĩ" name="namCapBangThacSi">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Năm cấp bằng Tiến sĩ" name="namCapBangTienSi">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -218,7 +261,15 @@ const QuanLyLyLich: React.FC = () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Chức danh hiện cứu" name="chucDanhHienCuu">
+                        <Form.Item label="Mức độ sử dụng nguồn gốc 2" name="mucDoSuDungNguonGoc2">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item label="Chức danh nghiên cứu" name="chucDanhHienCuu">
                             <Input />
                         </Form.Item>
                     </Col>
