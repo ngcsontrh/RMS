@@ -35,7 +35,7 @@ export const editNoiDangBao = async (id: number, data: NoiDangBaoData): Promise<
 }
 
 export const getNoiDangBaoDropDownData = async (): Promise<NoiDangBaoData[]> => {
-    const response = await api.get<ExecuteData<NoiDangBaoData[]>>(`${endpoint}/dropdown-data`);
+    const response = await api.get<ExecuteData<NoiDangBaoData[]>>(`${endpoint}/dropdown`);
     if (!response.data.success) {
         throw new Error(response.data.message!);
     }

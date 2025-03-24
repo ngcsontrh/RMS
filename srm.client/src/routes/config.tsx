@@ -20,6 +20,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/toan-truong/de-tai" element={<DeTaiHome />} />
             <Route path="/toan-truong/de-tai/:id" element={<DeTaiEdit />} />
             <Route path="/toan-truong/cong-bo" element={<CongBoHome />} />
+            <Route path="/toan-truong/cong-bo/:id" element={<CongBoEdit />} />
             {/*<Route path="/toan-truong/hoat-dong" element={<DeTaiHome />} />*/}
             <Route path="/lien-he" element={<LienHe />} />
             <Route path="/quy-che" element={<QuyChe />} />
@@ -27,6 +28,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/ca-nhan/de-tai" element={<DeTaiHome />} />
             <Route path="/ca-nhan/de-tai/:id" element={<DeTaiEdit />} />
             <Route path="/ca-nhan/cong-bo" element={<CongBoHome />} />
+            <Route path="/ca-nhan/cong-bo/:id" element={<CongBoEdit />} />
             <Route path="/cong-bo/tao-moi" element={<CongBoEdit />} />
             <Route path="/de-tai/tao-moi" element={<DeTaiEdit />} />
             <Route path="/danh-muc" element={<DanhMucHome />} />

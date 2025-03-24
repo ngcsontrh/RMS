@@ -10,7 +10,7 @@ namespace SRM.Shared.Utils
     {
         public static string GenerateFileName()
         {
-            return $"{Guid.NewGuid().ToString("N")}_{DateTime.Now:yyyyMMddHHmmss}";
+            return $"{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid().ToString("N")}";
         }
     }
 }

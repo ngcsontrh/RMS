@@ -35,7 +35,7 @@ export const editThanhQua = async (id: number, data: ThanhQuaData): Promise<void
 }
 
 export const getThanhQuaDropDownData = async (): Promise<ThanhQuaData[]> => {
-    const response = await api.get<ExecuteData<ThanhQuaData[]>>(`${endpoint}/dropdown-data`);
+    const response = await api.get<ExecuteData<ThanhQuaData[]>>(`${endpoint}/dropdown`);
     if (!response.data.success) {
         throw new Error(response.data.message!);
     }

@@ -26,4 +26,5 @@ export interface CongBoData {
     dongTacGias?: string[] | null;
     loaiHoTroChiPhi?: string | null;
     phanChiaSuDongGop?: string | null;
+    thanhQua?: string | null;
 }

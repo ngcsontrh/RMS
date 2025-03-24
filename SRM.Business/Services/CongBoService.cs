@@ -47,19 +47,10 @@ namespace SRM.Business.Services
             try
             {
                 await _congBoRepository.BeginTransactionAsync();
-                if (!model.NoiDangBaoId.HasValue && !string.IsNullOrEmpty(model.TenNoiDangBao))
+                if (!string.IsNullOrEmpty(model.FileMinhChungBaiBao))
                 {
-                    var noiDangBao = new NoiDangBao { Ten = model.TenNoiDangBao };
-                    await _noiDangBaoRepository.AddAsync(noiDangBao);
-                    model.NoiDangBaoId = noiDangBao.Id;
+                    model.FileMinhChungBaiBao = FileHelper.SaveBase64File(model.FileMinhChungBaiBao, "FileMinhChungBaiBao");
                 }
-                if (!model.ThanhQuaId.HasValue && !string.IsNullOrEmpty(model.TenThanhQua))
-                {
-                    var thanhQua = new ThanhQua { Ten = model.TenThanhQua };
-                    await _thanhquaRepository.AddAsync(thanhQua);
-                    model.ThanhQuaId = thanhQua.Id;
-                }
-
                 var congBo = _mapper.Map<CongBo>(model);
                 await _congBoRepository.AddAsync(congBo);
                 await _congBoRepository.CommitTransactionAsync();

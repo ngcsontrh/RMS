@@ -132,7 +132,11 @@ export default () => {
             width: 200,
             render: (_, record) => {
                 return record.linkBaiBao ? (
-                    <a href={`/${record.linkBaiBao}`} target="_blank" rel="noopener noreferrer">
+                    <a
+                        href={record.linkBaiBao.startsWith("http") ? record.linkBaiBao : `https://${record.linkBaiBao}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         Xem bài báo <GlobalOutlined />
                     </a>
                 ) : null;
