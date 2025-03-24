@@ -162,18 +162,9 @@ namespace SRM.Business.Services
         {
             try
             {
-                await _userRepository.BeginTransactionAsync();
-
-                var lyLichKhoaHoc = new LyLichKhoaHoc();
-                var quaTrinhCongTac = new QuaTrinhCongTac();
-
-                await _lyLichKhoaHocRepository.AddAsync(lyLichKhoaHoc);
-                await _quaTrinhCongTacRepository.AddAsync(quaTrinhCongTac);
+                await _userRepository.BeginTransactionAsync();                
 
                 var user = _mapper.Map<User>(registerData);
-                user.LyLichKhoaHocId = lyLichKhoaHoc.Id;
-                user.QuaTrinhCongTacId = quaTrinhCongTac.Id;
-
                 var registerResult = await _userManager.CreateAsync(user, registerData.Password!);
                 if (!registerResult.Succeeded)
                 {
@@ -185,6 +176,12 @@ namespace SRM.Business.Services
                 {
                     throw new Exception(addRoleResult.ToString());
                 }
+
+                var lyLichKhoaHoc = new LyLichKhoaHoc { UserId = user.Id };
+                var quaTrinhCongTac = new QuaTrinhCongTac { UserId = user.Id };
+
+                await _lyLichKhoaHocRepository.AddAsync(lyLichKhoaHoc);
+                await _quaTrinhCongTacRepository.AddAsync(quaTrinhCongTac);
 
                 await _userRepository.CommitTransactionAsync();
 

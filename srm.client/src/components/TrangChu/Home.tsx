@@ -11,14 +11,12 @@ import {
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { getCongBos } from '../../services/CongBoService';
-import { getTacGias } from '../../services/TacGiaService';
 import { getDeTais } from '../../services/DeTaiService'; // Assuming this service exists
-import type { CongBoData, TacGiaData, DeTaiData } from '../../models/data';
+import type { CongBoData, DeTaiData } from '../../models/data';
 
 const TrangChuHome: React.FC = () => {
     const [congBoChartData, setCongBoChartData] = useState<{ year: string; count: number }[]>([]);
     const [deTaiChartData, setDeTaiChartData] = useState<{ year: string; count: number }[]>([]);
-    const [tacGiaDeptData, setTacGiaDeptData] = useState<{ department: string; count: number }[]>([]);
 
     const { data: congBoData, isLoading: isLoadingCongBo, error: errorCongBo } = useQuery({
         queryKey: ['congBoData'],
@@ -28,11 +26,6 @@ const TrangChuHome: React.FC = () => {
     const { data: deTaiData, isLoading: isLoadingDeTai, error: errorDeTai } = useQuery({
         queryKey: ['deTaiData'],
         queryFn: () => getDeTais({ pageIndex: 1, pageSize: 100, tacGiaId: null }) 
-    });
-
-    const { data: tacGiaData, isLoading: isLoadingTacGia, error: errorTacGia } = useQuery({
-        queryKey: ['tacGiaData'],
-        queryFn: () => getTacGias({ pageIndex: 1, pageSize: 100 })
     });
 
     // CongBo by year (updated from month to year)
@@ -59,22 +52,10 @@ const TrangChuHome: React.FC = () => {
         }
     }, [deTaiData]);
 
-    // TacGia by department (unchanged)
-    useEffect(() => {
-        if (tacGiaData) {
-            const groupedData = tacGiaData.items.reduce((acc: Record<string, number>, item: TacGiaData) => {
-                const dept = item.donViId ? `Đơn vị ${item.donViId}` : "Không xác định";
-                acc[dept] = (acc[dept] || 0) + 1;
-                return acc;
-            }, {});
-            setTacGiaDeptData(Object.entries(groupedData).map(([department, count]) => ({ department, count })));
-        }
-    }, [tacGiaData]);
-
-    if (isLoadingCongBo || isLoadingDeTai || isLoadingTacGia) {
+    if (isLoadingCongBo || isLoadingDeTai) {
         return <div style={{ textAlign: 'center', color: '#0ea5e9', fontSize: '18px', fontWeight: '500' }}>Đang tải dữ liệu...</div>;
     }
-    if (errorCongBo || errorDeTai || errorTacGia) {
+    if (errorCongBo || errorDeTai) {
         return <div style={{ textAlign: 'center', color: '#ef4444', fontSize: '18px' }}>{(errorCongBo || errorDeTai || errorTacGia as Error).message}</div>;
     }
 
@@ -120,7 +101,7 @@ const TrangChuHome: React.FC = () => {
                         tick={{ fontSize: 14, fill: '#475569', fontFamily: 'Inter, sans-serif' }}
                         tickLine={false}
                         axisLine={{ stroke: '#bae6fd' }}
-                        tickFormatter={(value) => value.toLocaleString()}
+                        tickFormatter={(value: any) => value.toLocaleString()}
                     />
                     <Tooltip
                         contentStyle={{
@@ -140,7 +121,7 @@ const TrangChuHome: React.FC = () => {
                         height={40}
                         iconType="rect"
                         iconSize={14}
-                        formatter={(value) => (
+                        formatter={(value: any) => (
                             <span style={{ color: '#1e3a8a', fontSize: '16px', fontWeight: '600', marginLeft: '8px' }}>
                                 {value}
                             </span>
@@ -164,7 +145,6 @@ const TrangChuHome: React.FC = () => {
         <div style={chartStyle.container}>
             {renderChart(congBoChartData, "year", "Thống kê số lượng công bố theo năm", "Số lượng công bố", "Công bố")}
             {renderChart(deTaiChartData, "year", "Thống kê số lượng đề tài theo năm", "Số lượng đề tài", "Đề tài")}
-            {renderChart(tacGiaDeptData, "department", "Thống kê số lượng tác giả theo đơn vị", "Số lượng tác giả", "Tác giả")}
         </div>
     );
 };

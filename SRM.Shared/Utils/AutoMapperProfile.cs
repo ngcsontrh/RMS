@@ -32,6 +32,11 @@ namespace SRM.Shared.Utils
                 }
             }
 
+            CreateMap<CongBo, CongBoData>()
+                .ForMember(dest => dest.DongTacGias, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.DongTacGias) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(src.DongTacGias, options)))
+                .ReverseMap()
+                .ForMember(dest => dest.DongTacGias, opt => opt.MapFrom(src => JsonSerializer.Serialize(src.DongTacGias, options)));
+
             CreateMap<DeTai, DeTaiData>()
                 .ForMember(dest => dest.TenCapDeTai, opt => opt.MapFrom(src => src.CapDeTai != null ? src.CapDeTai.Ten : null))
                 .ForMember(dest => dest.TenDonViChuTri, opt => opt.MapFrom(src => src.DonViChuTri != null ? src.DonViChuTri.Ten : null))

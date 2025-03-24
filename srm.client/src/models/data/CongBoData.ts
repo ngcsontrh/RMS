@@ -1,5 +1,3 @@
-import type { TacGiaJson } from '../json';
-
 export interface CongBoData {
     id?: number | null;
     noiDangBaoId?: number | null;
@@ -23,9 +21,9 @@ export interface CongBoData {
     thanhQuaId?: number | null;
     tenThanhQua?: string | null;
     linkMinhChungLoaiQ?: string | null;
-    tacGiaChinh?: TacGiaJson | null;
-    tacGiaLienHe?: TacGiaJson | null;
-    dongTacGias?: TacGiaJson[] | null;
+    tacGiaChinh?: string | null;
+    tacGiaLienHe?: string | null;
+    dongTacGias?: string[] | null;
     loaiHoTroChiPhi?: string | null;
     phanChiaSuDongGop?: string | null;
 }

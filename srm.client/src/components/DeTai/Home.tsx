@@ -93,7 +93,13 @@ export default () => {
             title: <div style={{ textAlign: 'center' }}>Hồ sơ nghiệm thu</div>,
             key: 'hoSoNghiemThu',
             width: 300,
-            render: (_, record) => <Link to={`/${record.hoSoNghiemThu}`}>Hồ sơ nghiệm thu</Link>
+            render: (_, record) => {
+                return record.hoSoNghiemThu ? (
+                    <a href={`/${record.hoSoNghiemThu}`} target="_blank" rel="noopener noreferrer">
+                        Hồ sơ nghiệm thu
+                    </a>
+                ) : null;
+            }
         },
         {
             title: <div style={{ textAlign: 'center' }}>Thời gian thực hiện</div>,

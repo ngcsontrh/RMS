@@ -28,6 +28,16 @@ namespace SRM.Data.Configurations
 
             builder.Property(u => u.DonViId);
 
+            builder.HasOne(u => u.LyLichKhoaHoc)
+                .WithOne(llkh => llkh.User)
+                .HasForeignKey<LyLichKhoaHoc>(llkh => llkh.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(u => u.QuaTrinhCongTac)
+                .WithOne(qtct => qtct.User)
+                .HasForeignKey<QuaTrinhCongTac>(qtct => qtct.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasData(new User
             {
                 Id = 1,

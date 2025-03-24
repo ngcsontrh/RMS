@@ -22,7 +22,8 @@
     "jwt-decode": "4.0.0",
     "react-select": "5.10.1",
     "@ant-design/icons": "6.0.0",
-    "react-file-base64": "1.0.3"
+    "react-file-base64": "1.0.3",
+    "recharts": "2.15.1"
   },
   "devDependencies": {
     "@eslint/js": "9.21.0",

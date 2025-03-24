@@ -1,72 +1,54 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { Breadcrumb, Button, Flex, Table } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { TableProps } from 'antd';
 import type { CongBoData } from '../../models/data';
 import type { CongBoSearch } from '../../models/search';
 import { useQuery } from '@tanstack/react-query';
-
-import { faUser, faBookmark } from "@fortawesome/free-solid-svg-icons";
-import { Pagination } from '../commons';
-import { Link, useLocation } from 'react-router-dom';
 import { getCongBos } from '../../services/CongBoService';
+import { getUserDropdown } from '../../services/UserService';
+import { Loading, Pagination, Error } from '../commons';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
+import dayjs from 'dayjs';
+import { GlobalOutlined } from '@ant-design/icons';
 
 interface DataType extends CongBoData {
     key: string;
     stt: number
 }
 
-const columns: TableProps<DataType>['columns'] = [
-    {
-        title: <div style={{ textAlign: 'center' }}>STT</div>,
-        dataIndex: 'stt',
-        key: 'stt',
-        width: '5%',
-        render: (_, record) => (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
-            </div>
-        )
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Thông tin công bố</div>,
-        key: 'info',
-        render: (_, record) => (
-            <>
-                //<h2>{`${record.ten} - ${record.maSo}`}</h2>
-                //<ul style={{ listStyleType: 'none' }}>
-                //    <li><FontAwesomeIcon icon={faBookmark} /> {record.mucTieu}</li>
-                //    <li><FontAwesomeIcon icon={faUser} /> {record.chuNhiem?.ten}</li>
-                //</ul>
-            </>
-        ),
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Thao tác</div>,
-        key: 'action',
-        width: '10%',
-        render: (_, record) => (
-            <div style={{ textAlign: 'center' }}>
-                <Link to={`/cong-bo/${record.id}`}>Chi tiết</Link>
-            </div>
-        ),
-    },
-];
-
-export default () => {
+export default () => {   
     const location = useLocation();
-    const { authData } = useAuthStore();
+    const { userId } = useAuthStore();
     const [searchParams, setSearchParams] = React.useState<CongBoSearch>({
         pageIndex: 1,
-        pageSize: 10,
-        ten: null,
+        pageSize: 10
+    });
+    const isToanTruong = location.pathname.startsWith('/toan-truong');    
+
+    const { data: userDatas } = useQuery({
+        queryKey: ['userDropdown'],
+        queryFn: () => getUserDropdown()
     });
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['deTaiData', searchParams],
+        queryKey: ['congBoData', searchParams],
         queryFn: () => getCongBos(searchParams)
     });
+    useEffect(() => {
+        setSearchParams({
+            pageIndex: 1,
+            pageSize: 10,
+        });
+    }, [location.pathname, userId]);
+
+    if (isLoading) {
+        return <Loading />
+    }
+
+    if (error) {
+        return <Error message={error.message} />
+    }
 
     const dataSource: DataType[] = data?.items
         ? data.items.map((item, index) => ({
@@ -86,13 +68,93 @@ export default () => {
         });
     };
 
-    if (error) return <div>{(error as Error).message}</div>;
+    const columns: TableProps<DataType>['columns'] = [
+        {
+            title: <div style={{ textAlign: 'center' }}>STT</div>,
+            dataIndex: 'stt',
+            key: 'stt',
+            width: 70,
+            render: (_, record) => record.stt + 1
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Nơi đăng báo</div>,
+            key: 'noiDangBao',
+            width: 200,
+            render: (_, record) => record.tenNoiDangBao
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Tạp chí</div>,
+            key: 'tenTapChi',
+            width: 250,
+            render: (_, record) => record.tenTapChi
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Công bố</div>,
+            key: 'tenCongBo',
+            width: 350,
+            render: (_, record) => record.ten
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Ngày gửi đăng</div>,
+            key: 'ngayGuiDang',
+            width: 150,
+            render: (_, record) => dayjs(record.ngayGuiDang).format('DD/MM/YYYY')        
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Ngày công bố</div>,
+            key: 'ngayCongBo',
+            width: 150,
+            render: (_, record) => dayjs(record.ngayCongBo).format('DD/MM/YYYY')
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Tác giả chính</div>,
+            key: 'tacGiaChinh',
+            width: 180,
+            render: (_, record) => {
+                const user = userDatas?.find(u => u.id?.toString() === record.tacGiaChinh);
+
+                return user ? (
+                    <Button variant="outlined" color="primary">
+                        <Link to={`/user/${record.tacGiaChinh}`} style={{ color: 'inherit' }}>
+                            {user.fullName}
+                        </Link>
+                    </Button>
+                ) : (
+                    <Button variant="outlined" color="default">
+                        {record.tacGiaChinh}
+                    </Button>
+                );
+            }
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Bài báo</div>,
+            key: 'baibao',
+            width: 200,
+            render: (_, record) => {
+                return record.linkBaiBao ? (
+                    <a href={`/${record.linkBaiBao}`} target="_blank" rel="noopener noreferrer">
+                        Xem bài báo <GlobalOutlined />
+                    </a>
+                ) : null;
+            }
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Thao tác</div>,
+            key: 'action',
+            width: 100,
+            render: (_, record) => (
+                <div style={{ textAlign: 'center' }}>
+                    <Link to={isToanTruong ? `/toan-truong/cong-bo/${record.id}` : `/ca-nhan/cong-bo/${record.id}`}>Chi tiết</Link>
+                </div>
+            ),
+        },
+    ];    
 
     return (
         <>
             <Breadcrumb
                 style={{ marginTop: "10px" }}
-                items={[{ title: "Công Bố" }, { title: "Danh sách" }]}
+                items={[{ title: "Đề tài" }, { title: "Danh sách" }]}
             />
             {location.pathname === '/ca-nhan/cong-bo' && (
                 <Flex justify="flex-end">
@@ -109,7 +171,9 @@ export default () => {
                 dataSource={dataSource}
                 pagination={false}
                 loading={isLoading}
+                bordered
                 style={{ marginTop: "10px" }}
+                scroll={{ x: 'max-content', y: 500 }} 
             />
             <Pagination
                 current={searchParams.pageIndex!}

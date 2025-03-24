@@ -19,4 +19,6 @@ public class User : IdentityUser<int>
     public virtual ICollection<UserToken> UserTokens { get; set; } = new List<UserToken>();
     public virtual ICollection<UserLogin> UserLogins { get; set; } = new List<UserLogin>();
     public virtual DonVi? DonVi { get; set; }
+    public virtual QuaTrinhCongTac? QuaTrinhCongTac { get; set; }
+    public virtual LyLichKhoaHoc? LyLichKhoaHoc { get; set; }
 }

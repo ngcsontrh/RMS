@@ -31,9 +31,9 @@ namespace SRM.Shared.Models.Data
         public int? ThanhQuaId { get; set; }
         public string? TenThanhQua { get; set; }
         public string? LinkMinhChungLoaiQ { get; set; }
-        public TacGiaJson? TacGiaChinh { get; set; }
-        public TacGiaJson? TacGiaLienHe { get; set; }
-        public List<TacGiaJson>? DongTacGias { get; set; }
+        public string? TacGiaChinh { get; set; }
+        public string? TacGiaLienHe { get; set; }
+        public List<string>? DongTacGias { get; set; }
         public string? LoaiHoTroChiPhi { get; set; }
         public string? PhanChiaSuDongGop { get; set; }
     }
