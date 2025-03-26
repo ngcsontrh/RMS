@@ -6,6 +6,7 @@ export type { DonViChuTriSearch } from './DonViChuTriSearch';
 export type { TacGiaSearch } from './TacGiaSearch';
 export type { ThanhQuaSearch } from './ThanhQuaSearch';
 export type { LoaiHoatDongSearch } from './LoaiHoatDongSearch';
-export type { NoiDangBaoSearch } from './NoiDangBaoSearch'; }
+export type { NoiDangBaoSearch } from './NoiDangBaoSearch'; 
 export type { DonViSearch } from './DonViSearch';
 export type { RoleSearch } from './RoleSearch';
+export type { QuaTrinhCongTacSearch } from './QuaTrinhCongTacSearch';

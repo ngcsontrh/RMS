@@ -1,70 +1,20 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Button, Col, Form, Input, Modal, Row, Table, TableProps, message, Checkbox } from 'antd';
 import { useQuery } from '@tanstack/react-query';
-import { getCapDeTais, editCapDeTai, createCapDeTai } from '../../services/CapDeTaiService'; // Thay đổi service nếu cần
-import { CapDeTaiData } from '../../models'; // Thay đổi model nếu cần
+import { getQuaTrinhCongTac, editQuaTrinhCongTac, createQuaTrinhCongTac } from '../../services/QuaTrinhCongTacService';
+import { QuaTrinhCongTacData } from '../../models/data';
+import { useAuthStore } from '../../stores/authStore';
 
 // Định nghĩa kiểu dữ liệu cho bảng
-interface DataType extends CapDeTaiData {
+interface DataType extends QuaTrinhCongTacData {
     key: string;
     stt: number;
-    tuNam?: number;
-    denNam?: number | null;
-    viTriCongTac?: string;
-    toChucCongTac?: string;
-    diaChiToChuc?: string;
+    tuNam: number;
+    denNam: number | null;
+    viTriCongTac: string;
+    toChucCongTac: string;
+    diaChiToChuc: string;
 }
-
-// Cột của bảng
-const columns: TableProps<DataType>['columns'] = [
-    {
-        title: <div style={{ textAlign: 'center' }}>STT</div>,
-        dataIndex: 'stt',
-        key: 'stt',
-        width: '5%',
-        render: (_, record) => (
-            <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
-        ),
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Thời gian</div>,
-        key: 'thoiGian',
-        render: (_, record) => (
-            <div style={{ textAlign: 'center' }}>
-                {record.tuNam} - {record.denNam || 'Nay'}
-            </div>
-        ),
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Vị trí công tác</div>,
-        key: 'viTriCongTac',
-        dataIndex: 'viTriCongTac',
-        render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Tổ chức công tác</div>,
-        key: 'toChucCongTac',
-        dataIndex: 'toChucCongTac',
-        render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Địa chỉ tổ chức</div>,
-        key: 'diaChiToChuc',
-        dataIndex: 'diaChiToChuc',
-        render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
-    },
-    {
-        title: <div style={{ textAlign: 'center' }}>Thao tác</div>,
-        key: 'action',
-        render: (_, record) => (
-            <div style={{ textAlign: 'center' }}>
-                <Button type="link" onClick={() => record.onEdit?.(record)}>
-                    Cập nhật
-                </Button>
-            </div>
-        ),
-    },
-];
 
 const QuanLyCongTac: React.FC = () => {
     const [form] = Form.useForm();
@@ -72,25 +22,18 @@ const QuanLyCongTac: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editData, setEditData] = useState<DataType | null>(null);
     const [isDenNay, setIsDenNay] = useState(false);
+    const { userId } = useAuthStore();
 
-    // Dữ liệu giả lập (thay thế bằng API thực tế)
     const { data: congTacData, isLoading, error, refetch } = useQuery({
         queryKey: ['congTacData'],
-        queryFn: () => getCapDeTais({ pageIndex: 1, pageSize: 10, ten: null }), // Thay đổi API nếu cần
+        queryFn: () => getQuaTrinhCongTac(Number(userId)),
     });
 
-    // Dữ liệu cho bảng
-    const dataSource: DataType[] = congTacData?.items?.map((item, index) => ({
-        ...item,
-        key: item.id!.toString(),
-        stt: index,
-        tuNam: item.tuNam || 2020, // Dữ liệu giả lập
-        denNam: item.denNam || null,
-        viTriCongTac: item.viTriCongTac || 'Chuyên ngành Tiền sĩ',
-        toChucCongTac: item.toChucCongTac || 'Đại học Cần Thơ',
-        diaChiToChuc: item.diaChiToChuc || 'Cần Thơ',
-        onEdit: (record: DataType) => handleEdit(record),
-    })) || [];
+    useEffect(() => {
+        if (congTacData) {
+            form.setFieldsValue(congTacData);
+        }
+    }, [form, congTacData]);
 
     const handleCreateNew = () => {
         form.resetFields();
@@ -125,13 +68,13 @@ const QuanLyCongTac: React.FC = () => {
                 ...values,
                 denNam: isDenNay ? null : values.denNam, // Nếu "Đến nay" được chọn, denNam là null
             };
-            if (editData.id) {
+            if (editData && editData.id) {
                 // Cập nhật công tác
-                await editCapDeTai(editData.id, dataToSubmit);
+                await editQuaTrinhCongTac(editData.id, dataToSubmit);
                 messageApi.success('Cập nhật thành công');
             } else {
                 // Tạo mới công tác
-                await createCapDeTai(dataToSubmit);
+                await createQuaTrinhCongTac(dataToSubmit);
                 messageApi.success('Tạo mới thành công');
             }
             setIsModalOpen(false);
@@ -146,6 +89,56 @@ const QuanLyCongTac: React.FC = () => {
     };
 
     if (error) return <div>{(error as Error).message}</div>;
+
+    const columns: TableProps<DataType>['columns'] = [
+        {
+            title: <div style={{ textAlign: 'center' }}>STT</div>,
+            dataIndex: 'stt',
+            key: 'stt',
+            width: '5%',
+            render: (_, record) => (
+                <div style={{ textAlign: 'center' }}>{record.stt + 1}</div>
+            ),
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Thời gian</div>,
+            key: 'thoiGian',
+            render: (_, record) => (
+                <div style={{ textAlign: 'center' }}>
+                    {record.tuNam} - {record.denNam ?? 'Đến nay'}
+                </div>
+            ),
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Vị trí công tác</div>,
+            key: 'viTriCongTac',
+            dataIndex: 'viTriCongTac',
+            render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Tổ chức công tác</div>,
+            key: 'toChucCongTac',
+            dataIndex: 'toChucCongTac',
+            render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Địa chỉ tổ chức</div>,
+            key: 'diaChiToChuc',
+            dataIndex: 'diaChiToChuc',
+            render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+        },
+        {
+            title: <div style={{ textAlign: 'center' }}>Thao tác</div>,
+            key: 'action',
+            render: (_, record) => (
+                <div style={{ textAlign: 'center' }}>
+                    <Button type="link" onClick={() => handleEdit(record)}>
+                        Cập nhật
+                    </Button>
+                </div>
+            ),
+        },
+    ];
 
     return (
         <>
@@ -163,7 +156,7 @@ const QuanLyCongTac: React.FC = () => {
                 <Table<DataType>
                     size="small"
                     columns={columns}
-                    dataSource={dataSource}
+                    dataSource={congTacData as DataType[]}
                     pagination={false}
                     loading={isLoading}
                 />

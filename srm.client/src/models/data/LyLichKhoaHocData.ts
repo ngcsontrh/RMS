@@ -1,4 +1,5 @@
 export interface LyLichKhoaHocData {
+    id?: number | null;
     ngayThangNamSinh?: string | null;
     noiSinh: string | null;
     queQuan: string | null;

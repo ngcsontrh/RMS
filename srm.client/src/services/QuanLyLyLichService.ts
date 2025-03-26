@@ -1,11 +1,10 @@
 import api from "./api";
-import type { LyLichKhoaHocData, PageData, ExecuteData } from "../models/data";
-import type { LyLichKhoaHocSearch } from "../models/search";
+import type { LyLichKhoaHocData, ExecuteData } from "../models/data";
 
-const endpoint = "/api/don-vi";
+const endpoint = "/api/ly-lich-khoa-hoc";
 
-export const getLyLichKhoaHoc = async (id: number): Promise<LyLichKhoaHocData> => {
-    const response = await api.get<ExecuteData<LyLichKhoaHocData>>(`${endpoint}/${id}`);
+export const getLyLichKhoaHoc = async (userId: number): Promise<LyLichKhoaHocData> => {
+    const response = await api.get<ExecuteData<LyLichKhoaHocData>>(`${endpoint}/info`, { params: { userId } });
     if (!response.data.success) {
         throw new Error(response.data.message!);
     }

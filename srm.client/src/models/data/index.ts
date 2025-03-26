@@ -14,3 +14,5 @@ export type { AuthData } from './AuthData';
 export type { TokenData } from './TokenData';
 export type { DonViData } from './DonViData';
 export type { RoleData } from './RoleData';
+export type { LyLichKhoaHocData } from './LyLichKhoaHocData';
+export type { QuaTrinhCongTacData } from './QuaTrinhCongTacData';

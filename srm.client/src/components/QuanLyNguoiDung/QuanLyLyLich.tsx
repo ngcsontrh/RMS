@@ -1,63 +1,37 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect } from 'react';
 import { Form, Input, Row, Col, Button, message, Select, Typography, DatePicker } from 'antd';
-import axios from 'axios';
 import { LyLichKhoaHocData } from '../../models/data/LyLichKhoaHocData';
+import { getLyLichKhoaHoc, editLyLichKhoaHoc } from '../../services/QuanLyLyLichService';
+import { useAuthStore } from '../../stores/authStore';
+import { useQuery } from '@tanstack/react-query';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 const QuanLyLyLich: React.FC = () => {
     const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false);
-    const fetched = useRef(false); // Ngăn fetch API lặp lại
     const [messageApi, contextHolder] = message.useMessage();
+    const { userId } = useAuthStore();
 
-    // Dữ liệu giả lập
-    const LyLichInfo: LyLichKhoaHocData = {
-        noiSinh: 'Nam Định',
-        queQuan: 'Yên Hồng, Ý Yên, Nam Định',
-        diahoc: 'Đại học Công nghệ, Đại học Quốc gia Hà Nội',
-        hocViCaoNhat: 'ThS',
-        namCongNhanHocVi: '2014',
-        chucDanhKhoaHoc: 'Chức danh (viên chức hoặc trước khi nghỉ hưu)',
-        namCongNhanChucDanh: '2012',
-        donViLyLich: 'Đại học Công nghệ, Đại học Quốc gia Hà Nội',
-        diaChiLienHe: 'Cơ quan Đại học',
-        dienThoaiLienHe: 'Hiệu trưởng',
-        hieuTruong: 'Chính Quy',
-        namCapBang: '2012',
-        noiCapBang: 'Đại học Công nghệ, Đại học Quốc gia Hà Nội',
-        chuyenNganhTienSi: 'Chuyên ngành Tiến sĩ',
-        kyThuatPhanMem: 'Kỹ thuật phần mềm',
-        tenDeTaiLuanAn: '',
-        nguonGoc1: 'Tiếng Anh',
-        nguonGoc2: 'Khác',
-        mucDoSuDungNguonGoc1: 'Mức độ sử dụng nguồn gốc 1',
-        chucDanhHienCuu: '',
-    };  
-
-    // Set giá trị ban đầu cho form
+    const { data: lyLichInfo, isLoading, error, refetch } = useQuery({
+        queryKey: ['lyLichKhoaHoc'],
+        queryFn: () => getLyLichKhoaHoc(Number(userId)),
+    });
+    
     useEffect(() => {
-        if (fetched.current) return; // Chặn gọi API lần 2
-        fetched.current = true;
-        form.setFieldsValue(LyLichInfo);
-    }, [form, LyLichInfo]);
+        if (lyLichInfo) {
+            form.setFieldsValue(lyLichInfo);
+        }
+    }, [form, lyLichInfo]);
 
     // Xử lý khi submit form
-    const handleFinish = (values: any) => {
-        setLoading(true);
-        // Giả lập gọi API
-        axios
-            .post('/api/update-cong-tac', values)
-            .then(() => {
-                messageApi.success('Cập nhật thông tin công tác thành công!');
-            })
-            .catch(() => {
-                messageApi.error('Lỗi khi cập nhật thông tin công tác');
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+    const handleFinish = async (values: LyLichKhoaHocData) => {
+        try {
+            await editLyLichKhoaHoc(lyLichInfo?.id!, values);
+            messageApi.success("Thành công");
+        } catch (e) {
+            messageApi.error("Có lỗi xảy ra");
+        }
     };
 
     return (
@@ -280,7 +254,7 @@ const QuanLyLyLich: React.FC = () => {
                 </Text>
 
                 <Form.Item style={{ textAlign: 'center', marginTop: 20 }}>
-                    <Button type="primary" htmlType="submit" loading={loading}>
+                    <Button type="primary" htmlType="submit">
                         Cập nhật
                     </Button>
                 </Form.Item>
