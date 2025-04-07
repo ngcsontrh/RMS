@@ -1,1 +1,0 @@
-ef database update --project SRM.Data\SRM.Data.csproj --startup-project SRM.Server\SRM.Server.csproj --context SRM.Data.AppDbContext --configuration Debug 20250306102444_Initial
