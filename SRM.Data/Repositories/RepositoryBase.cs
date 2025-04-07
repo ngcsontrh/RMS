@@ -76,21 +76,17 @@ namespace SRM.Data.Repositories
             return entities;
         }
 
-        public Task<(List<TEntity>, int)> GetPageAsync(Expression<Func<TEntity, bool>> expression, int pageIndex = 1, int pageSize = 10)
+        public async Task<(List<TEntity>, int)> GetPageAsync(Expression<Func<TEntity, bool>> expression, int pageIndex = 1, int pageSize = 10)
         {
-            var pageResultTask = _context.Set<TEntity>()
+            var pageResult = await _context.Set<TEntity>()
                 .Where(expression)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .AsNoTracking()
                 .ToListAsync();
-            var totalCountTask = _context.Set<TEntity>().CountAsync(expression);
-            Task.WaitAll(pageResultTask, totalCountTask);
+            var totalCount = await _context.Set<TEntity>().CountAsync(expression);
 
-            var pageResult = pageResultTask.Result;
-            var totalCount = totalCountTask.Result;
-
-            return Task.FromResult((pageResult, totalCount));
+            return (pageResult, totalCount);
         }
 
         public async Task UpdateAndSaveAsync(TEntity entity)
