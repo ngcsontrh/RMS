@@ -1,0 +1,84 @@
+﻿using SRM.Business.IServices;
+using SRM.Data.IRepositories;
+using SRM.Domain.Data;
+using SRM.Domain.Entities;
+using SRM.Domain.Mappers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SRM.Business.Services
+{
+    public class CongBoService : ICongBoService
+    {
+        private readonly IRepositoryBase<CongBo> _congBoRepository;
+
+        public CongBoService(IRepositoryBase<CongBo> congBoRepository)
+        {
+            _congBoRepository = congBoRepository;
+        }
+
+        public async Task<bool> AddAsync(CongBoData model)
+        {
+            try
+            {
+                var entity = model.MapToEntity();
+                await _congBoRepository.AddAndSaveAsync(entity);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<(bool, CongBoData?)> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var entity = await _congBoRepository.GetByIdAsync(id);
+                var model = entity?.MapToData();
+                return (true, model);
+            }
+            catch (Exception)
+            {
+                return (false, null);
+            }
+        }
+
+        public async Task<(bool, PageData<CongBoData>?)> GetPageAsync(int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = await _congBoRepository.GetPageAsync(x => true, pageIndex, pageSize);
+                var data = result.Item1.Select(x => x.MapToData()).ToList();
+                var pageData = new PageData<CongBoData>
+                {
+                    Items = data,
+                    Total = result.Item2
+                };
+                return (true, pageData);
+            }
+            catch (Exception)
+            {
+                return (false, null);
+            }
+        }
+
+        public async Task<bool> UpdateAsync(CongBoData model)
+        {
+            try
+            {
+                var entity = model.MapToEntity();
+                await _congBoRepository.UpdateAndSaveAsync(entity);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+    }
+}
