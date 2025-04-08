@@ -3,6 +3,7 @@ using SRM.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security;
 using System.Text;
 using System.Text.Json;
@@ -40,7 +41,7 @@ namespace SRM.Data
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                     Username = "admin",
-                    Password = "admin",
+                    Password = "AQAAAAIAAYagAAAAENKmRj5jqegps3RqNwm9hCkccpMsKxFAP7p4ty/6/pZLIpwIiecVJv/cnGIQP/3PBQ==",
                 });
             });
 
@@ -72,6 +73,23 @@ namespace SRM.Data
                     UserId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                     RoleId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 });
+            });
+
+            builder.Entity<CongBo>(entity =>
+            {
+                entity.Property(x => x.ChiSoTacDong).HasPrecision(18, 2);
+                entity.Property(x => x.DiemHoiDong).HasPrecision(18, 2);
+            });
+
+            builder.Entity<DeTai>(entity =>
+            {
+                entity.Property(x => x.KinhPhiHangNam).HasPrecision(18, 2);
+                entity.Property(x => x.TongKinhPhi).HasPrecision(18, 2);
+            });
+
+            builder.Entity<HoatDong>(entity =>
+            {
+                entity.Property(x => x.KinhPhi).HasPrecision(18, 2);
             });
 
             base.OnModelCreating(builder);            

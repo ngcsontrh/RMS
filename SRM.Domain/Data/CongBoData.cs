@@ -27,7 +27,7 @@ namespace SRM.Domain.Data
         public decimal? DiemHoiDong { get; set; }
         public string? TenHoiDong { get; set; }
         public string? LoaiQ { get; set; }
-        public int? ThanhQuaId { get; set; }
+        public Guid? ThanhQuaId { get; set; }
         public string? LinkMinhChungLoaiQ { get; set; }
         public string? TacGiaChinh { get; set; }
         public string? TacGiaLienHe { get; set; }

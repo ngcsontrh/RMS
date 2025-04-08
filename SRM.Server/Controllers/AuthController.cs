@@ -36,7 +36,7 @@ namespace SRM.Server.Controllers
                 return Unauthorized();
             }
             var result = await _authService.GetMeAsync(username);
-            if (result.Item1)
+            if (!result.Item1)
             {
                 return NotFound();
             }
