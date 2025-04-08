@@ -17,30 +17,30 @@ const { RangePicker } = DatePicker;
 const recentResearchData = [
   {
     key: '1',
-    title: 'AI in Healthcare Applications',
-    investigator: 'Dr. Alice Johnson',
-    status: 'In Progress',
+    title: 'Ứng dụng AI trong Y tế',
+    investigator: 'TS. Nguyễn Văn A',
+    status: 'Đang thực hiện',
     date: '2025-03-15',
   },
   {
     key: '2',
-    title: 'Quantum Computing for Cryptography',
-    investigator: 'Dr. Bob Smith',
-    status: 'Completed',
+    title: 'Tính toán lượng tử cho Mật mã học',
+    investigator: 'TS. Trần Văn B',
+    status: 'Hoàn thành',
     date: '2025-02-28',
   },
   {
     key: '3',
-    title: 'Sustainable Energy Solutions',
-    investigator: 'Dr. Carol Williams',
-    status: 'Pending Approval',
-    date: '2025-04-01',
+    title: 'Giải pháp năng lượng bền vững',
+    investigator: 'TS. Lê Thị C',
+    status: 'Chờ phê duyệt',
+    date: '2025-04-10',
   },
   {
     key: '4',
-    title: 'Nanoparticles for Drug Delivery',
-    investigator: 'Dr. David Brown',
-    status: 'In Progress',
+    title: 'Phát triển vật liệu tiên tiến',
+    investigator: 'TS. Phạm Văn D',
+    status: 'Đang thực hiện',
     date: '2025-03-22',
   },
 ];
@@ -48,24 +48,31 @@ const recentResearchData = [
 const recentUsersData = [
   {
     key: '1',
-    name: 'John Doe',
-    department: 'Computer Science',
-    role: 'Researcher',
-    joinDate: '2025-03-30',
+    name: 'Nguyễn Văn A',
+    department: 'Khoa Công nghệ thông tin',
+    role: 'Giảng viên',
+    joinDate: '2025-03-15',
   },
   {
     key: '2',
-    name: 'Emily Wilson',
-    department: 'Physics',
-    role: 'Administrator',
-    joinDate: '2025-03-28',
+    name: 'Trần Thị B',
+    department: 'Khoa Hóa học',
+    role: 'Nghiên cứu viên',
+    joinDate: '2025-03-10',
   },
   {
     key: '3',
-    name: 'Mark Taylor',
-    department: 'Biology',
-    role: 'Researcher',
-    joinDate: '2025-03-25',
+    name: 'Lê Văn C',
+    department: 'Khoa Vật lý',
+    role: 'Giảng viên',
+    joinDate: '2025-02-28',
+  },
+  {
+    key: '4',
+    name: 'Phạm Thị D',
+    department: 'Khoa Điện tử',
+    role: 'Quản trị viên',
+    joinDate: '2025-02-15',
   },
 ];
 
@@ -73,30 +80,30 @@ const AdminDashboard: React.FC = () => {
   // Column definitions for research table
   const researchColumns = [
     {
-      title: 'Title',
+      title: 'Tên đề tài',
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: 'Principal Investigator',
+      title: 'Chủ nhiệm đề tài',
       dataIndex: 'investigator',
       key: 'investigator',
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => {
         let color = '';
-        if (status === 'In Progress') color = 'blue';
-        else if (status === 'Completed') color = 'green';
-        else if (status === 'Pending Approval') color = 'gold';
+        if (status === 'Đang thực hiện') color = 'blue';
+        else if (status === 'Hoàn thành') color = 'green';
+        else if (status === 'Chờ phê duyệt') color = 'gold';
         
         return <span style={{ color }}>{status}</span>;
       }
     },
     {
-      title: 'Date',
+      title: 'Ngày',
       dataIndex: 'date',
       key: 'date',
       // Only formatting dates when displayed in the table
@@ -107,22 +114,22 @@ const AdminDashboard: React.FC = () => {
   // Column definitions for users table
   const userColumns = [
     {
-      title: 'Name',
+      title: 'Họ tên',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Department',
+      title: 'Đơn vị',
       dataIndex: 'department',
       key: 'department',
     },
     {
-      title: 'Role',
+      title: 'Vai trò',
       dataIndex: 'role',
       key: 'role',
     },
     {
-      title: 'Join Date',
+      title: 'Ngày tham gia',
       dataIndex: 'joinDate',
       key: 'joinDate',
       // Only formatting dates when displayed in the table
@@ -133,7 +140,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
-        <Title level={2}>Admin Dashboard</Title>
+        <Title level={2}>Bảng điều khiển quản trị</Title>
         <RangePicker />
       </div>
       
@@ -142,7 +149,7 @@ const AdminDashboard: React.FC = () => {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Total Users"
+              title="Tổng số người dùng"
               value={125}
               prefix={<UserOutlined />}
               valueStyle={{ color: '#0078D4' }}
@@ -151,14 +158,14 @@ const AdminDashboard: React.FC = () => {
               <span style={{ fontSize: 14, color: '#3f8600' }}>
                 <ArrowUpOutlined /> 15% 
               </span>
-              <span style={{ fontSize: 14, marginLeft: 8 }}>Since last month</span>
+              <span style={{ fontSize: 14, marginLeft: 8 }}>So với tháng trước</span>
             </div>
           </Card>
         </Col>
         <Col span={6}>
           <Card>
             <Statistic
-              title="Research Projects"
+              title="Đề tài nghiên cứu"
               value={42}
               prefix={<BookOutlined />}
               valueStyle={{ color: '#0078D4' }}
@@ -167,14 +174,14 @@ const AdminDashboard: React.FC = () => {
               <span style={{ fontSize: 14, color: '#3f8600' }}>
                 <ArrowUpOutlined /> 8% 
               </span>
-              <span style={{ fontSize: 14, marginLeft: 8 }}>Since last month</span>
+              <span style={{ fontSize: 14, marginLeft: 8 }}>So với tháng trước</span>
             </div>
           </Card>
         </Col>
         <Col span={6}>
           <Card>
             <Statistic
-              title="Publications"
+              title="Công bố"
               value={87}
               prefix={<FileOutlined />}
               valueStyle={{ color: '#0078D4' }}
@@ -183,14 +190,14 @@ const AdminDashboard: React.FC = () => {
               <span style={{ fontSize: 14, color: '#cf1322' }}>
                 <ArrowDownOutlined /> 3% 
               </span>
-              <span style={{ fontSize: 14, marginLeft: 8 }}>Since last month</span>
+              <span style={{ fontSize: 14, marginLeft: 8 }}>So với tháng trước</span>
             </div>
           </Card>
         </Col>
         <Col span={6}>
           <Card>
             <Statistic
-              title="Departments"
+              title="Đơn vị"
               value={18}
               prefix={<TeamOutlined />}
               valueStyle={{ color: '#0078D4' }}
@@ -199,7 +206,7 @@ const AdminDashboard: React.FC = () => {
               <span style={{ fontSize: 14, color: '#3f8600' }}>
                 <ArrowUpOutlined /> 12% 
               </span>
-              <span style={{ fontSize: 14, marginLeft: 8 }}>Since last month</span>
+              <span style={{ fontSize: 14, marginLeft: 8 }}>So với tháng trước</span>
             </div>
           </Card>
         </Col>
@@ -207,8 +214,8 @@ const AdminDashboard: React.FC = () => {
       
       {/* Recent Research Projects */}
       <Card 
-        title="Recent Research Projects" 
-        extra={<Button type="link">View All</Button>}
+        title="Đề tài nghiên cứu gần đây" 
+        extra={<Button type="link">Xem tất cả</Button>}
         style={{ marginBottom: 24 }}
       >
         <Table 
@@ -220,8 +227,8 @@ const AdminDashboard: React.FC = () => {
       
       {/* Recent Users */}
       <Card 
-        title="Recently Added Users" 
-        extra={<Button type="link">View All</Button>}
+        title="Người dùng mới thêm gần đây" 
+        extra={<Button type="link">Xem tất cả</Button>}
       >
         <Table 
           dataSource={recentUsersData} 

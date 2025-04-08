@@ -37,7 +37,7 @@ namespace SRM.Business.Services
         {
             try
             {
-                var entity = await _deTaiRepository.GetByIdAsync(id);
+                var entity = await _deTaiRepository.GetDetailAsync(id);
                 var data = entity?.MapToData();
                 return (true, data);
             }
@@ -51,7 +51,7 @@ namespace SRM.Business.Services
         {
             try
             {
-                var entity = await _deTaiRepository.GetPageAsync(x => true, pageIndex, pageSize);
+                var entity = await _deTaiRepository.GetPageDetailAsync(pageIndex, pageSize);
                 var data = entity.Item1.Select(x => x.MapToData()).ToList();
                 var pageData = new PageData<DeTaiData>
                 {

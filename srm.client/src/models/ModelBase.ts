@@ -1,5 +1,7 @@
+import dayjs from 'dayjs';
+
 export interface ModelBase {
   id?: string;
-  ngayTao?: Date;
-  ngaySua?: Date;
+  ngayTao?: dayjs.Dayjs;
+  ngaySua?: dayjs.Dayjs;
 }

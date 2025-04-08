@@ -8,7 +8,6 @@ import {
   Avatar, 
   Dropdown, 
   Button, 
-  Badge, 
   Space 
 } from 'antd';
 import { 
@@ -20,7 +19,6 @@ import {
   TeamOutlined, 
   FileTextOutlined, 
   LogoutOutlined, 
-  BellOutlined,
   BookOutlined,
   ProjectOutlined,
   BuildOutlined,
@@ -63,74 +61,79 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const adminMenuItems: MenuItem[] = [
     {
       key: '/admin/dashboard',
-      label: 'Dashboard',
+      label: 'Bảng điều khiển',
       icon: <DashboardOutlined />
     },
     {
       key: 'research',
-      label: 'Research Management',
+      label: 'Quản lý Nghiên cứu',
       icon: <BookOutlined />,
       children: [
         {
+          key: '/detai', 
+          label: 'Đề tài nghiên cứu',
+          icon: <ProjectOutlined />
+        },
+        {
           key: '/admin/detai',
-          label: 'Research Topics',
+          label: 'Chủ đề nghiên cứu',
           icon: <ProjectOutlined />
         },
         {
           key: '/admin/capdetai',
-          label: 'Research Levels',
+          label: 'Cấp đề tài',
           icon: <BarsOutlined />
         },
         {
           key: '/admin/donvichutri',
-          label: 'Host Organizations',
+          label: 'Đơn vị chủ trì',
           icon: <ApartmentOutlined />
         },
         {
           key: '/admin/thanhqua',
-          label: 'Research Outputs',
+          label: 'Sản phẩm nghiên cứu',
           icon: <FileTextOutlined />
         },
         {
           key: '/admin/loaihoatdong',
-          label: 'Activity Types',
+          label: 'Loại hoạt động',
           icon: <BarsOutlined />
         }
       ]
     },
     {
       key: 'publications',
-      label: 'Publications',
+      label: 'Quản lý Công bố',
       icon: <FileTextOutlined />,
       children: [
         {
           key: '/admin/congbo',
-          label: 'Publications',
+          label: 'Công bố khoa học',
         },
         {
           key: '/admin/noidangbao',
-          label: 'Publication Venues',
+          label: 'Nơi đăng báo',
         }
       ]
     },
     {
       key: 'system',
-      label: 'System Management',
+      label: 'Quản lý Hệ thống',
       icon: <SettingOutlined />,
       children: [
         {
           key: '/admin/users',
-          label: 'User Management',
+          label: 'Quản lý Người dùng',
           icon: <TeamOutlined />
         },
         {
           key: '/admin/roles',
-          label: 'Role Management',
+          label: 'Quản lý Vai trò',
           icon: <BuildOutlined />
         },
         {
           key: '/admin/donvi',
-          label: 'Department Management',
+          label: 'Quản lý Đơn vị',
           icon: <ApartmentOutlined />
         }
       ]
@@ -144,7 +147,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     // Adding the logout menu item
     {
       key: 'logout',
-      label: 'Logout',
+      label: 'Đăng xuất',
       icon: <LogoutOutlined />,
     }
   ];
@@ -184,7 +187,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     const breadcrumbItems = [
       { 
         key: 'admin', 
-        title: <a onClick={() => navigate('/admin/dashboard')}>Admin</a> 
+        title: <a onClick={() => navigate('/admin/dashboard')}>Quản trị</a> 
       }
     ];
     
@@ -210,26 +213,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {
         key: 'profile',
         icon: <UserOutlined />,
-        label: 'Profile',
+        label: 'Hồ sơ',
         onClick: () => navigate('/profile')
       },
       {
         key: 'settings',
         icon: <SettingOutlined />,
-        label: 'Settings',
+        label: 'Cài đặt',
         onClick: () => navigate('/admin/settings')
-      },
-      {
-        type: 'divider'
-      },
-      {
-        key: 'logout',
-        icon: <LogoutOutlined />,
-        label: 'Logout',
-        onClick: () => {
-          logout();
-          navigate('/login');
-        }
       }
     ]
   };
@@ -312,14 +303,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               style={{ fontSize: '16px', width: 64, height: 64 }}
             />
             <Space size={16}>
-              <Badge count={5} dot>
-                <Button 
-                  type="text" 
-                  icon={<BellOutlined />} 
-                  style={{ fontSize: '16px' }} 
-                  onClick={() => navigate('/admin/notifications')}
-                />
-              </Badge>
               <Dropdown menu={userMenu} placement="bottomRight">
                 <Space style={{ cursor: 'pointer' }}>
                   <Avatar 

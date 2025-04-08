@@ -27,7 +27,7 @@ import {
 } from '@ant-design/icons';
 import { NoiDangBaoData } from '../../models/NoiDangBaoData';
 import * as NoiDangBaoService from '../../services/NoiDangBaoService';
-import { formatDate } from '../../utils/dateTime';
+import dayjs, { formatDate } from '../../utils/dateTime';
 import { 
   useQuery, 
   useMutation, 
@@ -218,29 +218,29 @@ const NoiDangBaoPage: React.FC = () => {
       render: (_: unknown, __: unknown, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: 'Name',
+      title: 'Tên',
       dataIndex: 'ten',
       key: 'ten',
       render: (text: string) => <strong>{text}</strong>
     },
     {
-      title: 'Created Date',
+      title: 'Ngày tạo',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
-      title: 'Last Modified',
+      title: 'Cập nhật gần nhất',
       dataIndex: 'ngaySua',
       key: 'ngaySua',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       render: (_: unknown, record: NoiDangBaoData) => (
         <Space size="small">
-          <Tooltip title="Edit">
+          <Tooltip title="Chỉnh sửa">
             <Button 
               type="primary" 
               icon={<EditOutlined />} 
@@ -248,13 +248,13 @@ const NoiDangBaoPage: React.FC = () => {
               size="small"
             />
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Xóa">
             <Popconfirm
-              title="Delete Publication Venue"
-              description="Are you sure you want to delete this publication venue?"
+              title="Xóa nơi đăng báo"
+              description="Bạn có chắc muốn xóa nơi đăng báo này không?"
               onConfirm={() => handleDelete(record.id!)}
-              okText="Yes"
-              cancelText="No"
+              okText="Có"
+              cancelText="Không"
               icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
             >
               <Button 
@@ -273,18 +273,18 @@ const NoiDangBaoPage: React.FC = () => {
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const errorMessage = queryError 
-    ? 'Failed to load publication venues. Please try again later.' 
+    ? 'Không thể tải danh sách nơi đăng báo. Vui lòng thử lại sau.' 
     : null;
 
   return (
     <div>
-      <Title level={2}>Publication Venues Management</Title>
+      <Title level={2}>Quản lý Nơi đăng báo</Title>
       
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
           <Col xs={24} sm={12} md={8} lg={6}>
             <Search
-              placeholder="Search by name"
+              placeholder="Tìm kiếm theo tên"
               allowClear
               enterButton={<SearchOutlined />}
               onSearch={handleSearch}
@@ -297,14 +297,14 @@ const NoiDangBaoPage: React.FC = () => {
                 onClick={refreshData}
                 loading={isLoading}
               >
-                Refresh
+                Làm mới
               </Button>
               <Button 
                 type="primary" 
                 icon={<PlusOutlined />} 
                 onClick={handleAddClick}
               >
-                Add Publication Venue
+                Thêm nơi đăng báo
               </Button>
             </Space>
           </Col>
@@ -325,7 +325,7 @@ const NoiDangBaoPage: React.FC = () => {
               ...pagination,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => `Total ${total} items`
+              showTotal: (total) => `Tổng cộng ${total} mục`
             }}
             onChange={handleTableChange}
           />
@@ -334,12 +334,12 @@ const NoiDangBaoPage: React.FC = () => {
 
       {/* Modal for Add/Edit */}
       <Modal
-        title={modalTitle}
+        title={modalTitle === 'Add Publication Venue' ? 'Thêm nơi đăng báo' : 'Chỉnh sửa nơi đăng báo'}
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>
-            Cancel
+            Hủy
           </Button>,
           <Button
             key="submit"
@@ -347,7 +347,7 @@ const NoiDangBaoPage: React.FC = () => {
             loading={isSubmitting}
             onClick={handleFormSubmit}
           >
-            Save
+            Lưu
           </Button>
         ]}
       >
@@ -358,10 +358,10 @@ const NoiDangBaoPage: React.FC = () => {
         >
           <Form.Item
             name="ten"
-            label="Publication Venue Name"
+            label="Tên nơi đăng báo"
             rules={[
-              { required: true, message: 'Please enter the publication venue name' },
-              { max: 100, message: 'Name cannot exceed 100 characters' }
+              { required: true, message: 'Vui lòng nhập tên nơi đăng báo' },
+              { max: 100, message: 'Tên không được vượt quá 100 ký tự' }
             ]}
           >
             <Input />

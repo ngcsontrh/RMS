@@ -8,6 +8,13 @@ import LoginPage from '../pages/LoginPage';
 import ProfilePage from '../pages/ProfilePage';
 import NotFoundPage from '../pages/NotFoundPage';
 import AdminDashboard from '../pages/AdminDashboard';
+import ContactPage from '../pages/ContactPage';
+import DeTaiListPage from '../pages/DeTaiListPage';
+import DeTaiDetailPage from '../pages/DeTaiDetailPage';
+import DeTaiFormPage from '../pages/DeTaiFormPage';
+import CongBoListPage from '../pages/CongBoListPage';
+import CongBoDetailPage from '../pages/CongBoDetailPage';
+import CongBoFormPage from '../pages/CongBoFormPage';
 
 // Import admin page components
 import CapDeTaiPage from '../pages/admin/CapDeTaiPage';
@@ -41,6 +48,48 @@ export const publicRoutes: RouteConfig[] = [
     path: '/login',
     element: <LoginPage />,
   },
+  {
+    path: '/contact',
+    element: (
+      <MainLayout>
+        <ContactPage />
+      </MainLayout>
+    ),
+  },
+  // DeTai public routes (list and detail views)
+  {
+    path: '/detai',
+    element: (
+      <MainLayout>
+        <DeTaiListPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: '/detai/:id',
+    element: (
+      <MainLayout>
+        <DeTaiDetailPage />
+      </MainLayout>
+    ),
+  },
+  // CongBo public routes (list and detail views)
+  {
+    path: '/congbo',
+    element: (
+      <MainLayout>
+        <CongBoListPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: '/congbo/:id',
+    element: (
+      <MainLayout>
+        <CongBoDetailPage />
+      </MainLayout>
+    ),
+  },
 ];
 
 // Protected routes (require authentication)
@@ -51,6 +100,48 @@ export const protectedRoutes: RouteConfig[] = [
       <ProtectedRoute>
         <MainLayout>
           <ProfilePage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
+  // DeTai protected routes (create and edit)
+  {
+    path: '/detai/create',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <DeTaiFormPage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/detai/:id/edit',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <DeTaiFormPage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
+  // CongBo protected routes (create and edit)
+  {
+    path: '/congbo/create',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <CongBoFormPage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/congbo/:id/edit',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <CongBoFormPage />
         </MainLayout>
       </ProtectedRoute>
     ),
@@ -74,7 +165,7 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>User Management</div>
+          <div>Quản lý Người dùng</div>
         </AdminLayout>
       </ProtectedRoute>
     ),
@@ -84,7 +175,7 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>Role Management</div>
+          <div>Quản lý Vai trò</div>
         </AdminLayout>
       </ProtectedRoute>
     ),
@@ -94,7 +185,7 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>Research Topics Management</div>
+          <div>Quản lý Đề tài</div>
         </AdminLayout>
       </ProtectedRoute>
     ),
@@ -124,7 +215,7 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>Publications Management</div>
+          <div>Quản lý Công bố</div>
         </AdminLayout>
       </ProtectedRoute>
     ),

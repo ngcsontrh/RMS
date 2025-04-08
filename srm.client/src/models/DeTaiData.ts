@@ -1,4 +1,5 @@
 import { ModelBase } from './ModelBase';
+import dayjs from 'dayjs';
 
 export interface DeTaiData extends ModelBase {
   capDeTaiId?: string;
@@ -8,8 +9,8 @@ export interface DeTaiData extends ModelBase {
   mucTieu?: string;
   noiDung?: string;
   tongKinhPhi?: number;
-  ngayBatDau?: Date;
-  ngayKetThuc?: Date;
+  ngayBatDau?: dayjs.Dayjs;
+  ngayKetThuc?: dayjs.Dayjs;
   kinhPhiHangNam?: number;
   hoSoNghiemThu?: string;
   hoSoSanPham?: string;

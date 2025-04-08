@@ -27,7 +27,7 @@ import {
 } from '@ant-design/icons';
 import { DonViChuTriData } from '../../models/DonViChuTriData';
 import * as DonViChuTriService from '../../services/DonViChuTriService';
-import { formatDate } from '../../utils/dateTime';
+import dayjs, { formatDate } from '../../utils/dateTime';
 import { 
   useQuery, 
   useMutation, 
@@ -227,13 +227,13 @@ const DonViChuTriPage: React.FC = () => {
       title: 'Created Date',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
       title: 'Last Modified',
       dataIndex: 'ngaySua',
       key: 'ngaySua',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
       title: 'Actions',

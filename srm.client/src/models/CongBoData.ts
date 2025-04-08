@@ -1,4 +1,5 @@
 import { ModelBase } from './ModelBase';
+import dayjs from 'dayjs';
 
 export interface CongBoData extends ModelBase {
   noiDangBaoId?: string;
@@ -10,8 +11,8 @@ export interface CongBoData extends ModelBase {
   nhaXuatBan?: string;
   fileMinhChungBaiBao?: string;
   linkBaiBao?: string;
-  ngayGuiDang?: Date;
-  ngayCongBo?: Date;
+  ngayGuiDang?: dayjs.Dayjs;
+  ngayCongBo?: dayjs.Dayjs;
   chiSoTacDong?: number;
   ky?: number;
   tap?: number;

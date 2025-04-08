@@ -28,7 +28,7 @@ export const ISO_FORMAT = 'YYYY-MM-DD';
  * @param format Format pattern (defaults to DATE_FORMAT)
  * @returns Formatted date string
  */
-export const formatDate = (date: string | Date | undefined | null, format: string = DATE_FORMAT): string => {
+export const formatDate = (date: string | dayjs.Dayjs | undefined | null, format: string = DATE_FORMAT): string => {
   if (!date) return '';
   return dayjs(date).format(format);
 };
@@ -39,7 +39,7 @@ export const formatDate = (date: string | Date | undefined | null, format: strin
  * @param format Format pattern (defaults to DATE_TIME_FORMAT)
  * @returns Formatted date-time string
  */
-export const formatDateTime = (dateTime: string | Date | undefined | null, format: string = DATE_TIME_FORMAT): string => {
+export const formatDateTime = (dateTime: string | dayjs.Dayjs | undefined | null, format: string = DATE_TIME_FORMAT): string => {
   if (!dateTime) return '';
   return dayjs(dateTime).format(format);
 };
@@ -49,9 +49,30 @@ export const formatDateTime = (dateTime: string | Date | undefined | null, forma
  * @param date Date to compare with now
  * @returns Relative time string
  */
-export const getRelativeTime = (date: string | Date | undefined | null): string => {
+export const getRelativeTime = (date: string | dayjs.Dayjs | undefined | null): string => {
   if (!date) return '';
   return dayjs(date).fromNow();
+};
+
+/**
+ * Convert a dayjs object to ISO string format suitable for API
+ * @param date The dayjs object
+ * @returns ISO string format of the date
+ */
+export const toISOString = (date: dayjs.Dayjs | undefined | null): string | undefined => {
+  if (!date) return undefined;
+  return date.toISOString();
+};
+
+/**
+ * Parse a string date to dayjs object
+ * @param dateString String representation of date
+ * @param format Format of the date string (optional)
+ * @returns dayjs object
+ */
+export const parseDate = (dateString: string | undefined | null, format?: string): dayjs.Dayjs | undefined => {
+  if (!dateString) return undefined;
+  return format ? dayjs(dateString, format) : dayjs(dateString);
 };
 
 export default dayjs;

@@ -1,4 +1,5 @@
 import { ModelBase } from './ModelBase';
+import dayjs from 'dayjs';
 
 export interface UserData extends ModelBase {
   username?: string;
@@ -9,7 +10,7 @@ export interface UserData extends ModelBase {
   gioiTinh?: string;
   donViId?: string;
   tenDonVi?: string;
-  ngaySinh?: Date;
+  ngaySinh?: dayjs.Dayjs;
   danToc?: string;
   chucDanh?: string;
   chuyenNganh?: string;

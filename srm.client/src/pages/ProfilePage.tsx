@@ -12,37 +12,37 @@ const ProfilePage: React.FC = () => {
   const tabItems: TabsProps['items'] = [
     {
       key: 'details',
-      label: 'Personal Details',
+      label: 'Thông tin cá nhân',
       children: (
         <Descriptions bordered column={1}>
-          <Descriptions.Item label="Full Name">
-            {user?.username || 'Not provided'}
+          <Descriptions.Item label="Họ và tên">
+            {user?.username || 'Chưa cung cấp'}
           </Descriptions.Item>
-          <Descriptions.Item label="Username">
-            {user?.username || 'Not provided'}
+          <Descriptions.Item label="Tên đăng nhập">
+            {user?.username || 'Chưa cung cấp'}
           </Descriptions.Item>
-          <Descriptions.Item label="Role">
-            {user?.roles?.join(', ') || 'Not provided'}
+          <Descriptions.Item label="Vai trò">
+            {user?.roles?.join(', ') || 'Chưa cung cấp'}
           </Descriptions.Item>
-          <Descriptions.Item label="Member Since">
-            {user?.id ? getRelativeTime(new Date(parseInt(user.id.substring(0, 8), 16) * 1000)) : 'Not available'}
+          <Descriptions.Item label="Thành viên từ">
+            {user?.id ? getRelativeTime(new Date(parseInt(user.id.substring(0, 8), 16) * 1000)) : 'Không có thông tin'}
           </Descriptions.Item>
         </Descriptions>
       )
     },
     {
       key: 'security',
-      label: 'Security',
+      label: 'Bảo mật',
       children: (
         <div style={{ padding: '20px 0' }}>
-          <h3>Password Management</h3>
-          <p>You can change your password to maintain account security.</p>
+          <h3>Quản lý mật khẩu</h3>
+          <p>Bạn có thể thay đổi mật khẩu để bảo vệ tài khoản.</p>
           <Button 
             type="primary" 
             icon={<KeyOutlined />}
             style={{ marginTop: 16 }}
           >
-            Change Password
+            Đổi mật khẩu
           </Button>
         </div>
       )
@@ -51,7 +51,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="page-container">
-      <h1>Profile</h1>
+      <h1>Hồ sơ cá nhân</h1>
       
       <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
         <Card 
@@ -67,14 +67,14 @@ const ProfilePage: React.FC = () => {
               icon={<UserOutlined />} 
               style={{ backgroundColor: '#0078D4', marginBottom: 20 }}
             />
-            <h2>{user?.username || 'User'}</h2>
-            <p>Role: {user?.roles?.join(', ') || 'Not provided'}</p>
+            <h2>{user?.username || 'Người dùng'}</h2>
+            <p>Vai trò: {user?.roles?.join(', ') || 'Chưa cung cấp'}</p>
             <Button 
               type="primary" 
               icon={<EditOutlined />}
               style={{ marginTop: 16 }}
             >
-              Edit Profile
+              Chỉnh sửa hồ sơ
             </Button>
           </div>
         </Card>

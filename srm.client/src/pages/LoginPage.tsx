@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input, Card, message, Alert } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
 import { useAuthStore } from '../stores/authStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { LoginData } from '../models/LoginData';
 
 const LoginPage: React.FC = () => {
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
     try {
       const success = await login(values);
       if (success) {
-        message.success('Login successful!');
+        message.success('Đăng nhập thành công!');
         
         // Get current user from store
         const { user } = useAuthStore.getState();
@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
       }
       // If not successful, the error will be displayed in the Alert component
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('Lỗi đăng nhập:', err);
     }
   };
 
@@ -48,13 +48,13 @@ const LoginPage: React.FC = () => {
       backgroundColor: '#f0f2f5' 
     }}>
       <Card 
-        title="SRM System Login" 
+        title="Đăng nhập Hệ thống SRM" 
         bordered={false} 
         style={{ width: 400, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
       >
         {error && (
           <Alert
-            message="Login Error"
+            message="Lỗi đăng nhập"
             description={error}
             type="error"
             showIcon
@@ -72,22 +72,22 @@ const LoginPage: React.FC = () => {
         >
           <Form.Item
             name="username"
-            rules={[{ required: true, message: 'Please input your Username!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
           >
             <Input 
               prefix={<UserOutlined />} 
-              placeholder="Username" 
+              placeholder="Tên đăng nhập" 
               size="large"
               disabled={isLoading}
             />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="Password"
+              placeholder="Mật khẩu"
               size="large"
               disabled={isLoading}
             />
@@ -101,10 +101,18 @@ const LoginPage: React.FC = () => {
               style={{ width: '100%', backgroundColor: '#0078D4' }}
               size="large"
             >
-              Log in
+              Đăng nhập
             </Button>
           </Form.Item>
         </Form>
+        
+        <div style={{ textAlign: 'center', marginTop: 16 }}>
+          <Link to="/">
+            <Button type="link" icon={<HomeOutlined />}>
+              Quay lại Trang chủ
+            </Button>
+          </Link>
+        </div>
       </Card>
     </div>
   );

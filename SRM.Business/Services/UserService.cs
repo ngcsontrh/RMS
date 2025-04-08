@@ -55,6 +55,20 @@ namespace SRM.Business.Services
             }
         }
 
+        public async Task<(bool, UserData?)> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var users = await _userRepository.GetByIdAsync(id);
+                var data = users?.MapToData();
+                return (true, data);
+            }
+            catch (Exception)
+            {
+                return (false, null);
+            }
+        }
+
         public async Task<(bool, List<UserData>?)> GetListBasicInfoAsync()
         {
             try

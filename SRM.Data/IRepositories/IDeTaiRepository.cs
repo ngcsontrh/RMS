@@ -9,5 +9,7 @@ namespace SRM.Data.IRepositories
 {
     public interface IDeTaiRepository : IRepositoryBase<DeTai>
     {
+        Task<DeTai?> GetDetailAsync(Guid id);
+        Task<(List<DeTai>, int)> GetPageDetailAsync(int pageIndex, int pageSize);
     }
 }

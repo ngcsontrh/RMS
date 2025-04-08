@@ -1,5 +1,7 @@
+import dayjs from 'dayjs';
+
 export interface TokenData {
   accessToken?: string;
   refreshToken?: string;
-  expiration?: Date;
+  expiration?: dayjs.Dayjs;
 }

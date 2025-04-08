@@ -12,6 +12,7 @@ namespace SRM.Business.IServices
         Task<(bool, List<UserData>?)> GetListBasicInfoAsync();
         Task<bool> AddAsync(UserData user);
         Task<bool> UpdateAsync(UserData user);
+        Task<(bool, UserData?)> GetByIdAsync(Guid id);
         Task<(bool, PageData<UserData>?)> GetPageAsync(int pageIndex = 1, int pageSize = 10);
     }
 }

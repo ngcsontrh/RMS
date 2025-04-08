@@ -1,11 +1,32 @@
-import React, { ReactNode } from 'react';
-import { Breadcrumb, Layout, Menu, ConfigProvider, theme } from 'antd';
-import { useAuthStore } from '../stores/authStore';
+import React, { ReactNode, useState } from 'react';
+import { 
+  Layout, 
+  Menu, 
+  ConfigProvider, 
+  theme, 
+  Breadcrumb, 
+  Avatar, 
+  Dropdown, 
+  Button, 
+  Space
+} from 'antd';
+import { 
+  MenuFoldOutlined, 
+  MenuUnfoldOutlined, 
+  UserOutlined, 
+  HomeOutlined, 
+  LoginOutlined, 
+  DashboardOutlined,
+  LogoutOutlined,
+  FileOutlined,
+  BookOutlined,
+  TeamOutlined
+} from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogoutOutlined, UserOutlined, HomeOutlined, LoginOutlined, DashboardOutlined } from '@ant-design/icons';
+import { useAuthStore } from '../stores/authStore';
 import type { MenuProps } from 'antd';
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
 // Define azure color tokens
 const azureTokens = {
@@ -25,78 +46,134 @@ type MenuItem = {
   label: string;
   icon?: React.ReactNode;
   onClick?: () => void;
+  children?: MenuItem[];
+  type?: 'divider' | 'group';
 };
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  const [collapsed, setCollapsed] = useState(false);
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Generate main menu items
-  const mainMenuItems: MenuItem[] = [
-    { key: '/', label: 'Home', icon: <HomeOutlined /> },
+  // Generate sidebar menu items
+  const sidebarMenuItems: MenuItem[] = [
+    { 
+      key: '/', 
+      label: 'Trang chủ', 
+      icon: <HomeOutlined /> 
+    },
+    {
+      key: 'research',
+      label: 'Nghiên cứu',
+      icon: <BookOutlined />,
+      children: [
+        {
+          key: '/detai',
+          label: 'Đề tài nghiên cứu',
+          icon: <FileOutlined />
+        },
+        {
+          key: '/topics',
+          label: 'Chủ đề nghiên cứu',
+          icon: <FileOutlined />
+        },
+        {
+          key: '/congbo',
+          label: 'Công bố khoa học',
+          icon: <FileOutlined />
+        }
+      ]
+    },
+    {
+      key: 'resources',
+      label: 'Tài nguyên',
+      icon: <TeamOutlined />,
+      children: [
+        {
+          key: '/contact',
+          label: 'Liên hệ',
+          icon: <TeamOutlined />
+        }
+      ]
+    }
   ];
   
-  // Create separate arrays for left and right menu items
-  const rightMenuItems: MenuItem[] = [];
+  // Add Admin Dashboard link if user has admin role
+  if (isAuthenticated && user && user.roles && user.roles.some(role => role.toLowerCase() === 'admin')) {
+    sidebarMenuItems.push({
+      key: '/admin/dashboard',
+      label: 'Bảng điều khiển Admin',
+      icon: <DashboardOutlined />,
+    });
+  }
   
-  // Add user-related menu items if authenticated
-  if (isAuthenticated && user) {
-    // Add Admin Dashboard link if user has admin role
-    if (user.roles && user.roles.some(role => role.toLowerCase() === 'admin')) {
-      mainMenuItems.push({
-        key: '/admin/dashboard',
-        label: 'Admin Dashboard',
-        icon: <DashboardOutlined />,
-      });
-    }
-    
-    rightMenuItems.push(
-      { 
-        key: '/profile', 
-        label: user.username, 
-        icon: <UserOutlined />,
+  // Adding a separator and logout for authenticated users
+  if (isAuthenticated) {
+    sidebarMenuItems.push(
+      {
+        key: 'divider',
+        label: '',
+        type: 'divider'
       },
       {
         key: 'logout',
-        label: 'Logout',
+        label: 'Đăng xuất',
         icon: <LogoutOutlined />,
-        onClick: () => {
-          logout();
-          navigate('/login');
-        }
       }
     );
   } else {
-    rightMenuItems.push({ 
-      key: '/login', 
-      label: 'Login',
-      icon: <LoginOutlined />
-    });
+    // Add login menu item if not authenticated
+    sidebarMenuItems.push(
+      {
+        key: 'divider',
+        label: '',
+        type: 'divider'
+      },
+      { 
+        key: '/login', 
+        label: 'Đăng nhập',
+        icon: <LoginOutlined />
+      }
+    );
   }
   
   // Handle menu click
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
-    const menuItem = [...mainMenuItems, ...rightMenuItems].find(item => item.key === key);
-    if (menuItem?.onClick) {
-      menuItem.onClick();
-    } else if (key) {
+    if (key === 'logout') {
+      logout();
+      navigate('/login');
+    } else if (key !== 'divider' && !key.includes('group')) {
       navigate(key);
     }
   };
   
-  // Convert our custom menu items to Antd menu items
-  const leftMenuItems: MenuProps['items'] = mainMenuItems.map(item => ({
-    key: item.key,
-    label: item.label,
-    icon: item.icon
-  }));
-
-  const rightAntdMenuItems: MenuProps['items'] = rightMenuItems.map(item => ({
-    key: item.key,
-    label: item.label,
-    icon: item.icon
-  }));
+  // Convert our custom menu items to Antd menu items recursively
+  const convertMenuItems = (items: MenuItem[]): MenuProps['items'] => {
+    return items.map(item => {
+      if (item.type === 'divider') {
+        return {
+          type: 'divider',
+          key: item.key
+        };
+      }
+      
+      if (item.children) {
+        return {
+          key: item.key,
+          label: item.label,
+          icon: item.icon,
+          children: convertMenuItems(item.children)
+        };
+      }
+      
+      return {
+        key: item.key,
+        label: item.label,
+        icon: item.icon
+      };
+    });
+  };
   
   // Generate breadcrumb items based on current path
   const generateBreadcrumbs = () => {
@@ -104,7 +181,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     const breadcrumbItems = [
       { 
         key: 'home', 
-        title: <a onClick={() => navigate('/')}>Home</a> 
+        title: <a onClick={() => navigate('/')}>Trang chủ</a> 
       }
     ];
     
@@ -124,6 +201,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     return breadcrumbItems;
   };
 
+  // User dropdown menu
+  const userMenu: MenuProps = {
+    items: [
+      {
+        key: 'profile',
+        icon: <UserOutlined />,
+        label: 'Hồ sơ',
+        onClick: () => navigate('/profile')
+      }
+    ]
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -132,59 +221,114 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       }}
     >
       <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Sider 
+          trigger={null} 
+          collapsible 
+          collapsed={collapsed}
+          width={260}
+          style={{
+            overflow: 'auto',
+            height: '100vh',
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            zIndex: 1000
+          }}
+        >
           <div 
             className="logo" 
             style={{ 
-              color: 'white', 
-              fontSize: '20px', 
-              fontWeight: 'bold',
-              marginRight: '24px'
+              margin: '16px', 
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: collapsed ? 'center' : 'flex-start',
+              overflow: 'hidden'
             }}
-            onClick={() => navigate('/')}
           >
-            SRM System
+            <img 
+              src="/vite.svg" 
+              alt="SRM Logo" 
+              style={{ 
+                height: '32px',
+                marginRight: collapsed ? '0' : '8px'
+              }} 
+            />
+            {!collapsed && (
+              <span style={{ 
+                color: 'white', 
+                fontSize: '18px', 
+                fontWeight: 'bold' 
+              }}>
+                SRM System
+              </span>
+            )}
           </div>
           <Menu
             theme="dark"
-            mode="horizontal"
-            selectedKeys={[location.pathname]}
-            items={leftMenuItems}
-            style={{ flex: 1, minWidth: 0 }}
+            mode="inline"
+            defaultSelectedKeys={[location.pathname]}
+            defaultOpenKeys={collapsed ? [] : ['research', 'resources']}
+            items={convertMenuItems(sidebarMenuItems)}
             onClick={handleMenuClick}
+            style={{ borderRight: 0 }}
           />
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            selectedKeys={[location.pathname]}
-            items={rightAntdMenuItems}
-            style={{ 
-              minWidth: '100px', 
-              display: 'flex', 
-              justifyContent: 'flex-end' 
-            }}
-            onClick={handleMenuClick}
-          />
-        </Header>
-        <Content style={{ padding: '0 48px', backgroundColor: azureTokens.colorBgLayout }}>
-          <Breadcrumb 
-            style={{ margin: '16px 0' }}
-            items={generateBreadcrumbs()}
-          />
-          <div
-            style={{
-              background: '#fff',
-              minHeight: 280,
-              padding: 24,
-              borderRadius: 8,
-            }}
-          >
-            {children}
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center', backgroundColor: azureTokens.colorBgLayout }}>
-          SRM System ©{new Date().getFullYear()} Created by Your Organization
-        </Footer>
+        </Sider>
+        <Layout style={{ marginLeft: collapsed ? 80 : 260, transition: 'margin-left 0.2s' }}>
+          <Header style={{ 
+            padding: '0 24px', 
+            background: '#fff', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            boxShadow: '0 1px 4px rgba(0,21,41,.08)',
+            zIndex: 999
+          }}>
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{ fontSize: '16px', width: 64, height: 64 }}
+            />
+            {isAuthenticated && user ? (
+              <Dropdown menu={userMenu} placement="bottomRight">
+                <Space style={{ cursor: 'pointer' }}>
+                  <Avatar 
+                    style={{ backgroundColor: '#0078D4' }} 
+                    icon={<UserOutlined />}
+                  />
+                  <span>{user.username}</span>
+                </Space>
+              </Dropdown>
+            ) : null}
+          </Header>
+          <Content style={{ 
+            margin: '24px 16px', 
+            padding: 24, 
+            backgroundColor: azureTokens.colorBgLayout, 
+            borderRadius: 8,
+            minHeight: 280
+          }}>
+            <Breadcrumb 
+              style={{ marginBottom: 16 }}
+              items={generateBreadcrumbs()}
+            />
+            <div
+              style={{
+                background: '#fff',
+                padding: 24,
+                borderRadius: 8,
+                minHeight: 'calc(100vh - 200px)',
+                boxShadow: '0 1px 4px rgba(0,21,41,.08)',
+              }}
+            >
+              {children}
+            </div>
+          </Content>
+          <Footer style={{ textAlign: 'center', backgroundColor: azureTokens.colorBgLayout }}>
+            SRM System ©{new Date().getFullYear()} Created by Your Organization
+          </Footer>
+        </Layout>
       </Layout>
     </ConfigProvider>
   );

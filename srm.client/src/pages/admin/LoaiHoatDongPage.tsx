@@ -27,7 +27,7 @@ import {
 } from '@ant-design/icons';
 import { LoaiHoatDongData } from '../../models/LoaiHoatDongData';
 import * as LoaiHoatDongService from '../../services/LoaiHoatDongService';
-import { formatDate } from '../../utils/dateTime';
+import dayjs, { formatDate } from '../../utils/dateTime';
 import { 
   useQuery, 
   useMutation, 
@@ -99,46 +99,70 @@ const LoaiHoatDongPage: React.FC = () => {
 
   // Mutation for creating new activity type
   const createMutation = useMutation({
-    mutationFn: LoaiHoatDongService.create,
-    onSuccess: () => {
+    mutationFn: LoaiHoatDongService.create
+  });
+
+  // Effect to handle createMutation success
+  useEffect(() => {
+    if (createMutation.isSuccess) {
       message.success('Activity type added successfully');
       queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
       setModalVisible(false);
       form.resetFields();
-    },
-    onError: (error) => {
-      console.error('Error adding activity type:', error);
+    }
+  }, [createMutation.isSuccess, queryClient, form]);
+
+  // Effect to handle createMutation error
+  useEffect(() => {
+    if (createMutation.isError) {
+      console.error('Error adding activity type:', createMutation.error);
       message.error('Failed to add activity type');
     }
-  });
+  }, [createMutation.isError, createMutation.error]);
 
   // Mutation for updating activity type
   const updateMutation = useMutation({
-    mutationFn: LoaiHoatDongService.update,
-    onSuccess: () => {
+    mutationFn: LoaiHoatDongService.update
+  });
+
+  // Effect to handle updateMutation success
+  useEffect(() => {
+    if (updateMutation.isSuccess) {
       message.success('Activity type updated successfully');
       queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
       setModalVisible(false);
       form.resetFields();
-    },
-    onError: (error) => {
-      console.error('Error updating activity type:', error);
+    }
+  }, [updateMutation.isSuccess, queryClient, form]);
+
+  // Effect to handle updateMutation error
+  useEffect(() => {
+    if (updateMutation.isError) {
+      console.error('Error updating activity type:', updateMutation.error);
       message.error('Failed to update activity type');
     }
-  });
+  }, [updateMutation.isError, updateMutation.error]);
 
   // Mutation for deleting activity type
   const deleteMutation = useMutation({
-    mutationFn: LoaiHoatDongService.remove,
-    onSuccess: () => {
+    mutationFn: LoaiHoatDongService.remove
+  });
+
+  // Effect to handle deleteMutation success
+  useEffect(() => {
+    if (deleteMutation.isSuccess) {
       message.success('Activity type deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
-    },
-    onError: (error) => {
-      console.error('Error deleting activity type:', error);
+    }
+  }, [deleteMutation.isSuccess, queryClient]);
+
+  // Effect to handle deleteMutation error
+  useEffect(() => {
+    if (deleteMutation.isError) {
+      console.error('Error deleting activity type:', deleteMutation.error);
       message.error('Failed to delete activity type');
     }
-  });
+  }, [deleteMutation.isError, deleteMutation.error]);
 
   // Handle table change (pagination, filters)
   const handleTableChange = (newPagination: TablePaginationConfig) => {
@@ -227,13 +251,13 @@ const LoaiHoatDongPage: React.FC = () => {
       title: 'Created Date',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
       title: 'Last Modified',
       dataIndex: 'ngaySua',
       key: 'ngaySua',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm')
     },
     {
       title: 'Actions',

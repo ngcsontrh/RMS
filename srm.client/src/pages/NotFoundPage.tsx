@@ -9,14 +9,14 @@ const NotFoundPage: React.FC = () => {
     <Result
       status="404"
       title="404"
-      subTitle="Sorry, the page you visited does not exist."
+      subTitle="Xin lỗi, trang bạn đang truy cập không tồn tại."
       extra={
         <Button 
           type="primary" 
           onClick={() => navigate('/')}
           style={{ backgroundColor: '#0078D4' }}
         >
-          Back Home
+          Quay lại Trang chủ
         </Button>
       }
     />
