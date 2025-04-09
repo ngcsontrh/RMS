@@ -24,7 +24,7 @@ interface AuthState {
 // Create the auth store with persist middleware to keep auth state on refresh
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       // Initial state
       user: null,
       isAuthenticated: false,

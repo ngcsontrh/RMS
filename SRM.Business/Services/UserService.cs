@@ -109,12 +109,8 @@ namespace SRM.Business.Services
                 await _unitOfWork.BeginTransactionAsync();
 
                 var role = await _unitOfWork.RoleRepository.GetByNameAsync(user.Role!);
-                if (role == null)
-                {
-                    throw new Exception("Role not found");
-                }
-
-                await _unitOfWork.UserRepository.AddAsync(userEntity);
+                userEntity.Password = await _unitOfWork.UserRepository.GetHashedPasswordAsync(user.Username!);
+                await _unitOfWork.UserRepository.UpdateAsync(userEntity);
                 await _unitOfWork.UserRoleRepository.AddAsync(new UserRole
                 {
                     UserId = userEntity.Id,

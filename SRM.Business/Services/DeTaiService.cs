@@ -33,6 +33,19 @@ namespace SRM.Business.Services
             }
         }
 
+        public async Task<bool> ApproveAsync(Guid id)
+        {
+            try
+            {
+                await _deTaiRepository.ApproveAsync(id);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task<(bool, DeTaiData?)> GetByIdAsync(Guid id)
         {
             try

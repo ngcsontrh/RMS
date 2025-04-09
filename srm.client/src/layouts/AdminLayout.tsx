@@ -70,13 +70,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       icon: <BookOutlined />,
       children: [
         {
-          key: '/detai', 
+          key: '/admin/detai', 
           label: 'Đề tài nghiên cứu',
-          icon: <ProjectOutlined />
-        },
-        {
-          key: '/admin/detai',
-          label: 'Chủ đề nghiên cứu',
           icon: <ProjectOutlined />
         },
         {
@@ -91,13 +86,18 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         },
         {
           key: '/admin/thanhqua',
-          label: 'Sản phẩm nghiên cứu',
+          label: 'Thành quả',
           icon: <FileTextOutlined />
         },
         {
           key: '/admin/loaihoatdong',
           label: 'Loại hoạt động',
           icon: <BarsOutlined />
+        },
+        {
+          key: '/admin/hoatdong',
+          label: 'Hoạt động',
+          icon: <ProjectOutlined />
         }
       ]
     },
@@ -193,9 +193,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     
     let breadcrumbPath = '/admin';
     
+    // Map of path segments to Vietnamese titles
+    const pathTitles: Record<string, string> = {
+      'dashboard': 'Bảng điều khiển',
+      'users': 'Người dùng',
+      'roles': 'Vai trò',
+      'detai': 'Đề tài',
+      'capdetai': 'Cấp đề tài',
+      'donvichutri': 'Đơn vị chủ trì',
+      'thanhqua': 'Thành quả',
+      'congbo': 'Công bố',
+      'noidangbao': 'Nơi đăng báo',
+      'donvi': 'Đơn vị',
+      'loaihoatdong': 'Loại hoạt động',
+      'hoatdong': 'Hoạt động',
+      'settings': 'Cài đặt'
+    };
+    
     paths.slice(1).forEach((path, index) => {
       breadcrumbPath += `/${path}`;
-      const pathTitle = path.charAt(0).toUpperCase() + path.slice(1);
+      const pathTitle = pathTitles[path] || (path.charAt(0).toUpperCase() + path.slice(1));
       breadcrumbItems.push({
         key: path,
         title: index === paths.length - 2 
@@ -215,12 +232,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         icon: <UserOutlined />,
         label: 'Hồ sơ',
         onClick: () => navigate('/profile')
-      },
-      {
-        key: 'settings',
-        icon: <SettingOutlined />,
-        label: 'Cài đặt',
-        onClick: () => navigate('/admin/settings')
       }
     ]
   };

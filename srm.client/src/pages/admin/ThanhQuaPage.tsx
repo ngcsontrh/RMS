@@ -27,7 +27,7 @@ import {
 } from '@ant-design/icons';
 import { ThanhQuaData } from '../../models/ThanhQuaData';
 import * as ThanhQuaService from '../../services/ThanhQuaService';
-import { formatDate } from '../../utils/dateTime';
+import dayjs, { formatDate } from '../../utils/dateTime';
 import { 
   useQuery, 
   useMutation, 
@@ -43,7 +43,7 @@ const ThanhQuaPage: React.FC = () => {
   
   // State for modals and form
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('Add Research Output');
+  const [modalTitle, setModalTitle] = useState<string>('Thêm thành quả nghiên cứu');
   const [editingThanhQua, setEditingThanhQua] = useState<ThanhQuaData | null>(null);
   const [form] = Form.useForm();
   
@@ -101,14 +101,14 @@ const ThanhQuaPage: React.FC = () => {
   const createMutation = useMutation({
     mutationFn: ThanhQuaService.create,
     onSuccess: () => {
-      message.success('Research output added successfully');
+      message.success('Thêm thành quả nghiên cứu thành công');
       queryClient.invalidateQueries({ queryKey: ['thanhQuas'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error adding research output:', error);
-      message.error('Failed to add research output');
+      console.error('Lỗi khi thêm thành quả nghiên cứu:', error);
+      message.error('Không thể thêm thành quả nghiên cứu');
     }
   });
 
@@ -116,14 +116,14 @@ const ThanhQuaPage: React.FC = () => {
   const updateMutation = useMutation({
     mutationFn: ThanhQuaService.update,
     onSuccess: () => {
-      message.success('Research output updated successfully');
+      message.success('Cập nhật thành quả nghiên cứu thành công');
       queryClient.invalidateQueries({ queryKey: ['thanhQuas'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error updating research output:', error);
-      message.error('Failed to update research output');
+      console.error('Lỗi khi cập nhật thành quả nghiên cứu:', error);
+      message.error('Không thể cập nhật thành quả nghiên cứu');
     }
   });
 
@@ -131,12 +131,12 @@ const ThanhQuaPage: React.FC = () => {
   const deleteMutation = useMutation({
     mutationFn: ThanhQuaService.remove,
     onSuccess: () => {
-      message.success('Research output deleted successfully');
+      message.success('Xóa thành quả nghiên cứu thành công');
       queryClient.invalidateQueries({ queryKey: ['thanhQuas'] });
     },
     onError: (error) => {
-      console.error('Error deleting research output:', error);
-      message.error('Failed to delete research output');
+      console.error('Lỗi khi xóa thành quả nghiên cứu:', error);
+      message.error('Không thể xóa thành quả nghiên cứu');
     }
   });
 
@@ -161,7 +161,7 @@ const ThanhQuaPage: React.FC = () => {
   // Handle add button click
   const handleAddClick = () => {
     setEditingThanhQua(null);
-    setModalTitle('Add Research Output');
+    setModalTitle('Thêm thành quả nghiên cứu');
     form.resetFields();
     setModalVisible(true);
   };
@@ -169,7 +169,7 @@ const ThanhQuaPage: React.FC = () => {
   // Handle edit button click
   const handleEditClick = (record: ThanhQuaData) => {
     setEditingThanhQua(record);
-    setModalTitle('Edit Research Output');
+    setModalTitle('Chỉnh sửa thành quả nghiên cứu');
     form.setFieldsValue({
       ten: record.ten
     });
@@ -227,13 +227,13 @@ const ThanhQuaPage: React.FC = () => {
       title: 'Created Date',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
       title: 'Last Modified',
       dataIndex: 'ngaySua',
       key: 'ngaySua',
-      render: (date: Date) => formatDate(date, 'DD/MM/YYYY HH:mm')
+      render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
       title: 'Actions',

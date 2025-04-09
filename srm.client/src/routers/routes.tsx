@@ -15,6 +15,9 @@ import DeTaiFormPage from '../pages/DeTaiFormPage';
 import CongBoListPage from '../pages/CongBoListPage';
 import CongBoDetailPage from '../pages/CongBoDetailPage';
 import CongBoFormPage from '../pages/CongBoFormPage';
+import HoatDongListPage from '../pages/HoatDongListPage';
+import HoatDongDetailPage from '../pages/HoatDongDetailPage';
+import HoatDongFormPage from '../pages/HoatDongFormPage';
 
 // Import admin page components
 import CapDeTaiPage from '../pages/admin/CapDeTaiPage';
@@ -23,6 +26,7 @@ import DonViChuTriPage from '../pages/admin/DonViChuTriPage';
 import LoaiHoatDongPage from '../pages/admin/LoaiHoatDongPage';
 import NoiDangBaoPage from '../pages/admin/NoiDangBaoPage';
 import ThanhQuaPage from '../pages/admin/ThanhQuaPage';
+import RolePage from '../pages/admin/RolePage';
 
 // Import ProtectedRoute from its dedicated file
 import ProtectedRoute from './ProtectedRoute';
@@ -48,7 +52,7 @@ export const publicRoutes: RouteConfig[] = [
     path: '/login',
     element: <LoginPage />,
   },
-  {
+{
     path: '/contact',
     element: (
       <MainLayout>
@@ -87,6 +91,23 @@ export const publicRoutes: RouteConfig[] = [
     element: (
       <MainLayout>
         <CongBoDetailPage />
+      </MainLayout>
+    ),
+  },
+  // HoatDong public routes (list and detail views)
+  {
+    path: '/hoatdong',
+    element: (
+      <MainLayout>
+        <HoatDongListPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: '/hoatdong/:id',
+    element: (
+      <MainLayout>
+        <HoatDongDetailPage />
       </MainLayout>
     ),
   },
@@ -146,6 +167,27 @@ export const protectedRoutes: RouteConfig[] = [
       </ProtectedRoute>
     ),
   },
+  // HoatDong protected routes (create and edit)
+  {
+    path: '/hoatdong/create',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <HoatDongFormPage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/hoatdong/:id/edit',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <HoatDongFormPage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
 ];
 
 // Admin routes (require authentication and admin role)
@@ -175,17 +217,7 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>Quản lý Vai trò</div>
-        </AdminLayout>
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/admin/detai',
-    element: (
-      <ProtectedRoute requiredRoles={['admin']}>
-        <AdminLayout>
-          <div>Quản lý Đề tài</div>
+          <RolePage />
         </AdminLayout>
       </ProtectedRoute>
     ),
@@ -211,11 +243,21 @@ export const adminRoutes: RouteConfig[] = [
     ),
   },
   {
+    path: '/admin/detai',
+    element: (
+      <ProtectedRoute requiredRoles={['admin']}>
+        <AdminLayout>
+          <DeTaiListPage />
+        </AdminLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: '/admin/congbo',
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>Quản lý Công bố</div>
+          <CongBoListPage />
         </AdminLayout>
       </ProtectedRoute>
     ),
@@ -259,7 +301,17 @@ export const adminRoutes: RouteConfig[] = [
         </AdminLayout>
       </ProtectedRoute>
     ),
-  }
+  },
+  {
+    path: '/admin/hoatdong',
+    element: (
+      <ProtectedRoute requiredRoles={['admin']}>
+        <AdminLayout>
+          <HoatDongListPage />
+        </AdminLayout>
+      </ProtectedRoute>
+    ),
+  },
 ];
 
 // Not found route

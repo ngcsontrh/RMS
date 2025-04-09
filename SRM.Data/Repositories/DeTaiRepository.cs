@@ -16,12 +16,21 @@ namespace SRM.Data.Repositories
         {
         }
 
+        public async Task ApproveAsync(Guid id)
+        {
+            await _context.DeTais
+                .Where(x => x.Id == id)
+                .ExecuteUpdateAsync(setter =>
+                    setter.SetProperty(x => x.TrangThaiPheDuyet, x => "APPROVE"));
+        }
+
         public async Task<DeTai?> GetDetailAsync(Guid id)
         {
             var entity = await _context.DeTais
                 .Where(d => d.Id == id)
                 .Include(d => d.CapDeTai)
                 .Include(d => d.DonViChuTri)
+                .Include(d => d.NguoiDeXuat)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
             return entity;
@@ -34,6 +43,7 @@ namespace SRM.Data.Repositories
                 .Take(pageSize)
                 .Include(x => x.CapDeTai)
                 .Include(x => x.DonViChuTri)
+                .Include(x => x.NguoiDeXuat)
                 .AsNoTracking()
                 .ToListAsync();
             var count = await _context.DeTais.CountAsync();

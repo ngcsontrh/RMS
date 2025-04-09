@@ -14,7 +14,6 @@ import {
   Tooltip,
   Row,
   Col,
-  Input as AntdInput,
   Alert
 } from 'antd';
 import {
@@ -22,7 +21,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
-  SearchOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
 import { DonViData } from '../../models/DonViData';
@@ -36,7 +34,6 @@ import {
 import { TablePaginationConfig } from 'antd/es/table';
 
 const { Title } = Typography;
-const { Search } = AntdInput;
 
 const DonViPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -52,10 +49,7 @@ const DonViPage: React.FC = () => {
     current: 1,
     pageSize: 10,
     total: 0
-  });
-  
-  // Search state
-  const [searchText, setSearchText] = useState<string>('');
+  });  
   
   // Query for fetching don vi data
   const { 
@@ -64,24 +58,12 @@ const DonViPage: React.FC = () => {
     isError, 
     error: queryError 
   } = useQuery({
-    queryKey: ['donVis', pagination.current, pagination.pageSize, searchText],
+    queryKey: ['donVis', pagination.current, pagination.pageSize],
     queryFn: async () => {
       const response = await DonViService.getPage(
         pagination.current, 
         pagination.pageSize
-      );
-      
-      // Apply client-side filtering when searchText is provided
-      if (searchText && response.items) {
-        const filteredItems = response.items.filter(item => 
-          item.ten?.toLowerCase().includes(searchText.toLowerCase())
-        );
-        return {
-          ...response,
-          items: filteredItems,
-          total: filteredItems.length
-        };
-      }
+      );      
       
       return response;
     }
@@ -146,15 +128,6 @@ const DonViPage: React.FC = () => {
       ...prev,
       current: newPagination.current || 1,
       pageSize: newPagination.pageSize || 10
-    }));
-  };
-
-  // Search functionality
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-    setPagination(prev => ({
-      ...prev,
-      current: 1 // Reset to first page when searching
     }));
   };
 
@@ -282,14 +255,7 @@ const DonViPage: React.FC = () => {
       
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Search
-              placeholder="Tìm kiếm theo tên"
-              allowClear
-              enterButton={<SearchOutlined />}
-              onSearch={handleSearch}
-            />
-          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}></Col>
           <Col xs={24} sm={12} md={16} lg={18} style={{ textAlign: 'right' }}>
             <Space>
               <Button 

@@ -11,5 +11,6 @@ namespace SRM.Data.IRepositories
     {
         Task<DeTai?> GetDetailAsync(Guid id);
         Task<(List<DeTai>, int)> GetPageDetailAsync(int pageIndex, int pageSize);
+        Task ApproveAsync(Guid id);
     }
 }

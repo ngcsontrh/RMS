@@ -19,4 +19,7 @@ export interface DeTaiData extends ModelBase {
   chuNhiem?: string;
   canBoThamGias?: string[];
   phanChiaSuDongGop?: string;
+  nguoiDeXuatId?: string;
+  tenNguoiDeXuat?: string;
+  trangThaiPheDuyet?: string;
 }

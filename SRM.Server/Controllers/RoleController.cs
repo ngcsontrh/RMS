@@ -7,19 +7,19 @@ namespace SRM.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeTaiController : ControllerBase
+    public class RoleController : ControllerBase
     {
-        private readonly IDeTaiService _DeTaiService;
+        private readonly IRoleService _RoleService;
 
-        public DeTaiController(IDeTaiService DeTaiService)
+        public RoleController(IRoleService RoleService)
         {
-            _DeTaiService = DeTaiService;
+            _RoleService = RoleService;
         }
 
         [HttpPost("create")]
-        public async Task<IResult> AddAsync([FromBody] DeTaiData data)
+        public async Task<IResult> AddAsync([FromBody] RoleData data)
         {
-            var result = await _DeTaiService.AddAsync(data);
+            var result = await _RoleService.AddAsync(data);
             if (result)
             {
                 return Results.Created();
@@ -31,9 +31,9 @@ namespace SRM.Server.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<IResult> UpdateAsync([FromBody] DeTaiData data)
+        public async Task<IResult> UpdateAsync([FromBody] RoleData data)
         {
-            var result = await _DeTaiService.UpdateAsync(data);
+            var result = await _RoleService.UpdateAsync(data);
             if (result)
             {
                 return Results.NoContent();
@@ -44,10 +44,38 @@ namespace SRM.Server.Controllers
             }
         }
 
+        [HttpPost("delete")]
+        public async Task<IResult> DeleteAsync([FromBody] GuidData data)
+        {
+            var result = await _RoleService.DeleteAsync(data.Id);
+            if (result)
+            {
+                return Results.NoContent();
+            }
+            else
+            {
+                return Results.BadRequest(new { message = "Xóa thất bại" });
+            }
+        }
+
+        [HttpGet("list")]
+        public async Task<IResult> GetListAsync()
+        {
+            var result = await _RoleService.GetListAsync();
+            if (result.Item1)
+            {
+                return Results.Ok(result.Item2);
+            }
+            else
+            {
+                return Results.NotFound(new { message = "Không tìm thấy dữ liệu" });
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IResult> GetByIdAsync(Guid id)
         {
-            var result = await _DeTaiService.GetByIdAsync(id);
+            var result = await _RoleService.GetByIdAsync(id);
             if (result.Item1)
             {
                 if (result.Item2 == null)
@@ -65,7 +93,7 @@ namespace SRM.Server.Controllers
         [HttpGet("page")]
         public async Task<IResult> GetPageAsync([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _DeTaiService.GetPageAsync(pageIndex, pageSize);
+            var result = await _RoleService.GetPageAsync(pageIndex, pageSize);
             if (result.Item1)
             {
                 return Results.Ok(result.Item2);
@@ -74,17 +102,6 @@ namespace SRM.Server.Controllers
             {
                 return Results.NotFound(new { message = "Không tìm thấy dữ liệu" });
             }
-        }
-
-        [HttpPost("approve")]
-        public async Task<IResult> ApproveAsync([FromBody] GuidData data)
-        {
-            var result = await _DeTaiService.ApproveAsync(data.Id);
-            if (result)
-            {
-                return Results.NoContent();
-            }
-            return Results.Problem();
         }
     }
 }

@@ -38,6 +38,9 @@ namespace SRM.Domain.Mappers
                 TenCapDeTai = entity.CapDeTai?.Ten,
                 TenDonViChuTri = entity.DonViChuTri?.Ten,
                 TongKinhPhi = entity.TongKinhPhi,
+                NguoiDeXuatId = entity.NguoiDeXuatId,
+                TrangThaiPheDuyet = entity.TrangThaiPheDuyet,
+                TenNguoiDeXuat = entity.NguoiDeXuat?.HoTen
             };
         }
 
@@ -67,6 +70,8 @@ namespace SRM.Domain.Mappers
                 PhanChiaSuDongGop = data.PhanChiaSuDongGop,
                 Ten = data.Ten,
                 TongKinhPhi = data.TongKinhPhi,                
+                NguoiDeXuatId = data.NguoiDeXuatId,
+                TrangThaiPheDuyet = data.TrangThaiPheDuyet
             };
         }
     }

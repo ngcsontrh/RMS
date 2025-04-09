@@ -14,7 +14,6 @@ import {
   Tooltip,
   Row,
   Col,
-  Input as AntdInput,
   Alert
 } from 'antd';
 import {
@@ -22,7 +21,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
-  SearchOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
 import { DonViChuTriData } from '../../models/DonViChuTriData';
@@ -36,14 +34,13 @@ import {
 import { TablePaginationConfig } from 'antd/es/table';
 
 const { Title } = Typography;
-const { Search } = AntdInput;
 
 const DonViChuTriPage: React.FC = () => {
   const queryClient = useQueryClient();
   
   // State for modals and form
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('Add Host Organization');
+  const [modalTitle, setModalTitle] = useState<string>('Thêm đơn vị chủ trì');
   const [editingDonViChuTri, setEditingDonViChuTri] = useState<DonViChuTriData | null>(null);
   const [form] = Form.useForm();
   
@@ -54,9 +51,6 @@ const DonViChuTriPage: React.FC = () => {
     total: 0
   });
   
-  // Search state
-  const [searchText, setSearchText] = useState<string>('');
-  
   // Query for fetching don vi chu tri data
   const { 
     data, 
@@ -64,24 +58,12 @@ const DonViChuTriPage: React.FC = () => {
     isError, 
     error: queryError 
   } = useQuery({
-    queryKey: ['donViChuTris', pagination.current, pagination.pageSize, searchText],
+    queryKey: ['donViChuTris', pagination.current, pagination.pageSize],
     queryFn: async () => {
       const response = await DonViChuTriService.getPage(
         pagination.current, 
         pagination.pageSize
-      );
-      
-      // Apply client-side filtering when searchText is provided
-      if (searchText && response.items) {
-        const filteredItems = response.items.filter(item => 
-          item.ten?.toLowerCase().includes(searchText.toLowerCase())
-        );
-        return {
-          ...response,
-          items: filteredItems,
-          total: filteredItems.length
-        };
-      }
+      );      
       
       return response;
     }
@@ -101,14 +83,14 @@ const DonViChuTriPage: React.FC = () => {
   const createMutation = useMutation({
     mutationFn: DonViChuTriService.create,
     onSuccess: () => {
-      message.success('Host organization added successfully');
+      message.success('Thêm đơn vị chủ trì thành công');
       queryClient.invalidateQueries({ queryKey: ['donViChuTris'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error adding host organization:', error);
-      message.error('Failed to add host organization');
+      console.error('Lỗi khi thêm đơn vị chủ trì:', error);
+      message.error('Không thể thêm đơn vị chủ trì');
     }
   });
 
@@ -116,14 +98,14 @@ const DonViChuTriPage: React.FC = () => {
   const updateMutation = useMutation({
     mutationFn: DonViChuTriService.update,
     onSuccess: () => {
-      message.success('Host organization updated successfully');
+      message.success('Cập nhật đơn vị chủ trì thành công');
       queryClient.invalidateQueries({ queryKey: ['donViChuTris'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error updating host organization:', error);
-      message.error('Failed to update host organization');
+      console.error('Lỗi khi cập nhật đơn vị chủ trì:', error);
+      message.error('Không thể cập nhật đơn vị chủ trì');
     }
   });
 
@@ -131,12 +113,12 @@ const DonViChuTriPage: React.FC = () => {
   const deleteMutation = useMutation({
     mutationFn: DonViChuTriService.remove,
     onSuccess: () => {
-      message.success('Host organization deleted successfully');
+      message.success('Xóa đơn vị chủ trì thành công');
       queryClient.invalidateQueries({ queryKey: ['donViChuTris'] });
     },
     onError: (error) => {
-      console.error('Error deleting host organization:', error);
-      message.error('Failed to delete host organization');
+      console.error('Lỗi khi xóa đơn vị chủ trì:', error);
+      message.error('Không thể xóa đơn vị chủ trì');
     }
   });
 
@@ -149,19 +131,10 @@ const DonViChuTriPage: React.FC = () => {
     }));
   };
 
-  // Search functionality
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-    setPagination(prev => ({
-      ...prev,
-      current: 1 // Reset to first page when searching
-    }));
-  };
-
   // Handle add button click
   const handleAddClick = () => {
     setEditingDonViChuTri(null);
-    setModalTitle('Add Host Organization');
+    setModalTitle('Thêm đơn vị chủ trì');
     form.resetFields();
     setModalVisible(true);
   };
@@ -169,7 +142,7 @@ const DonViChuTriPage: React.FC = () => {
   // Handle edit button click
   const handleEditClick = (record: DonViChuTriData) => {
     setEditingDonViChuTri(record);
-    setModalTitle('Edit Host Organization');
+    setModalTitle('Chỉnh sửa đơn vị chủ trì');
     form.setFieldsValue({
       ten: record.ten
     });
@@ -218,29 +191,29 @@ const DonViChuTriPage: React.FC = () => {
       render: (_: unknown, __: unknown, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: 'Name',
+      title: 'Tên',
       dataIndex: 'ten',
       key: 'ten',
       render: (text: string) => <strong>{text}</strong>
     },
     {
-      title: 'Created Date',
+      title: 'Ngày tạo',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
       render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
-      title: 'Last Modified',
+      title: 'Ngày sửa',
       dataIndex: 'ngaySua',
       key: 'ngaySua',
       render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       render: (_: unknown, record: DonViChuTriData) => (
         <Space size="small">
-          <Tooltip title="Edit">
+          <Tooltip title="Chỉnh sửa">
             <Button 
               type="primary" 
               icon={<EditOutlined />} 
@@ -248,13 +221,13 @@ const DonViChuTriPage: React.FC = () => {
               size="small"
             />
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Xóa">
             <Popconfirm
-              title="Delete Host Organization"
-              description="Are you sure you want to delete this host organization?"
+              title="Xóa đơn vị chủ trì"
+              description="Bạn có chắc chắn muốn xóa đơn vị chủ trì này không?"
               onConfirm={() => handleDelete(record.id!)}
-              okText="Yes"
-              cancelText="No"
+              okText="Có"
+              cancelText="Không"
               icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
             >
               <Button 
@@ -273,23 +246,16 @@ const DonViChuTriPage: React.FC = () => {
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const errorMessage = queryError 
-    ? 'Failed to load host organizations. Please try again later.' 
+    ? 'Không thể tải danh sách đơn vị chủ trì. Vui lòng thử lại sau.' 
     : null;
 
   return (
     <div>
-      <Title level={2}>Host Organizations Management</Title>
+      <Title level={2}>Quản lý đơn vị chủ trì</Title>
       
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Search
-              placeholder="Search by name"
-              allowClear
-              enterButton={<SearchOutlined />}
-              onSearch={handleSearch}
-            />
-          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}></Col>
           <Col xs={24} sm={12} md={16} lg={18} style={{ textAlign: 'right' }}>
             <Space>
               <Button 
@@ -297,14 +263,14 @@ const DonViChuTriPage: React.FC = () => {
                 onClick={refreshData}
                 loading={isLoading}
               >
-                Refresh
+                Làm mới
               </Button>
               <Button 
                 type="primary" 
                 icon={<PlusOutlined />} 
                 onClick={handleAddClick}
               >
-                Add Host Organization
+                Thêm đơn vị chủ trì
               </Button>
             </Space>
           </Col>
@@ -325,7 +291,7 @@ const DonViChuTriPage: React.FC = () => {
               ...pagination,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => `Total ${total} items`
+              showTotal: (total) => `Tổng cộng ${total} mục`
             }}
             onChange={handleTableChange}
           />
@@ -339,7 +305,7 @@ const DonViChuTriPage: React.FC = () => {
         onCancel={() => setModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>
-            Cancel
+            Hủy
           </Button>,
           <Button
             key="submit"
@@ -347,7 +313,7 @@ const DonViChuTriPage: React.FC = () => {
             loading={isSubmitting}
             onClick={handleFormSubmit}
           >
-            Save
+            Lưu
           </Button>
         ]}
       >
@@ -358,10 +324,10 @@ const DonViChuTriPage: React.FC = () => {
         >
           <Form.Item
             name="ten"
-            label="Host Organization Name"
+            label="Tên đơn vị chủ trì"
             rules={[
-              { required: true, message: 'Please enter the host organization name' },
-              { max: 100, message: 'Name cannot exceed 100 characters' }
+              { required: true, message: 'Vui lòng nhập tên đơn vị chủ trì' },
+              { max: 100, message: 'Tên không được vượt quá 100 ký tự' }
             ]}
           >
             <Input />

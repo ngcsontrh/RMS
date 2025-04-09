@@ -14,7 +14,6 @@ import {
   Tooltip,
   Row,
   Col,
-  Input as AntdInput,
   Alert
 } from 'antd';
 import {
@@ -22,7 +21,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
-  SearchOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
 import { CapDeTaiData } from '../../models/CapDeTaiData';
@@ -36,14 +34,13 @@ import {
 import { TablePaginationConfig } from 'antd/es/table';
 
 const { Title } = Typography;
-const { Search } = AntdInput;
 
 const CapDeTaiPage: React.FC = () => {
   const queryClient = useQueryClient();
   
   // State for modals and form
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('Add Research Level');
+  const [modalTitle, setModalTitle] = useState<string>('Thêm cấp đề tài');
   const [editingCapDeTai, setEditingCapDeTai] = useState<CapDeTaiData | null>(null);
   const [form] = Form.useForm();
   
@@ -52,10 +49,7 @@ const CapDeTaiPage: React.FC = () => {
     current: 1,
     pageSize: 10,
     total: 0
-  });
-  
-  // Search state
-  const [searchText, setSearchText] = useState<string>('');
+  });  
   
   // Query for fetching cap de tai data
   const { 
@@ -64,24 +58,12 @@ const CapDeTaiPage: React.FC = () => {
     isError, 
     error: queryError 
   } = useQuery({
-    queryKey: ['capDeTais', pagination.current, pagination.pageSize, searchText],
+    queryKey: ['capDeTais', pagination.current, pagination.pageSize],
     queryFn: async () => {
       const response = await CapDeTaiService.getPage(
         pagination.current, 
         pagination.pageSize
-      );
-      
-      // Apply client-side filtering when searchText is provided
-      if (searchText && response.items) {
-        const filteredItems = response.items.filter(item => 
-          item.ten?.toLowerCase().includes(searchText.toLowerCase())
-        );
-        return {
-          ...response,
-          items: filteredItems,
-          total: filteredItems.length
-        };
-      }
+      );      
       
       return response;
     }
@@ -101,14 +83,14 @@ const CapDeTaiPage: React.FC = () => {
   const createMutation = useMutation({
     mutationFn: CapDeTaiService.create,
     onSuccess: () => {
-      message.success('Research level added successfully');
+      message.success('Thêm cấp đề tài thành công');
       queryClient.invalidateQueries({ queryKey: ['capDeTais'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error adding research level:', error);
-      message.error('Failed to add research level');
+      console.error('Lỗi khi thêm cấp đề tài:', error);
+      message.error('Không thể thêm cấp đề tài');
     }
   });
 
@@ -116,14 +98,14 @@ const CapDeTaiPage: React.FC = () => {
   const updateMutation = useMutation({
     mutationFn: CapDeTaiService.update,
     onSuccess: () => {
-      message.success('Research level updated successfully');
+      message.success('Cập nhật cấp đề tài thành công');
       queryClient.invalidateQueries({ queryKey: ['capDeTais'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error updating research level:', error);
-      message.error('Failed to update research level');
+      console.error('Lỗi khi cập nhật cấp đề tài:', error);
+      message.error('Không thể cập nhật cấp đề tài');
     }
   });
 
@@ -131,12 +113,12 @@ const CapDeTaiPage: React.FC = () => {
   const deleteMutation = useMutation({
     mutationFn: CapDeTaiService.remove,
     onSuccess: () => {
-      message.success('Research level deleted successfully');
+      message.success('Xóa cấp đề tài thành công');
       queryClient.invalidateQueries({ queryKey: ['capDeTais'] });
     },
     onError: (error) => {
-      console.error('Error deleting research level:', error);
-      message.error('Failed to delete research level');
+      console.error('Lỗi khi xóa cấp đề tài:', error);
+      message.error('Không thể xóa cấp đề tài');
     }
   });
 
@@ -149,19 +131,10 @@ const CapDeTaiPage: React.FC = () => {
     }));
   };
 
-  // Search functionality
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-    setPagination(prev => ({
-      ...prev,
-      current: 1 // Reset to first page when searching
-    }));
-  };
-
   // Handle add button click
   const handleAddClick = () => {
     setEditingCapDeTai(null);
-    setModalTitle('Add Research Level');
+    setModalTitle('Thêm cấp đề tài');
     form.resetFields();
     setModalVisible(true);
   };
@@ -169,7 +142,7 @@ const CapDeTaiPage: React.FC = () => {
   // Handle edit button click
   const handleEditClick = (record: CapDeTaiData) => {
     setEditingCapDeTai(record);
-    setModalTitle('Edit Research Level');
+    setModalTitle('Chỉnh sửa cấp đề tài');
     form.setFieldsValue({
       ten: record.ten
     });
@@ -282,14 +255,7 @@ const CapDeTaiPage: React.FC = () => {
       
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Search
-              placeholder="Tìm kiếm theo tên"
-              allowClear
-              enterButton={<SearchOutlined />}
-              onSearch={handleSearch}
-            />
-          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}></Col>
           <Col xs={24} sm={12} md={16} lg={18} style={{ textAlign: 'right' }}>
             <Space>
               <Button 
@@ -334,7 +300,7 @@ const CapDeTaiPage: React.FC = () => {
 
       {/* Modal for Add/Edit */}
       <Modal
-        title={modalTitle === 'Add Research Level' ? 'Thêm cấp đề tài' : 'Chỉnh sửa cấp đề tài'}
+        title={modalTitle === 'Thêm cấp đề tài' ? 'Thêm cấp đề tài' : 'Chỉnh sửa cấp đề tài'}
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[

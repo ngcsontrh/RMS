@@ -23,8 +23,8 @@ import {
   ExclamationCircleOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
-import { NoiDangBaoData } from '../../models/NoiDangBaoData';
-import * as NoiDangBaoService from '../../services/NoiDangBaoService';
+import { RoleData } from '../../models/RoleData';
+import * as RoleService from '../../services/RoleService';
 import dayjs, { formatDate } from '../../utils/dateTime';
 import { 
   useQuery, 
@@ -35,13 +35,13 @@ import { TablePaginationConfig } from 'antd/es/table';
 
 const { Title } = Typography;
 
-const NoiDangBaoPage: React.FC = () => {
+const RolePage: React.FC = () => {
   const queryClient = useQueryClient();
   
   // State for modals and form
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('Add Publication Venue');
-  const [editingNoiDangBao, setEditingNoiDangBao] = useState<NoiDangBaoData | null>(null);
+  const [modalTitle, setModalTitle] = useState<string>('Add Role');
+  const [editingRole, setEditingRole] = useState<RoleData | null>(null);
   const [form] = Form.useForm();
   
   // Pagination state
@@ -51,19 +51,19 @@ const NoiDangBaoPage: React.FC = () => {
     total: 0
   });
   
-  // Query for fetching publication venue data
+  // Query for fetching roles data
   const { 
     data, 
     isLoading, 
     isError, 
     error: queryError 
   } = useQuery({
-    queryKey: ['noiDangBaos', pagination.current, pagination.pageSize],
+    queryKey: ['roles', pagination.current, pagination.pageSize],
     queryFn: async () => {
-      const response = await NoiDangBaoService.getPage(
+      const response = await RoleService.getPage(
         pagination.current, 
         pagination.pageSize
-      );
+      );      
       
       return response;
     }
@@ -79,46 +79,46 @@ const NoiDangBaoPage: React.FC = () => {
     }
   }, [data]);
 
-  // Mutation for creating new publication venue
+  // Mutation for creating new role
   const createMutation = useMutation({
-    mutationFn: NoiDangBaoService.create,
+    mutationFn: RoleService.create,
     onSuccess: () => {
-      message.success('Publication venue added successfully');
-      queryClient.invalidateQueries({ queryKey: ['noiDangBaos'] });
+      message.success('Vai trò đã được thêm thành công');
+      queryClient.invalidateQueries({ queryKey: ['roles'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error adding publication venue:', error);
-      message.error('Failed to add publication venue');
+      console.error('Lỗi khi thêm vai trò:', error);
+      message.error('Không thể thêm vai trò');
     }
   });
 
-  // Mutation for updating publication venue
+  // Mutation for updating role
   const updateMutation = useMutation({
-    mutationFn: NoiDangBaoService.update,
+    mutationFn: RoleService.update,
     onSuccess: () => {
-      message.success('Publication venue updated successfully');
-      queryClient.invalidateQueries({ queryKey: ['noiDangBaos'] });
+      message.success('Vai trò đã được cập nhật thành công');
+      queryClient.invalidateQueries({ queryKey: ['roles'] });
       setModalVisible(false);
       form.resetFields();
     },
     onError: (error) => {
-      console.error('Error updating publication venue:', error);
-      message.error('Failed to update publication venue');
+      console.error('Lỗi khi cập nhật vai trò:', error);
+      message.error('Không thể cập nhật vai trò');
     }
   });
 
-  // Mutation for deleting publication venue
+  // Mutation for deleting role
   const deleteMutation = useMutation({
-    mutationFn: NoiDangBaoService.remove,
+    mutationFn: RoleService.remove,
     onSuccess: () => {
-      message.success('Publication venue deleted successfully');
-      queryClient.invalidateQueries({ queryKey: ['noiDangBaos'] });
+      message.success('Vai trò đã được xóa thành công');
+      queryClient.invalidateQueries({ queryKey: ['roles'] });
     },
     onError: (error) => {
-      console.error('Error deleting publication venue:', error);
-      message.error('Failed to delete publication venue');
+      console.error('Lỗi khi xóa vai trò:', error);
+      message.error('Không thể xóa vai trò');
     }
   });
 
@@ -133,18 +133,18 @@ const NoiDangBaoPage: React.FC = () => {
 
   // Handle add button click
   const handleAddClick = () => {
-    setEditingNoiDangBao(null);
-    setModalTitle('Add Publication Venue');
+    setEditingRole(null);
+    setModalTitle('Thêm vai trò');
     form.resetFields();
     setModalVisible(true);
   };
 
   // Handle edit button click
-  const handleEditClick = (record: NoiDangBaoData) => {
-    setEditingNoiDangBao(record);
-    setModalTitle('Edit Publication Venue');
+  const handleEditClick = (record: RoleData) => {
+    setEditingRole(record);
+    setModalTitle('Chỉnh sửa vai trò');
     form.setFieldsValue({
-      ten: record.ten
+      name: record.name
     });
     setModalVisible(true);
   };
@@ -154,20 +154,20 @@ const NoiDangBaoPage: React.FC = () => {
     try {
       const values = await form.validateFields();
       
-      if (editingNoiDangBao) {
+      if (editingRole) {
         // Update existing record
         updateMutation.mutate({
-          ...editingNoiDangBao,
-          ten: values.ten
+          ...editingRole,
+          name: values.name
         });
       } else {
         // Create new record
         createMutation.mutate({
-          ten: values.ten
+          name: values.name
         });
       }
     } catch (error) {
-      console.error('Form validation error:', error);
+      console.error('Lỗi xác thực biểu mẫu:', error);
     }
   };
 
@@ -178,8 +178,8 @@ const NoiDangBaoPage: React.FC = () => {
 
   // Refresh data
   const refreshData = () => {
-    queryClient.invalidateQueries({ queryKey: ['noiDangBaos'] });
-    message.info('Data refreshed');
+    queryClient.invalidateQueries({ queryKey: ['roles'] });
+    message.info('Dữ liệu đã được làm mới');
   };
 
   // Table columns configuration
@@ -191,9 +191,9 @@ const NoiDangBaoPage: React.FC = () => {
       render: (_: unknown, __: unknown, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: 'Tên',
-      dataIndex: 'ten',
-      key: 'ten',
+      title: 'Tên vai trò',
+      dataIndex: 'name',
+      key: 'name',
       render: (text: string) => <strong>{text}</strong>
     },
     {
@@ -211,7 +211,7 @@ const NoiDangBaoPage: React.FC = () => {
     {
       title: 'Thao tác',
       key: 'actions',
-      render: (_: unknown, record: NoiDangBaoData) => (
+      render: (_: unknown, record: RoleData) => (
         <Space size="small">
           <Tooltip title="Chỉnh sửa">
             <Button 
@@ -223,8 +223,8 @@ const NoiDangBaoPage: React.FC = () => {
           </Tooltip>
           <Tooltip title="Xóa">
             <Popconfirm
-              title="Xóa nơi đăng báo"
-              description="Bạn có chắc muốn xóa nơi đăng báo này không?"
+              title="Xóa vai trò"
+              description="Bạn có chắc muốn xóa vai trò này không?"
               onConfirm={() => handleDelete(record.id!)}
               okText="Có"
               cancelText="Không"
@@ -246,12 +246,12 @@ const NoiDangBaoPage: React.FC = () => {
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const errorMessage = queryError 
-    ? 'Không thể tải danh sách nơi đăng báo. Vui lòng thử lại sau.' 
+    ? 'Không thể tải danh sách vai trò. Vui lòng thử lại sau.' 
     : null;
 
   return (
     <div>
-      <Title level={2}>Quản lý Nơi đăng báo</Title>
+      <Title level={2}>Quản lý Vai trò</Title>
       
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
@@ -270,7 +270,7 @@ const NoiDangBaoPage: React.FC = () => {
                 icon={<PlusOutlined />} 
                 onClick={handleAddClick}
               >
-                Thêm nơi đăng báo
+                Thêm vai trò
               </Button>
             </Space>
           </Col>
@@ -300,7 +300,7 @@ const NoiDangBaoPage: React.FC = () => {
 
       {/* Modal for Add/Edit */}
       <Modal
-        title={modalTitle === 'Add Publication Venue' ? 'Thêm nơi đăng báo' : 'Chỉnh sửa nơi đăng báo'}
+        title={modalTitle}
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[
@@ -320,13 +320,13 @@ const NoiDangBaoPage: React.FC = () => {
         <Form
           form={form}
           layout="vertical"
-          name="noiDangBaoForm"
+          name="roleForm"
         >
           <Form.Item
-            name="ten"
-            label="Tên nơi đăng báo"
+            name="name"
+            label="Tên vai trò"
             rules={[
-              { required: true, message: 'Vui lòng nhập tên nơi đăng báo' },
+              { required: true, message: 'Vui lòng nhập tên vai trò' },
               { max: 100, message: 'Tên không được vượt quá 100 ký tự' }
             ]}
           >
@@ -338,4 +338,4 @@ const NoiDangBaoPage: React.FC = () => {
   );
 };
 
-export default NoiDangBaoPage;
+export default RolePage;

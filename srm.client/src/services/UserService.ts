@@ -36,7 +36,7 @@ export const getById = async (id: string): Promise<UserData> => {
  * Get a list of all users with basic information
  * @returns Promise with list of users
  */
-export const listBasicInfo = async (): Promise<UserData[]> => {
+export const getListBasicInfo = async (): Promise<UserData[]> => {
   const response = await api.get<UserData[]>('/User/list-basic-info');
   return response.data;
 };

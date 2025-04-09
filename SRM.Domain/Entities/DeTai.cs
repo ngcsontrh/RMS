@@ -25,8 +25,11 @@ namespace SRM.Domain.Entities
         public string? ChuNhiem { get; set; }
         public string? CanBoThamGias { get; set; }
         public string? PhanChiaSuDongGop { get; set; }
+        public Guid? NguoiDeXuatId { get; set; }
+        public string? TrangThaiPheDuyet { get; set; }
 
         public virtual CapDeTai? CapDeTai { get; set; }
-        public virtual DonViChuTri DonViChuTri { get; set; } = null!;
+        public virtual DonViChuTri? DonViChuTri { get; set; }
+        public virtual User? NguoiDeXuat { get; set; }
     }
 }

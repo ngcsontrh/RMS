@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   Button,
@@ -8,13 +8,11 @@ import {
   Spin,
   Row,
   Col,
-  Input,
   Alert,
   Tag,
   Tooltip
 } from 'antd';
 import {
-  SearchOutlined,
   ReloadOutlined,
   PlusOutlined,
   EyeOutlined,
@@ -30,7 +28,6 @@ import { useAuthStore } from '../stores/authStore';
 import { PageData } from '../models/PageData';
 
 const { Title } = Typography;
-const { Search } = Input;
 
 const CongBoListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,26 +38,6 @@ const CongBoListPage: React.FC = () => {
     pageSize: 10,
     total: 0
   });
-  const [searchText, setSearchText] = useState<string>('');
-
-  // Custom debounce hook
-  const useDebounce = <T,>(value: T, delay: number): T => {
-    const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-  
-      return () => {
-        clearTimeout(timer);
-      };
-    }, [value, delay]);
-  
-    return debouncedValue;
-  };
-  
-  const debouncedSearchTerm = useDebounce(searchText, 500);
 
   // Fetch data with React Query
   const {
@@ -70,7 +47,7 @@ const CongBoListPage: React.FC = () => {
     error,
     isFetching
   } = useQuery<PageData<CongBoData>>({
-    queryKey: ['congbos', pagination.current, pagination.pageSize, debouncedSearchTerm],
+    queryKey: ['congbos', pagination.current, pagination.pageSize],
     queryFn: () => CongBoService.getPage(
       pagination.current as number,
       pagination.pageSize as number
@@ -96,23 +73,6 @@ const CongBoListPage: React.FC = () => {
       current: newPagination.current || 1,
       pageSize: newPagination.pageSize || 10
     }));
-  };
-
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    (value: string) => {
-      setSearchText(value);
-      setPagination(prev => ({
-        ...prev,
-        current: 1 // Reset to first page when searching
-      }));
-    },
-    []
-  );
-
-  // Search functionality
-  const handleSearch = (value: string) => {
-    debouncedSearch(value);
   };
 
   // Refresh data
@@ -224,15 +184,7 @@ const CongBoListPage: React.FC = () => {
 
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Search
-              placeholder="Tìm kiếm theo tên hoặc tạp chí"
-              allowClear
-              enterButton={<SearchOutlined />}
-              onSearch={handleSearch}
-            />
-          </Col>
-          <Col xs={24} sm={12} md={16} lg={18} style={{ textAlign: 'right' }}>
+          <Col xs={24} sm={24} md={24} lg={24} style={{ textAlign: 'right' }}>
             <Space>
               <Button 
                 icon={<ReloadOutlined />} 

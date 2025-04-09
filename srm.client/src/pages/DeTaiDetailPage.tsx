@@ -123,7 +123,7 @@ const DeTaiDetailPage: React.FC = () => {
         {/* Project Team Section */}
         <Card title="Nhóm nghiên cứu" style={{ marginBottom: 20 }}>
           <Descriptions bordered column={1}>
-            <Descriptions.Item label="Đơn vị chủ trì">{detai?.tenDonViChuTri || '-'}</Descriptions.Item>
+            <Descriptions.Item label="Đơn vị chủ trì">{detai?.chuNhiem || '-' }</Descriptions.Item>
             <Descriptions.Item label="Chủ nhiệm đề tài">{detai?.chuNhiem || '-'}</Descriptions.Item>
             <Descriptions.Item label="Thành viên tham gia">
               {detai?.canBoThamGias?.length ? (

@@ -13,5 +13,6 @@ namespace SRM.Business.IServices
         public Task<bool> UpdateAsync(DeTaiData model);
         public Task<(bool, DeTaiData?)> GetByIdAsync(Guid id);
         public Task<(bool, PageData<DeTaiData>?)> GetPageAsync(int pageIndex = 1, int pageSize = 10);
+        public Task<bool> ApproveAsync(Guid id);
     }
 }

@@ -14,7 +14,6 @@ import {
   Tooltip,
   Row,
   Col,
-  Input as AntdInput,
   Alert
 } from 'antd';
 import {
@@ -22,7 +21,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
-  SearchOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
 import { LoaiHoatDongData } from '../../models/LoaiHoatDongData';
@@ -36,14 +34,13 @@ import {
 import { TablePaginationConfig } from 'antd/es/table';
 
 const { Title } = Typography;
-const { Search } = AntdInput;
 
 const LoaiHoatDongPage: React.FC = () => {
   const queryClient = useQueryClient();
   
   // State for modals and form
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('Add Activity Type');
+  const [modalTitle, setModalTitle] = useState<string>('Thêm loại hoạt động');
   const [editingLoaiHoatDong, setEditingLoaiHoatDong] = useState<LoaiHoatDongData | null>(null);
   const [form] = Form.useForm();
   
@@ -54,9 +51,6 @@ const LoaiHoatDongPage: React.FC = () => {
     total: 0
   });
   
-  // Search state
-  const [searchText, setSearchText] = useState<string>('');
-  
   // Query for fetching activity type data
   const { 
     data, 
@@ -64,24 +58,12 @@ const LoaiHoatDongPage: React.FC = () => {
     isError, 
     error: queryError 
   } = useQuery({
-    queryKey: ['loaiHoatDongs', pagination.current, pagination.pageSize, searchText],
+    queryKey: ['loaiHoatDongs', pagination.current, pagination.pageSize],
     queryFn: async () => {
       const response = await LoaiHoatDongService.getPage(
         pagination.current, 
         pagination.pageSize
       );
-      
-      // Apply client-side filtering when searchText is provided
-      if (searchText && response.items) {
-        const filteredItems = response.items.filter(item => 
-          item.ten?.toLowerCase().includes(searchText.toLowerCase())
-        );
-        return {
-          ...response,
-          items: filteredItems,
-          total: filteredItems.length
-        };
-      }
       
       return response;
     }
@@ -105,7 +87,7 @@ const LoaiHoatDongPage: React.FC = () => {
   // Effect to handle createMutation success
   useEffect(() => {
     if (createMutation.isSuccess) {
-      message.success('Activity type added successfully');
+      message.success('Thêm loại hoạt động thành công');
       queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
       setModalVisible(false);
       form.resetFields();
@@ -115,8 +97,8 @@ const LoaiHoatDongPage: React.FC = () => {
   // Effect to handle createMutation error
   useEffect(() => {
     if (createMutation.isError) {
-      console.error('Error adding activity type:', createMutation.error);
-      message.error('Failed to add activity type');
+      console.error('Lỗi khi thêm loại hoạt động:', createMutation.error);
+      message.error('Không thể thêm loại hoạt động');
     }
   }, [createMutation.isError, createMutation.error]);
 
@@ -128,7 +110,7 @@ const LoaiHoatDongPage: React.FC = () => {
   // Effect to handle updateMutation success
   useEffect(() => {
     if (updateMutation.isSuccess) {
-      message.success('Activity type updated successfully');
+      message.success('Cập nhật loại hoạt động thành công');
       queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
       setModalVisible(false);
       form.resetFields();
@@ -138,8 +120,8 @@ const LoaiHoatDongPage: React.FC = () => {
   // Effect to handle updateMutation error
   useEffect(() => {
     if (updateMutation.isError) {
-      console.error('Error updating activity type:', updateMutation.error);
-      message.error('Failed to update activity type');
+      console.error('Lỗi khi cập nhật loại hoạt động:', updateMutation.error);
+      message.error('Không thể cập nhật loại hoạt động');
     }
   }, [updateMutation.isError, updateMutation.error]);
 
@@ -151,7 +133,7 @@ const LoaiHoatDongPage: React.FC = () => {
   // Effect to handle deleteMutation success
   useEffect(() => {
     if (deleteMutation.isSuccess) {
-      message.success('Activity type deleted successfully');
+      message.success('Xóa loại hoạt động thành công');
       queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
     }
   }, [deleteMutation.isSuccess, queryClient]);
@@ -159,8 +141,8 @@ const LoaiHoatDongPage: React.FC = () => {
   // Effect to handle deleteMutation error
   useEffect(() => {
     if (deleteMutation.isError) {
-      console.error('Error deleting activity type:', deleteMutation.error);
-      message.error('Failed to delete activity type');
+      console.error('Lỗi khi xóa loại hoạt động:', deleteMutation.error);
+      message.error('Không thể xóa loại hoạt động');
     }
   }, [deleteMutation.isError, deleteMutation.error]);
 
@@ -173,19 +155,10 @@ const LoaiHoatDongPage: React.FC = () => {
     }));
   };
 
-  // Search functionality
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-    setPagination(prev => ({
-      ...prev,
-      current: 1 // Reset to first page when searching
-    }));
-  };
-
   // Handle add button click
   const handleAddClick = () => {
     setEditingLoaiHoatDong(null);
-    setModalTitle('Add Activity Type');
+    setModalTitle('Thêm loại hoạt động');
     form.resetFields();
     setModalVisible(true);
   };
@@ -193,7 +166,7 @@ const LoaiHoatDongPage: React.FC = () => {
   // Handle edit button click
   const handleEditClick = (record: LoaiHoatDongData) => {
     setEditingLoaiHoatDong(record);
-    setModalTitle('Edit Activity Type');
+    setModalTitle('Chỉnh sửa loại hoạt động');
     form.setFieldsValue({
       ten: record.ten
     });
@@ -230,7 +203,7 @@ const LoaiHoatDongPage: React.FC = () => {
   // Refresh data
   const refreshData = () => {
     queryClient.invalidateQueries({ queryKey: ['loaiHoatDongs'] });
-    message.info('Data refreshed');
+    message.info('Dữ liệu đã được làm mới');
   };
 
   // Table columns configuration
@@ -242,29 +215,29 @@ const LoaiHoatDongPage: React.FC = () => {
       render: (_: unknown, __: unknown, index: number) => (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: 'Name',
+      title: 'Tên',
       dataIndex: 'ten',
       key: 'ten',
       render: (text: string) => <strong>{text}</strong>
     },
     {
-      title: 'Created Date',
+      title: 'Ngày tạo',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
       render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm') 
     },
     {
-      title: 'Last Modified',
+      title: 'Ngày sửa',
       dataIndex: 'ngaySua',
       key: 'ngaySua',
       render: (date: dayjs.Dayjs) => formatDate(date, 'DD/MM/YYYY HH:mm')
     },
     {
-      title: 'Actions',
+      title: 'Hành động',
       key: 'actions',
       render: (_: unknown, record: LoaiHoatDongData) => (
         <Space size="small">
-          <Tooltip title="Edit">
+          <Tooltip title="Chỉnh sửa">
             <Button 
               type="primary" 
               icon={<EditOutlined />} 
@@ -272,13 +245,13 @@ const LoaiHoatDongPage: React.FC = () => {
               size="small"
             />
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Xóa">
             <Popconfirm
-              title="Delete Activity Type"
-              description="Are you sure you want to delete this activity type?"
+              title="Xóa loại hoạt động"
+              description="Bạn có chắc chắn muốn xóa loại hoạt động này không?"
               onConfirm={() => handleDelete(record.id!)}
-              okText="Yes"
-              cancelText="No"
+              okText="Có"
+              cancelText="Không"
               icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
             >
               <Button 
@@ -297,23 +270,16 @@ const LoaiHoatDongPage: React.FC = () => {
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const errorMessage = queryError 
-    ? 'Failed to load activity types. Please try again later.' 
+    ? 'Không thể tải danh sách loại hoạt động. Vui lòng thử lại sau.' 
     : null;
 
   return (
     <div>
-      <Title level={2}>Activity Types Management</Title>
+      <Title level={2}>Quản lý loại hoạt động</Title>
       
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Search
-              placeholder="Search by name"
-              allowClear
-              enterButton={<SearchOutlined />}
-              onSearch={handleSearch}
-            />
-          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}></Col>
           <Col xs={24} sm={12} md={16} lg={18} style={{ textAlign: 'right' }}>
             <Space>
               <Button 
@@ -321,14 +287,14 @@ const LoaiHoatDongPage: React.FC = () => {
                 onClick={refreshData}
                 loading={isLoading}
               >
-                Refresh
+                Làm mới
               </Button>
               <Button 
                 type="primary" 
                 icon={<PlusOutlined />} 
                 onClick={handleAddClick}
               >
-                Add Activity Type
+                Thêm loại hoạt động
               </Button>
             </Space>
           </Col>
@@ -349,7 +315,7 @@ const LoaiHoatDongPage: React.FC = () => {
               ...pagination,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => `Total ${total} items`
+              showTotal: (total) => `Tổng cộng ${total} mục`
             }}
             onChange={handleTableChange}
           />
@@ -363,7 +329,7 @@ const LoaiHoatDongPage: React.FC = () => {
         onCancel={() => setModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>
-            Cancel
+            Hủy
           </Button>,
           <Button
             key="submit"
@@ -371,7 +337,7 @@ const LoaiHoatDongPage: React.FC = () => {
             loading={isSubmitting}
             onClick={handleFormSubmit}
           >
-            Save
+            Lưu
           </Button>
         ]}
       >
@@ -382,10 +348,10 @@ const LoaiHoatDongPage: React.FC = () => {
         >
           <Form.Item
             name="ten"
-            label="Activity Type Name"
+            label="Tên loại hoạt động"
             rules={[
-              { required: true, message: 'Please enter the activity type name' },
-              { max: 100, message: 'Name cannot exceed 100 characters' }
+              { required: true, message: 'Vui lòng nhập tên loại hoạt động' },
+              { max: 100, message: 'Tên không được vượt quá 100 ký tự' }
             ]}
           >
             <Input />

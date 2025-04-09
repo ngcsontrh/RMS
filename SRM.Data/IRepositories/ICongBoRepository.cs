@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 namespace SRM.Data.IRepositories
 {
     public interface ICongBoRepository : IRepositoryBase<CongBo>
-    {       
+    {
+        Task<CongBo?> GetDetailAsync(Guid id);
+        Task<(List<CongBo>, int)> GetPageDetailAsync(int pageIndex, int pageSize);
     }
 }

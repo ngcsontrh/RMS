@@ -64,6 +64,15 @@ namespace SRM.Data.Repositories
             return user;
         }
 
+        public async Task<string> GetHashedPasswordAsync(string username)
+        {
+            var hashedPassword = await _context.Users
+                    .Where(x => x.Username == username)
+                    .Select(x => x.Password)
+                    .FirstAsync();
+            return hashedPassword;
+        }
+
         public async Task<List<User>> GetListBasicInfoAsync()
         {
             var users = await _context.Users

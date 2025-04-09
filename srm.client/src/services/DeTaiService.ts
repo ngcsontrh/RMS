@@ -1,4 +1,5 @@
 import { DeTaiData } from '../models/DeTaiData';
+import { GuidData } from '../models/GuidData';
 import { PageData } from '../models/PageData';
 import api from '../utils/api';
 
@@ -44,4 +45,13 @@ export const getPage = async (pageIndex: number = 1, pageSize: number = 10, sear
     params: { pageIndex, pageSize, searchText }
   });
   return response.data;
+};
+
+/**
+ * Approve a DeTai
+ * @param id ID of the DeTai to approve
+ */
+export const approve = async (id: string): Promise<void> => {
+  const guidData: GuidData = { id };
+  await api.post(`/DeTai/approve`, guidData);
 };

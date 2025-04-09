@@ -25,5 +25,8 @@ namespace SRM.Domain.Data
         public string? ChuNhiem { get; set; }
         public List<string>? CanBoThamGias { get; set; }
         public string? PhanChiaSuDongGop { get; set; }
+        public Guid? NguoiDeXuatId { get; set; }
+        public string? TenNguoiDeXuat { get; set; }
+        public string? TrangThaiPheDuyet { get; set; }
     }
 }

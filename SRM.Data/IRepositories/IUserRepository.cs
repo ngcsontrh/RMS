@@ -10,6 +10,7 @@ namespace SRM.Data.IRepositories
 {
     public interface IUserRepository : IRepositoryBase<User>
     {
+        Task<string> GetHashedPasswordAsync(string username);
         Task<User?> GetByUsernameAsync(string username);
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByMaVienChucAsync(string maVienChuc);

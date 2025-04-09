@@ -10,21 +10,18 @@ import {
   Col,
   Alert,
   Tag,
-  Tooltip,
-  message
+  Tooltip
 } from 'antd';
 import {
   ReloadOutlined,
   PlusOutlined,
   EyeOutlined,
-  EditOutlined,
-  CheckOutlined
+  EditOutlined
 } from '@ant-design/icons';
-import { DeTaiData } from '../models/DeTaiData';
-import * as DeTaiService from '../services/DeTaiService';
-import * as UserService from '../services/UserService';
+import { HoatDongData } from '../models/HoatDongData';
+import * as HoatDongService from '../services/HoatDongService';
 import { formatDate } from '../utils/dateTime';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { TablePaginationConfig } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
@@ -32,10 +29,10 @@ import { PageData } from '../models/PageData';
 
 const { Title } = Typography;
 
-const DeTaiListPage: React.FC = () => {
+const HoatDongListPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
@@ -49,20 +46,14 @@ const DeTaiListPage: React.FC = () => {
     isError,
     error,
     isFetching
-  } = useQuery<PageData<DeTaiData>>({
-    queryKey: ['detais', pagination.current, pagination.pageSize],
-    queryFn: () => DeTaiService.getPage(
+  } = useQuery<PageData<HoatDongData>>({
+    queryKey: ['hoatdongs', pagination.current, pagination.pageSize],
+    queryFn: () => HoatDongService.getPage(
       pagination.current as number,
-      pagination.pageSize as number,
+      pagination.pageSize as number
     ),
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
     placeholderData: (previousData) => previousData // Keep previous data while fetching new data
-  });
-
-  // Fetch list basic user data with React Query
-  const { data: userData } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => UserService.getListBasicInfo(),        
   });
 
   // Update pagination total when data changes
@@ -95,160 +86,109 @@ const DeTaiListPage: React.FC = () => {
 
   // Refresh data
   const refreshData = () => {
-    queryClient.invalidateQueries({ queryKey: ['detais'] });
+    queryClient.invalidateQueries({ queryKey: ['hoatdongs'] });
   };
 
   // Prefetch detail page data when hovering on view button
   const prefetchDetail = (id: string) => {
     queryClient.prefetchQuery({
-      queryKey: ['detai', id],
-      queryFn: () => DeTaiService.getById(id)
+      queryKey: ['hoatdong', id],
+      queryFn: () => HoatDongService.getById(id)
     });
-  };
-
-  // Mutation for approve de tai
-  const approveMutation = useMutation({
-    mutationFn: DeTaiService.approve,
-    onSuccess: () => {
-      message.success('Phê duyệt đề tài thành công');
-      queryClient.invalidateQueries({ queryKey: ['detais'] });
-    },
-    onError: (error) => {
-      message.error(`Lỗi: ${error}`);
-    }
-  });
-
-  // Handle approve action
-  const handleApprove = (id: string) => {
-    approveMutation.mutate(id);
   };
 
   // Navigate to create new
   const handleAddClick = () => {
-    navigate('/detai/create');
+    navigate('/hoatdong/create');
   };
 
   // Navigate to view details
   const handleViewDetails = (id: string) => {
-    navigate(`/detai/${id}`);
+    navigate(`/hoatdong/${id}`);
   };
 
   // Navigate to edit
   const handleEdit = (id: string) => {
-    navigate(`/detai/${id}/edit`);
+    navigate(`/hoatdong/${id}/edit`);
   };
 
   // Table columns configuration
   const columns = [
     {
-      title: "#",
-      key: "index",
+      title: '#',
+      key: 'index',
       width: 60,
-      render: (_: unknown, __: unknown, index: number) =>
-        (pagination.current! - 1) * pagination.pageSize! + index + 1,
+      render: (_: unknown, __: unknown, index: number) => (pagination.current! - 1) * pagination.pageSize! + index + 1,
     },
     {
-      title: "Cấp đề tài",
-      dataIndex: "tenCapDeTai",
-      key: "tenCapDeTai",
-      render: (text: string) => <Tag color="blue">{text}</Tag>,
+      title: 'Loại hoạt động',
+      dataIndex: 'tenLoaiHoatDong',
+      key: 'tenLoaiHoatDong',
+      render: (text: string) => <Tag color="blue">{text}</Tag>
     },
     {
-      title: "Tên đề tài",
-      dataIndex: "ten",
-      key: "ten",
-      render: (text: string) => <strong>{text}</strong>,
+      title: 'Tên hoạt động',
+      dataIndex: 'ten',
+      key: 'ten',
+      render: (text: string) => <strong>{text}</strong>
     },
     {
-      title: "Mã số",
-      dataIndex: "maSo",
-      key: "maSo",
-    },{
-      title: "Người đề xuất",
-      dataIndex: "tenNguoiDeXuat",
-      key: "tenNguoiDeXuat",
-      render: (text: string) => {
-        const user = userData?.find((user) => user.id === text);
-        return <Tag color="green">{user?.hoTen || text}</Tag>;
-      },
+      title: 'Địa điểm',
+      dataIndex: 'diaChi',
+      key: 'diaChi',
     },
     {
-      title: "Đơn vị chủ trì",
-      dataIndex: "tenDonViChuTri",
-      key: "tenDonViChuTri",
+      title: 'Chủ nhiệm',
+      dataIndex: 'chuNhiem',
+      key: 'chuNhiem',
     },
     {
-      title: "Chủ nhiệm",
-      dataIndex: "chuNhiem",
-      key: "chuNhiem",
-      render: (text: string) => {
-        const user = userData?.find((user) => user.id === text);
-        return <Tag color="purple">{user?.hoTen || text}</Tag>;
-      },
-    },
-    {
-      title: "Thời gian",
-      key: "period",
-      render: (record: DeTaiData) => {
-        const start = record.ngayBatDau
-          ? formatDate(record.ngayBatDau, "DD/MM/YYYY")
-          : "";
-        const end = record.ngayKetThuc
-          ? formatDate(record.ngayKetThuc, "DD/MM/YYYY")
-          : "";
+      title: 'Thời gian',
+      key: 'period',
+      render: (record: HoatDongData) => {
+        const start = record.ngayBatDau ? formatDate(record.ngayBatDau, 'DD/MM/YYYY') : '';
+        const end = record.ngayKetThuc ? formatDate(record.ngayKetThuc, 'DD/MM/YYYY') : '';
         return `${start} - ${end}`;
-      },
+      }
     },
     {
-      title: "Kinh phí",
-      dataIndex: "tongKinhPhi",
-      key: "tongKinhPhi",
-      render: (amount: number) => formatMoney(amount),
+      title: 'Kinh phí',
+      dataIndex: 'kinhPhi',
+      key: 'kinhPhi',
+      render: (amount: number) => formatMoney(amount)
     },
     {
-      title: "Thao tác",
-      key: "actions",
-      render: (_: unknown, record: DeTaiData) => (
+      title: 'Thao tác',
+      key: 'actions',
+      render: (_: unknown, record: HoatDongData) => (
         <Space size="small">
           <Tooltip title="Xem chi tiết">
-            <Button
-              type="primary"
-              icon={<EyeOutlined />}
-              onClick={() => handleViewDetails(record.id!)}
+            <Button 
+              type="primary" 
+              icon={<EyeOutlined />} 
+              onClick={() => handleViewDetails(record.id!)} 
               size="small"
               onMouseEnter={() => prefetchDetail(record.id!)}
             />
           </Tooltip>
           {isAuthenticated && (
             <Tooltip title="Chỉnh sửa">
-              <Button
-                type="default"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record.id!)}
+              <Button 
+                type="default" 
+                icon={<EditOutlined />} 
+                onClick={() => handleEdit(record.id!)} 
                 size="small"
               />
             </Tooltip>
           )}
-          {isAuthenticated &&
-            user?.roles.includes("Admin") &&
-            record.trangThaiPheDuyet !== "APPROVE" && (
-              <Tooltip title="Phê duyệt">
-                <Button
-                  type="default"
-                  icon={<CheckOutlined />}
-                  onClick={() => handleApprove(record.id!)}
-                  size="small"
-                />
-              </Tooltip>
-            )}
         </Space>
-      ),
+      )
     },
   ];
 
   return (
     <div>
-      <Title level={2}>Đề tài nghiên cứu</Title>
+      <Title level={2}>Hoạt động nghiên cứu</Title>
 
       <Card>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
@@ -267,7 +207,7 @@ const DeTaiListPage: React.FC = () => {
                   icon={<PlusOutlined />} 
                   onClick={handleAddClick}
                 >
-                  Thêm đề tài mới
+                  Thêm hoạt động mới
                 </Button>
               )}
             </Space>
@@ -277,7 +217,7 @@ const DeTaiListPage: React.FC = () => {
         {isError && (
           <div style={{ marginBottom: 16 }}>
             <Alert 
-              message="Không thể tải danh sách đề tài" 
+              message="Không thể tải danh sách hoạt động" 
               description={error instanceof Error ? error.message : 'Lỗi không xác định'}
               type="error" 
               showIcon 
@@ -305,4 +245,4 @@ const DeTaiListPage: React.FC = () => {
   );
 };
 
-export default DeTaiListPage;
+export default HoatDongListPage;

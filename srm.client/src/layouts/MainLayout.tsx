@@ -20,7 +20,6 @@ import {
   LogoutOutlined,
   FileOutlined,
   BookOutlined,
-  TeamOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
@@ -74,26 +73,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           icon: <FileOutlined />
         },
         {
-          key: '/topics',
-          label: 'Chủ đề nghiên cứu',
-          icon: <FileOutlined />
-        },
-        {
           key: '/congbo',
           label: 'Công bố khoa học',
           icon: <FileOutlined />
-        }
-      ]
-    },
-    {
-      key: 'resources',
-      label: 'Tài nguyên',
-      icon: <TeamOutlined />,
-      children: [
+        },
         {
-          key: '/contact',
-          label: 'Liên hệ',
-          icon: <TeamOutlined />
+          key: '/hoatdong',
+          label: 'Hoạt động nghiên cứu',
+          icon: <FileOutlined />
         }
       ]
     }
@@ -187,9 +174,22 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     
     let breadcrumbPath = '';
     
+    // Map of path segments to Vietnamese titles
+    const pathTitles: Record<string, string> = {
+      'detai': 'Đề tài',
+      'congbo': 'Công bố',
+      'hoatdong': 'Hoạt động',
+      'profile': 'Hồ sơ',
+      'contact': 'Liên hệ',
+      'login': 'Đăng nhập',
+      'create': 'Tạo mới',
+      'edit': 'Chỉnh sửa',
+      'admin': 'Quản trị'
+    };
+    
     paths.forEach((path, index) => {
       breadcrumbPath += `/${path}`;
-      const pathTitle = path.charAt(0).toUpperCase() + path.slice(1);
+      const pathTitle = pathTitles[path] || (path.charAt(0).toUpperCase() + path.slice(1));
       breadcrumbItems.push({
         key: path,
         title: index === paths.length - 1 

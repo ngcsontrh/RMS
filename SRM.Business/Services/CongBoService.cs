@@ -13,9 +13,9 @@ namespace SRM.Business.Services
 {
     public class CongBoService : ICongBoService
     {
-        private readonly IRepositoryBase<CongBo> _congBoRepository;
+        private readonly ICongBoRepository _congBoRepository;
 
-        public CongBoService(IRepositoryBase<CongBo> congBoRepository)
+        public CongBoService(ICongBoRepository congBoRepository)
         {
             _congBoRepository = congBoRepository;
         }
@@ -38,7 +38,7 @@ namespace SRM.Business.Services
         {
             try
             {
-                var entity = await _congBoRepository.GetByIdAsync(id);
+                var entity = await _congBoRepository.GetDetailAsync(id);
                 var model = entity?.MapToData();
                 return (true, model);
             }
@@ -52,7 +52,7 @@ namespace SRM.Business.Services
         {
             try
             {
-                var result = await _congBoRepository.GetPageAsync(x => true, pageIndex, pageSize);
+                var result = await _congBoRepository.GetPageDetailAsync(pageIndex, pageSize);
                 var data = result.Item1.Select(x => x.MapToData()).ToList();
                 var pageData = new PageData<CongBoData>
                 {
