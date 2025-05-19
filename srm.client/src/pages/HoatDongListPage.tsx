@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   Alert,
-  Tag,
   Tooltip
 } from 'antd';
 import {
@@ -119,12 +118,6 @@ const HoatDongListPage: React.FC = () => {
       key: 'index',
       width: 60,
       render: (_: unknown, __: unknown, index: number) => (pagination.current! - 1) * pagination.pageSize! + index + 1,
-    },
-    {
-      title: 'Loại hoạt động',
-      dataIndex: 'tenLoaiHoatDong',
-      key: 'tenLoaiHoatDong',
-      render: (text: string) => <Tag color="blue">{text}</Tag>
     },
     {
       title: 'Tên hoạt động',

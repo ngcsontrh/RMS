@@ -8,6 +8,7 @@ import LoginPage from '../pages/LoginPage';
 import ProfilePage from '../pages/ProfilePage';
 import NotFoundPage from '../pages/NotFoundPage';
 import AdminDashboard from '../pages/AdminDashboard';
+import Dashboard from '../pages/Dashboard';
 import ContactPage from '../pages/ContactPage';
 import DeTaiListPage from '../pages/DeTaiListPage';
 import DeTaiDetailPage from '../pages/DeTaiDetailPage';
@@ -27,9 +28,11 @@ import LoaiHoatDongPage from '../pages/admin/LoaiHoatDongPage';
 import NoiDangBaoPage from '../pages/admin/NoiDangBaoPage';
 import ThanhQuaPage from '../pages/admin/ThanhQuaPage';
 import RolePage from '../pages/admin/RolePage';
+import UserPage from '../pages/admin/UserPage';
 
 // Import ProtectedRoute from its dedicated file
 import ProtectedRoute from './ProtectedRoute';
+import QuyChePage from '../pages/QuyChePage';
 
 // Define route structure
 interface RouteConfig {
@@ -52,11 +55,20 @@ export const publicRoutes: RouteConfig[] = [
     path: '/login',
     element: <LoginPage />,
   },
-{
+  {
     path: '/contact',
     element: (
       <MainLayout>
         <ContactPage />
+      </MainLayout>
+    ),
+  },
+  // QuyChePage route
+  {
+    path: '/quyche',
+    element: (
+      <MainLayout>
+        <QuyChePage />
       </MainLayout>
     ),
   },
@@ -121,6 +133,17 @@ export const protectedRoutes: RouteConfig[] = [
       <ProtectedRoute>
         <MainLayout>
           <ProfilePage />
+        </MainLayout>
+      </ProtectedRoute>
+    ),
+  },
+  // Dashboard route for regular users
+  {
+    path: '/dashboard',
+    element: (
+      <ProtectedRoute>
+        <MainLayout>
+          <Dashboard />
         </MainLayout>
       </ProtectedRoute>
     ),
@@ -207,7 +230,7 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <ProtectedRoute requiredRoles={['admin']}>
         <AdminLayout>
-          <div>Quản lý Người dùng</div>
+          <UserPage />
         </AdminLayout>
       </ProtectedRoute>
     ),

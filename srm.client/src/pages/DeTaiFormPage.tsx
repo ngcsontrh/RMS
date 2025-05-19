@@ -49,7 +49,7 @@ const DeTaiFormPage: React.FC = () => {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      message.error('You must be logged in to access this page');
+      message.error('Bạn phải đăng nhập để truy cập trang này');
       navigate('/login');
     }
   }, [isAuthenticated, navigate]);
@@ -121,7 +121,7 @@ const DeTaiFormPage: React.FC = () => {
   // Effect to handle createMutation success
   useEffect(() => {
     if (createMutation.isSuccess) {
-      message.success('Research project created successfully');
+      message.success('Đề tài nghiên cứu đã được tạo thành công');
       queryClient.invalidateQueries({ queryKey: ['detais'] });
       navigate('/detai');
     }
@@ -130,8 +130,8 @@ const DeTaiFormPage: React.FC = () => {
   // Effect to handle createMutation error
   useEffect(() => {
     if (createMutation.isError) {
-      console.error('Error creating research project:', createMutation.error);
-      message.error('Failed to create research project');
+      console.error('Lỗi khi tạo đề tài nghiên cứu:', createMutation.error);
+      message.error('Không thể tạo đề tài nghiên cứu');
     }
   }, [createMutation.isError, createMutation.error]);
 
@@ -143,7 +143,7 @@ const DeTaiFormPage: React.FC = () => {
   // Effect to handle updateMutation success
   useEffect(() => {
     if (updateMutation.isSuccess) {
-      message.success('Research project updated successfully');
+      message.success('Đề tài nghiên cứu đã được cập nhật thành công');
       queryClient.invalidateQueries({ queryKey: ['detais'] });
       queryClient.invalidateQueries({ queryKey: ['detai', id] });
       navigate(`/detai/${id}`);
@@ -153,8 +153,8 @@ const DeTaiFormPage: React.FC = () => {
   // Effect to handle updateMutation error
   useEffect(() => {
     if (updateMutation.isError) {
-      console.error('Error updating research project:', updateMutation.error);
-      message.error('Failed to update research project');
+      console.error('Lỗi khi cập nhật đề tài nghiên cứu:', updateMutation.error);
+      message.error('Không thể cập nhật đề tài nghiên cứu');
     }
   }, [updateMutation.isError, updateMutation.error]);
 
@@ -214,7 +214,7 @@ const DeTaiFormPage: React.FC = () => {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-        <Spin size="large" tip="Loading project data..." />
+        <Spin size="large" tip="Đang tải dữ liệu đề tài..." />
       </div>
     );
   }
@@ -228,15 +228,15 @@ const DeTaiFormPage: React.FC = () => {
             onClick={handleCancel} 
             style={{ marginBottom: 16 }}
           >
-            Back
+            Quay lại
           </Button>
-          <Title level={2}>{isEditing ? 'Edit Research Project' : 'Create New Research Project'}</Title>
+          <Title level={2}>{isEditing ? 'Chỉnh sửa đề tài nghiên cứu' : 'Tạo đề tài nghiên cứu mới'}</Title>
         </div>
 
         {isErrorDeTai && (
           <Alert
-            message="Error"
-            description={`Failed to load research project data: ${detaiError instanceof Error ? detaiError.message : 'Unknown error'}`}
+            message="Lỗi"
+            description={`Không thể tải dữ liệu đề tài: ${detaiError instanceof Error ? detaiError.message : 'Lỗi không xác định'}`}
             type="error"
             showIcon
             style={{ marginBottom: 24 }}
@@ -254,16 +254,16 @@ const DeTaiFormPage: React.FC = () => {
         >
           <Row gutter={16}>
             <Col span={16}>
-              <Card title="Basic Information" style={{ marginBottom: 24 }}>
+              <Card title="Thông tin cơ bản" style={{ marginBottom: 24 }}>
                 <Row gutter={16}>
                   <Col span={12}>
                     <Form.Item
                       name="capDeTaiId"
-                      label="Research Level"
-                      rules={[{ required: true, message: 'Please select research level' }]}
+                      label="Cấp đề tài"
+                      rules={[{ required: true, message: 'Vui lòng chọn cấp đề tài' }]}
                     >
                       <Select
-                        placeholder="Select research level"
+                        placeholder="Chọn cấp đề tài"
                         loading={isLoadingCapDeTai}
                         optionFilterProp="children"
                         showSearch
@@ -279,11 +279,11 @@ const DeTaiFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="donViChuTriId"
-                      label="Host Organization"
-                      rules={[{ required: true, message: 'Please select host organization' }]}
+                      label="Đơn vị chủ trì"
+                      rules={[{ required: true, message: 'Vui lòng chọn đơn vị chủ trì' }]}
                     >
                       <Select
-                        placeholder="Select host organization"
+                        placeholder="Chọn đơn vị chủ trì"
                         loading={isLoadingDonViChuTri}
                         optionFilterProp="children"
                         showSearch
@@ -300,10 +300,10 @@ const DeTaiFormPage: React.FC = () => {
 
                 <Form.Item
                   name="ten"
-                  label="Project Name"
+                  label="Tên đề tài"
                   rules={[
-                    { required: true, message: 'Please enter project name' },
-                    { max: 200, message: 'Name cannot exceed 200 characters' }
+                    { required: true, message: 'Vui lòng nhập tên đề tài' },
+                    { max: 200, message: 'Tên không được vượt quá 200 ký tự' }
                   ]}
                 >
                   <Input />
@@ -311,10 +311,10 @@ const DeTaiFormPage: React.FC = () => {
 
                 <Form.Item
                   name="maSo"
-                  label="Project Code"
+                  label="Mã số đề tài"
                   rules={[
-                    { required: true, message: 'Please enter project code' },
-                    { max: 50, message: 'Code cannot exceed 50 characters' }
+                    { required: true, message: 'Vui lòng nhập mã số đề tài' },
+                    { max: 50, message: 'Mã số không được vượt quá 50 ký tự' }
                   ]}
                 >
                   <Input />
@@ -324,8 +324,8 @@ const DeTaiFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="ngayBatDau"
-                      label="Start Date"
-                      rules={[{ required: true, message: 'Please select start date' }]}
+                      label="Ngày bắt đầu"
+                      rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu' }]}
                     >
                       <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
                     </Form.Item>
@@ -333,8 +333,8 @@ const DeTaiFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="ngayKetThuc"
-                      label="End Date"
-                      rules={[{ required: true, message: 'Please select end date' }]}
+                      label="Ngày kết thúc"
+                      rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc' }]}
                     >
                       <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
                     </Form.Item>
@@ -342,31 +342,31 @@ const DeTaiFormPage: React.FC = () => {
                 </Row>
               </Card>
 
-              <Card title="Project Content" style={{ marginBottom: 24 }}>
+              <Card title="Nội dung đề tài" style={{ marginBottom: 24 }}>
                 <Form.Item
                   name="mucTieu"
-                  label="Objectives"
-                  rules={[{ required: true, message: 'Please enter project objectives' }]}
+                  label="Mục tiêu"
+                  rules={[{ required: true, message: 'Vui lòng nhập mục tiêu đề tài' }]}
                 >
                   <TextArea rows={4} />
                 </Form.Item>
 
                 <Form.Item
                   name="noiDung"
-                  label="Content"
-                  rules={[{ required: true, message: 'Please enter project content' }]}
+                  label="Nội dung"
+                  rules={[{ required: true, message: 'Vui lòng nhập nội dung đề tài' }]}
                 >
                   <TextArea rows={8} />
                 </Form.Item>
               </Card>
 
-              <Card title="Financial Information">
+              <Card title="Thông tin tài chính">
                 <Row gutter={16}>
                   <Col span={12}>
                     <Form.Item
                       name="tongKinhPhi"
-                      label="Total Budget (VND)"
-                      rules={[{ required: true, message: 'Please enter total budget' }]}
+                      label="Tổng kinh phí (VNĐ)"
+                      rules={[{ required: true, message: 'Vui lòng nhập tổng kinh phí' }]}
                     >
                       <InputNumber 
                         style={{ width: '100%' }} 
@@ -378,8 +378,8 @@ const DeTaiFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="kinhPhiHangNam"
-                      label="Annual Budget (VND)"
-                      rules={[{ required: true, message: 'Please enter annual budget' }]}
+                      label="Kinh phí hàng năm (VNĐ)"
+                      rules={[{ required: true, message: 'Vui lòng nhập kinh phí hàng năm' }]}
                     >
                       <InputNumber 
                         style={{ width: '100%' }} 
@@ -393,16 +393,16 @@ const DeTaiFormPage: React.FC = () => {
             </Col>
 
             <Col span={8}>
-              <Card title="Team Information">
+              <Card title="Thông tin đội ngũ">
                 <Form.Item
                   name="chuNhiem"
-                  label="Principal Investigator"
-                  rules={[{ required: true, message: 'Please enter principal investigator' }]}
+                  label="Chủ nhiệm đề tài"
+                  rules={[{ required: true, message: 'Vui lòng nhập tên chủ nhiệm đề tài' }]}
                 >
                   <Input />
                 </Form.Item>
 
-                <Divider>Team Members</Divider>
+                <Divider>Thành viên tham gia</Divider>
 
                 <div style={{ marginBottom: 16 }}>
                   {teamMembers.map((member, index) => (
@@ -410,7 +410,7 @@ const DeTaiFormPage: React.FC = () => {
                       <Input
                         value={member}
                         onChange={(e) => handleTeamMemberChange(index, e.target.value)}
-                        placeholder={`Team member ${index + 1}`}
+                        placeholder={`Thành viên ${index + 1}`}
                         style={{ marginRight: 8 }}
                       />
                       <Button
@@ -427,31 +427,31 @@ const DeTaiFormPage: React.FC = () => {
                     icon={<PlusOutlined />}
                     style={{ width: '100%' }}
                   >
-                    Add Team Member
+                    Thêm thành viên
                   </Button>
                 </div>
 
                 <Form.Item
                   name="phanChiaSuDongGop"
-                  label="Contribution Allocation"
+                  label="Phân chia đóng góp"
                 >
-                  <TextArea rows={4} placeholder="Describe how contributions are allocated among team members" />
+                  <TextArea rows={4} placeholder="Mô tả sự phân chia đóng góp giữa các thành viên" />
                 </Form.Item>
               </Card>
 
-              <Card title="Documents" style={{ marginTop: 24 }}>
+              <Card title="Tài liệu" style={{ marginTop: 24 }}>
                 <Form.Item
                   name="hoSoNghiemThu"
-                  label="Acceptance Documents"
+                  label="Hồ sơ nghiệm thu"
                 >
-                  <Input placeholder="URL or reference to acceptance documents" />
+                  <Input placeholder="URL hoặc tham chiếu đến hồ sơ nghiệm thu" />
                 </Form.Item>
 
                 <Form.Item
                   name="hoSoSanPham"
-                  label="Product Documents"
+                  label="Hồ sơ sản phẩm"
                 >
-                  <Input placeholder="URL or reference to product documents" />
+                  <Input placeholder="URL hoặc tham chiếu đến hồ sơ sản phẩm" />
                 </Form.Item>
               </Card>
             </Col>
@@ -460,7 +460,7 @@ const DeTaiFormPage: React.FC = () => {
           <div style={{ marginTop: 24, textAlign: 'right' }}>
             <Space>
               <Button onClick={handleCancel}>
-                Cancel
+                Hủy
               </Button>
               <Button
                 type="primary"
@@ -468,7 +468,7 @@ const DeTaiFormPage: React.FC = () => {
                 icon={<SaveOutlined />}
                 loading={isSubmitting}
               >
-                {isEditing ? 'Update Project' : 'Create Project'}
+                {isEditing ? 'Cập nhật đề tài' : 'Tạo đề tài'}
               </Button>
             </Space>
           </div>

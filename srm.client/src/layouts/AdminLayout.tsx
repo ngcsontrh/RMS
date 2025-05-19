@@ -268,22 +268,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               justifyContent: collapsed ? 'center' : 'flex-start',
               overflow: 'hidden'
             }}
-          >
-            <img 
-              src="/vite.svg" 
-              alt="Admin Logo" 
-              style={{ 
-                height: '32px',
-                marginRight: collapsed ? '0' : '8px'
-              }} 
-            />
+          >            
             {!collapsed && (
               <span style={{ 
                 color: 'white', 
                 fontSize: '18px', 
                 fontWeight: 'bold' 
               }}>
-                SRM Admin
+                RSM Admin
               </span>
             )}
           </div>

@@ -4,6 +4,7 @@ using SRM.Data.UOW;
 using SRM.Domain.Data;
 using SRM.Domain.Entities;
 using SRM.Domain.Mappers;
+using SRM.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace SRM.Business.Services
             try
             {                
                 var userEntity = user.MapToEntity();
+                userEntity.Password ??= PasswordHelper.HashPassword("12345678aA@");
 
                 await _unitOfWork.BeginTransactionAsync();
 
@@ -111,6 +113,7 @@ namespace SRM.Business.Services
                 var role = await _unitOfWork.RoleRepository.GetByNameAsync(user.Role!);
                 userEntity.Password = await _unitOfWork.UserRepository.GetHashedPasswordAsync(user.Username!);
                 await _unitOfWork.UserRepository.UpdateAsync(userEntity);
+                await _unitOfWork.UserRoleRepository.DeleteByUserId(userEntity.Id);
                 await _unitOfWork.UserRoleRepository.AddAsync(new UserRole
                 {
                     UserId = userEntity.Id,

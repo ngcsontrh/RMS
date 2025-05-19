@@ -9,5 +9,6 @@ namespace SRM.Data.IRepositories
 {
     public interface IUserRoleRepository : IRepositoryBase<UserRole>
     {
+        Task DeleteByUserId(Guid id);
     }
 }

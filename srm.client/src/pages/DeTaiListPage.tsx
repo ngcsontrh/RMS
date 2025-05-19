@@ -160,6 +160,18 @@ const DeTaiListPage: React.FC = () => {
       render: (text: string) => <strong>{text}</strong>,
     },
     {
+      title: "Trạng thái",
+      dataIndex: "trangThaiPheDuyet",
+      key: "trangThaiPheDuyet",
+      render: (text: string) => {
+        let color = "default";
+        const status = text == "APPROVE" ? "Đã phê duyệt" : "Đợi phê duyệt";
+        if (text === "APPROVE") color = "green";
+        else color = "blue"
+        return <Tag color={color}>{status}</Tag>;
+      },
+    },
+    {
       title: "Mã số",
       dataIndex: "maSo",
       key: "maSo",
@@ -169,7 +181,7 @@ const DeTaiListPage: React.FC = () => {
       key: "tenNguoiDeXuat",
       render: (text: string) => {
         const user = userData?.find((user) => user.id === text);
-        return <Tag color="green">{user?.hoTen || text}</Tag>;
+        return <Tag color="blue">{user?.hoTen || text}</Tag>;
       },
     },
     {

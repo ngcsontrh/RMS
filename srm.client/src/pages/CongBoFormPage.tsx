@@ -47,7 +47,7 @@ const CongBoFormPage: React.FC = () => {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      message.error('You must be logged in to access this page');
+      message.error('Bạn phải đăng nhập để truy cập trang này');
       navigate('/login');
     }
   }, [isAuthenticated, navigate]);
@@ -112,7 +112,7 @@ const CongBoFormPage: React.FC = () => {
   // Effect to handle createMutation success
   useEffect(() => {
     if (createMutation.isSuccess) {
-      message.success('Publication created successfully');
+      message.success('Tạo công bố thành công');
       queryClient.invalidateQueries({ queryKey: ['congbos'] });
       navigate('/congbo');
     }
@@ -122,7 +122,7 @@ const CongBoFormPage: React.FC = () => {
   useEffect(() => {
     if (createMutation.isError) {
       console.error('Error creating publication:', createMutation.error);
-      message.error('Failed to create publication');
+      message.error('Tạo công bố thất bại');
     }
   }, [createMutation.isError, createMutation.error]);
 
@@ -134,7 +134,7 @@ const CongBoFormPage: React.FC = () => {
   // Effect to handle updateMutation success
   useEffect(() => {
     if (updateMutation.isSuccess) {
-      message.success('Publication updated successfully');
+      message.success('Cập nhật công bố thành công');
       queryClient.invalidateQueries({ queryKey: ['congbos'] });
       queryClient.invalidateQueries({ queryKey: ['congbo', id] });
       navigate(`/congbo/${id}`);
@@ -145,7 +145,7 @@ const CongBoFormPage: React.FC = () => {
   useEffect(() => {
     if (updateMutation.isError) {
       console.error('Error updating publication:', updateMutation.error);
-      message.error('Failed to update publication');
+      message.error('Cập nhật công bố thất bại');
     }
   }, [updateMutation.isError, updateMutation.error]);
 
@@ -180,7 +180,7 @@ const CongBoFormPage: React.FC = () => {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-        <Spin size="large" tip="Loading publication data..." />
+        <Spin size="large" tip="Đang tải dữ liệu công bố..." />
       </div>
     );
   }
@@ -194,15 +194,15 @@ const CongBoFormPage: React.FC = () => {
             onClick={handleCancel} 
             style={{ marginBottom: 16 }}
           >
-            Back
+            Quay lại
           </Button>
-          <Title level={2}>{isEditing ? 'Edit Publication' : 'Create New Publication'}</Title>
+          <Title level={2}>{isEditing ? 'Chỉnh sửa công bố' : 'Tạo công bố mới'}</Title>
         </div>
 
         {isErrorCongBo && (
           <Alert
-            message="Error"
-            description={`Failed to load publication data: ${congboError instanceof Error ? congboError.message : 'Unknown error'}`}
+            message="Lỗi"
+            description={`Không thể tải dữ liệu công bố: ${congboError instanceof Error ? congboError.message : 'Lỗi không xác định'}`}
             type="error"
             showIcon
             style={{ marginBottom: 24 }}
@@ -220,13 +220,13 @@ const CongBoFormPage: React.FC = () => {
         >
           <Row gutter={16}>
             <Col span={16}>
-              <Card title="Publication Information" style={{ marginBottom: 24 }}>
+              <Card title="Thông tin công bố" style={{ marginBottom: 24 }}>
                 <Form.Item
                   name="ten"
-                  label="Publication Title"
+                  label="Tiêu đề công bố"
                   rules={[
-                    { required: true, message: 'Please enter publication title' },
-                    { max: 200, message: 'Title cannot exceed 200 characters' }
+                    { required: true, message: 'Vui lòng nhập tiêu đề công bố' },
+                    { max: 200, message: 'Tiêu đề không vượt quá 200 ký tự' }
                   ]}
                 >
                   <Input />
@@ -236,11 +236,11 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="noiDangBaoId"
-                      label="Publication Location"
-                      rules={[{ required: true, message: 'Please select publication location' }]}
+                      label="Nơi đăng báo"
+                      rules={[{ required: true, message: 'Vui lòng chọn nơi đăng báo' }]}
                     >
                       <Select
-                        placeholder="Select publication location"
+                        placeholder="Chọn nơi đăng báo"
                         loading={isLoadingNoiDangBao}
                         optionFilterProp="children"
                         showSearch
@@ -256,10 +256,10 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="thanhQuaId"
-                      label="Research Outcome"
+                      label="Thành quả nghiên cứu"
                     >
                       <Select
-                        placeholder="Select research outcome"
+                        placeholder="Chọn thành quả nghiên cứu"
                         loading={isLoadingThanhQua}
                         optionFilterProp="children"
                         showSearch
@@ -277,22 +277,22 @@ const CongBoFormPage: React.FC = () => {
 
                 <Form.Item
                   name="tenTapChi"
-                  label="Journal/Conference Name"
-                  rules={[{ required: true, message: 'Please enter journal/conference name' }]}
+                  label="Tên tạp chí/hội nghị"
+                  rules={[{ required: true, message: 'Vui lòng nhập tên tạp chí/hội nghị' }]}
                 >
                   <Input />
                 </Form.Item>
 
                 <Form.Item
                   name="nhaXuatBan"
-                  label="Publisher"
+                  label="Nhà xuất bản"
                 >
                   <Input />
                 </Form.Item>
 
                 <Form.Item
                   name="diaDiem"
-                  label="Location"
+                  label="Địa điểm"
                 >
                   <Input />
                 </Form.Item>
@@ -301,7 +301,7 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="ngayGuiDang"
-                      label="Submission Date"
+                      label="Ngày gửi đăng"
                     >
                       <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
                     </Form.Item>
@@ -309,8 +309,8 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={12}>
                     <Form.Item
                       name="ngayCongBo"
-                      label="Publication Date"
-                      rules={[{ required: true, message: 'Please select publication date' }]}
+                      label="Ngày công bố"
+                      rules={[{ required: true, message: 'Vui lòng chọn ngày công bố' }]}
                     >
                       <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
                     </Form.Item>
@@ -321,7 +321,7 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={8}>
                     <Form.Item
                       name="tap"
-                      label="Volume"
+                      label="Tập"
                     >
                       <InputNumber style={{ width: '100%' }} min={0} />
                     </Form.Item>
@@ -329,7 +329,7 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={8}>
                     <Form.Item
                       name="ky"
-                      label="Issue"
+                      label="Kỳ"
                     >
                       <InputNumber style={{ width: '100%' }} min={0} />
                     </Form.Item>
@@ -337,58 +337,58 @@ const CongBoFormPage: React.FC = () => {
                   <Col span={8}>
                     <Form.Item
                       name="trang"
-                      label="Pages"
+                      label="Trang"
                     >
-                      <Input placeholder="e.g. 123-135" />
+                      <Input placeholder="VD: 123-135" />
                     </Form.Item>
                   </Col>
                 </Row>
               </Card>
 
-              <Card title="Author Information" style={{ marginBottom: 24 }}>
+              <Card title="Thông tin tác giả" style={{ marginBottom: 24 }}>
                 <Form.Item
                   name="tacGiaChinh"
-                  label="Main Author"
-                  rules={[{ required: true, message: 'Please enter main author' }]}
+                  label="Tác giả chính"
+                  rules={[{ required: true, message: 'Vui lòng nhập tác giả chính' }]}
                 >
                   <Input />
                 </Form.Item>
 
                 <Form.Item
                   name="tacGiaLienHe"
-                  label="Corresponding Author"
+                  label="Tác giả liên hệ"
                 >
                   <Input />
                 </Form.Item>
 
                 <Form.Item
                   name="dongTacGias"
-                  label="Co-Authors"
+                  label="Đồng tác giả"
                 >
-                  <TextArea rows={3} placeholder="List all co-authors, separated by commas" />
+                  <TextArea rows={3} placeholder="Liệt kê các đồng tác giả, cách nhau bởi dấu phẩy" />
                 </Form.Item>
 
                 <Form.Item
                   name="phanChiaSuDongGop"
-                  label="Contribution Allocation"
+                  label="Phân chia đóng góp"
                 >
-                  <TextArea rows={3} placeholder="Describe how contributions are allocated among authors" />
+                  <TextArea rows={3} placeholder="Mô tả phân chia đóng góp giữa các tác giả" />
                 </Form.Item>
 
                 <Form.Item
                   name="loaiHoTroChiPhi"
-                  label="Publication Cost Support"
+                  label="Hỗ trợ chi phí công bố"
                 >
-                  <Input placeholder="Type of financial support for publication costs" />
+                  <Input placeholder="Loại hỗ trợ chi phí công bố" />
                 </Form.Item>
               </Card>
             </Col>
 
             <Col span={8}>
-              <Card title="Impact and Evaluation" style={{ marginBottom: 24 }}>
+              <Card title="Tác động & Đánh giá" style={{ marginBottom: 24 }}>
                 <Form.Item
                   name="chiSoTacDong"
-                  label="Impact Factor"
+                  label="Chỉ số tác động"
                 >
                   <InputNumber 
                     style={{ width: '100%' }} 
@@ -399,9 +399,9 @@ const CongBoFormPage: React.FC = () => {
 
                 <Form.Item
                   name="loaiQ"
-                  label="Q Index Category"
+                  label="Phân loại Q"
                 >
-                  <Select placeholder="Select Q index">
+                  <Select placeholder="Chọn phân loại Q">
                     <Option value="1">Q1</Option>
                     <Option value="2">Q2</Option>
                     <Option value="3">Q3</Option>
@@ -411,48 +411,48 @@ const CongBoFormPage: React.FC = () => {
 
                 <Form.Item
                   name="linkMinhChungLoaiQ"
-                  label="Q Index Proof Link"
+                  label="Link minh chứng phân loại Q"
                 >
-                  <Input addonBefore={<LinkOutlined />} placeholder="URL to Q index proof" />
+                  <Input addonBefore={<LinkOutlined />} placeholder="URL minh chứng phân loại Q" />
                 </Form.Item>
 
                 <Divider />
 
                 <Form.Item
                   name="tenHoiDong"
-                  label="Research Council"
+                  label="Tên hội đồng"
                 >
                   <Input />
                 </Form.Item>
 
                 <Form.Item
                   name="diemHoiDong"
-                  label="Council Score"
+                  label="Điểm hội đồng"
                 >
                   <InputNumber style={{ width: '100%' }} min={0} max={10} step={0.1} />
                 </Form.Item>
               </Card>
 
-              <Card title="Links and Documents">
+              <Card title="Liên kết & Tài liệu">
                 <Form.Item
                   name="linkMinhChungTapChi"
-                  label="Journal Index Proof Link"
+                  label="Link minh chứng tạp chí"
                 >
-                  <Input addonBefore={<LinkOutlined />} placeholder="URL to journal index proof" />
+                  <Input addonBefore={<LinkOutlined />} placeholder="URL minh chứng tạp chí" />
                 </Form.Item>
 
                 <Form.Item
                   name="linkBaiBao"
-                  label="Article Link"
+                  label="Link bài báo"
                 >
-                  <Input addonBefore={<LinkOutlined />} placeholder="URL to article" />
+                  <Input addonBefore={<LinkOutlined />} placeholder="URL bài báo" />
                 </Form.Item>
 
                 <Form.Item
                   name="fileMinhChungBaiBao"
-                  label="Article Document"
+                  label="Tài liệu bài báo"
                 >
-                  <Input placeholder="URL or reference to article document" />
+                  <Input placeholder="URL hoặc tham chiếu tài liệu bài báo" />
                 </Form.Item>
               </Card>
             </Col>
@@ -461,7 +461,7 @@ const CongBoFormPage: React.FC = () => {
           <div style={{ marginTop: 24, textAlign: 'right' }}>
             <Space>
               <Button onClick={handleCancel}>
-                Cancel
+                Hủy
               </Button>
               <Button
                 type="primary"
@@ -469,7 +469,7 @@ const CongBoFormPage: React.FC = () => {
                 icon={<SaveOutlined />}
                 loading={isSubmitting}
               >
-                {isEditing ? 'Update Publication' : 'Create Publication'}
+                {isEditing ? 'Cập nhật công bố' : 'Tạo công bố'}
               </Button>
             </Space>
           </div>

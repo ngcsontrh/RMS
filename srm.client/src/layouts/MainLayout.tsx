@@ -20,6 +20,7 @@ import {
   LogoutOutlined,
   FileOutlined,
   BookOutlined,
+  MailOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
@@ -83,6 +84,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           icon: <FileOutlined />
         }
       ]
+    },
+    { 
+      key: '/quyche', 
+      label: 'Quy chế - Quy định', 
+      icon: <FileOutlined /> 
+    },
+    { 
+      key: '/contact', 
+      label: 'Liên hệ', 
+      icon: <MailOutlined /> 
     }
   ];
   
@@ -246,21 +257,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               overflow: 'hidden'
             }}
           >
-            <img 
-              src="/vite.svg" 
-              alt="SRM Logo" 
-              style={{ 
-                height: '32px',
-                marginRight: collapsed ? '0' : '8px'
-              }} 
-            />
             {!collapsed && (
               <span style={{ 
                 color: 'white', 
                 fontSize: '18px', 
                 fontWeight: 'bold' 
               }}>
-                SRM System
+                RMS System
               </span>
             )}
           </div>
